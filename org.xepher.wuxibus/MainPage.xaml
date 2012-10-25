@@ -1,0 +1,62 @@
+﻿<phone:PhoneApplicationPage 
+    x:Class="org.xepher.wuxibus.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="696"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    shell:SystemTray.IsVisible="True"
+    BackKeyPress="PhoneApplicationPage_BackKeyPress">
+
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto" MinHeight="535"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+        	<TextBlock x:Name="ApplicationTitle" Text="{StaticResource ApplicationTitle}" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="{StaticResource PageMain}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,0,0">
+            <ListBox x:Name="routesList" SelectionChanged="routesList_SelectionChanged" BorderThickness="12,0,0,0">
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid Height="60">
+                            <StackPanel Margin="10,15,0,0"
+                                        Height="50"
+                                        VerticalAlignment="Top">
+                                <TextBlock Text="{Binding Name}" 
+                                           FontSize="30" />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
+        </Grid>
+    </Grid>
+ 
+    <!--Sample code showing usage of ApplicationBar-->
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
+            <shell:ApplicationBar.Buttons>
+                <shell:ApplicationBarIconButton Text="Refresh" IconUri="Assets/Icons/dark/appbar.refresh.rest.png" Click="ApplicationBarIconButtonRefresh_Click" IsEnabled="False"/>
+                <shell:ApplicationBarIconButton Text="Search" IconUri="Assets/Icons/dark/appbar.feature.search.rest.png" Click="ApplicationBarIconButtonSearch_Click"/>
+            </shell:ApplicationBar.Buttons>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="About" Click="ApplicationBarMenuItemAbout_OnClick" />
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
+
+</phone:PhoneApplicationPage>
