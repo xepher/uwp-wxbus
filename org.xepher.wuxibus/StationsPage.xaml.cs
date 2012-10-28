@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
+using System.Linq;
+using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.model;
 
@@ -12,129 +15,350 @@ namespace org.xepher.wuxibus
 {
     public partial class StationsPage : PhoneApplicationPage
     {
-        public Route route { get; set; }
+        // 处理重新绑定ListBox数据源时会触发SelectionChanged事件的问题
+        private bool _isListBoxDataBinded = false;
+
+        private Route Route { get; set; }
+        private List<Direction> Directions { get; set; }
+        private bool _isAddedDirectionButton = false;
+        private int _stationCount;
+
+        private Direction _direction;
 
         public StationsPage()
         {
             InitializeComponent();
-            LoadRouteInformation();
-        }
 
-        private void LoadRouteInformation()
-        {
-            route = (Application.Current as App).SelectedRoute;
-            //// deep clone
-            //route = new Route()
-            //            {
-            //                Name = (Application.Current as App).SelectedRoute.Name,
-            //                Value = (Application.Current as App).SelectedRoute.Value,
-            //                Stations = (Application.Current as App).SelectedRoute.Stations
-            //            };
-            //(Application.Current as App).SelectedRoute = null;
-            PageTitle.Text = route.Name;
+            Route = (Application.Current as App).SelectedRoute;
+            PageTitle.Text = Route.Name;
 
-            // start loading 
-            WebClient client = new WebClient();
-            Uri uri = new Uri("http://218.90.160.85:9090/bustravelguide/default.aspx", UriKind.Absolute);
+            Object obj = IsolatedStorage.ReadFromFile(string.Format("Data\\{0}.data", Route.Value), typeof(List<Direction>));
 
-            client.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-            string formatString = "__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&btnSegment.x=30&btnSegment.y=14&ddlSegment=33450414&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=&hidY=";
-            string postString = string.Format(formatString, (Application.Current as App).ViewState, route.Value);
-
-            client.UploadStringCompleted += new UploadStringCompletedEventHandler(StationsDownloaded);
-            client.UploadStringAsync(uri, "POST", postString);
-            GlobalLoading.Instance.IsLoading = true;
-        }
-
-        // 下载车站信息
-        private void StationsDownloaded(object sender, UploadStringCompletedEventArgs e)
-        {
-            if (e.Result == null || e.Error != null)
+            if (obj == null)
             {
-                MessageBox.Show("There was an error downloading the Stations!");
+                LoadStations();
             }
             else
             {
-                // Resolve Stations
-                List<Station> stations = ResolveStations(e.Result);
-                stationsList.ItemsSource = stations;
+                Directions = (List<Direction>)obj;
+                stationsList.ItemsSource = Directions.First(d => d.IsSelected).Stations;
+                if (!_isAddedDirectionButton)
+                {
+                    if (Directions.Count > 1)
+                    {
+                        ApplicationBarIconButton button = new ApplicationBarIconButton()
+                                                              {
+                                                                  IconUri =
+                                                                      new Uri(
+                                                                      "Assets/Icons/dark/appbar.next.rest.png",
+                                                                      UriKind.Relative),
+                                                                  IsEnabled = true,
+                                                                  Text = "Direction"
+                                                              };
+
+                        button.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
+
+                        ApplicationBar.Buttons.Add(button);
+                        _isAddedDirectionButton = true;
+                    }
+                }
+                txtInformation.Text = Directions.First(d => d.IsSelected).Name;
             }
-            GlobalLoading.Instance.IsLoading = false;
         }
 
-        // 解析页面获得车站信息
-        public List<Station> ResolveStations(string rawhtml)
+        private void LoadStations()
         {
-            string pattern = "<span id=\"rpt_ctl[0-9][0-9]_lblStation\">([^<]*)</span>";
-            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
+            // GET /bustravelguide/ for all routes
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/default.aspx");
+            request.Accept = "text/html, application/xhtml+xml, */*";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
+            request.Headers["Accept-Encoding"] = "gzip, deflate";
+            request.Headers["Accept-Language"] = "zh-CN";
+            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.Method = "POST";
+            request.CookieContainer = (Application.Current as App).Container;
 
-            MatchCollection collection = regex.Matches(rawhtml);
+            request.BeginGetRequestStream(StationsRequestCallback, request);
 
-            List<Station> stations = new List<Station>();
+            GlobalLoading.Instance.IsLoading = true;
+        }
 
-            int index = 0;
-            foreach (Match match in collection)
+        private void StationsRequestCallback(IAsyncResult ar)
+        {
+            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+
+            const string formatString = "__EVENTTARGET=ddlRoute&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=&hidY=";
+            string postString = string.Format(formatString, (Application.Current as App).ViewState, Route.Value);
+            byte[] postData = Encoding.UTF8.GetBytes(postString);
+
+            using (Stream postStream = request.EndGetRequestStream(ar))
             {
-                index++;
-                Station station = new Station()
-                                      {
-                                          Name = match.Groups[1].Value,
-                                          Value = index
-                                      };
-                stations.Add(station);
+                postStream.Write(postData, 0, postData.Length);
+            }
+            request.BeginGetResponse(StationsResponseCallback, request);
+        }
+
+        private void StationsResponseCallback(IAsyncResult ar)
+        {
+            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
+
+            // GET randomming.aspx for Session and Cookies
+            HttpWebRequest requestRandomming = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/randomming.aspx");
+            requestRandomming.Accept = "image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5";
+            requestRandomming.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
+            request.Headers["Accept-Encoding"] = "gzip, deflate";
+            request.Headers["Accept-Language"] = "zh-CN";
+            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
+            requestRandomming.CookieContainer = (Application.Current as App).Container;
+
+            requestRandomming.BeginGetResponse(iar => { }, requestRandomming);
+
+            string result;
+
+            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            {
+                result = reader.ReadToEnd();
+
+                // viewstate save
+                (Application.Current as App).ViewState = Common.GetViewState(result);
+
+                Dispatcher.BeginInvoke(() =>
+                                           {
+                                               _isListBoxDataBinded = true;
+
+                                               // Resolve Stations
+                                               if (Directions == null)
+                                               {
+                                                   // first load the directions
+                                                   Directions = Common.ResolveStations(result);
+                                               }
+                                               else
+                                               {
+                                                   // switch the direction
+                                                   // save the download stations to current direction
+                                                   Direction newDirection = Common.ResolveStations(result).First(d => d.IsSelected);
+                                                   Directions.First(d => d.Value == newDirection.Value).Stations = newDirection.Stations;
+                                               }
+
+                                               stationsList.ItemsSource = Directions.First(d => d.IsSelected).Stations;
+
+                                               if (!_isAddedDirectionButton)
+                                               {
+                                                   if (Directions.Count > 1)
+                                                   {
+                                                       ApplicationBarIconButton button = new ApplicationBarIconButton()
+                                                                                             {
+                                                                                                 IconUri =
+                                                                                                     new Uri(
+                                                                                                     "Assets/Icons/dark/appbar.next.rest.png",
+                                                                                                     UriKind.Relative),
+                                                                                                 IsEnabled = true,
+                                                                                                 Text = "Direction"
+                                                                                             };
+
+                                                       button.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
+
+                                                       ApplicationBar.Buttons.Add(button);
+                                                       _isAddedDirectionButton = true;
+                                                   }
+                                               }
+                                               txtInformation.Text = Directions.First(d => d.IsSelected).Name;
+
+                                               stationsList.SelectedIndex = -1;
+                                               _isListBoxDataBinded = false;
+
+                                               if (Directions.First(d => d.IsSelected).Stations == null)
+                                               {
+                                                   // todo: Async save Stations information
+                                                   IsolatedStorage.SaveToFile(Directions,
+                                                                              string.Format("Data\\{0}.data",
+                                                                                            Route.Value));
+                                               }
+
+                                               GlobalLoading.Instance.IsLoading = false;
+                                           });
+            }
+        }
+
+        private void LoadStations(int stationCount)
+        {
+
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/default.aspx");
+            request.Accept = "text/html, application/xhtml+xml, */*";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
+            request.Headers["Accept-Encoding"] = "gzip, deflate";
+            request.Headers["Accept-Language"] = "zh-CN";
+            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
+            request.ContentType = "application/x-www-form-urlencoded";
+            request.Method = "POST";
+            request.CookieContainer = (Application.Current as App).Container;
+
+            _stationCount = stationCount;
+
+            request.BeginGetRequestStream(StationDirectionRequestCallback, request);
+
+            GlobalLoading.Instance.IsLoading = true;
+        }
+
+        private void StationDirectionRequestCallback(IAsyncResult ar)
+        {
+            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+
+            const string formatString = "__EVENTTARGET=ddlSegment&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&ddlSegment={2}";
+            string postString = string.Format(formatString, (Application.Current as App).ViewState, Route.Value,
+                                              _direction.Value);
+
+            // add rpt$ctl00$hidSngserialID,rpt$ctl00$hidDualserialID etc
+            StringBuilder sb = new StringBuilder(postString);
+            for (int i = 0; i < _stationCount; i++)
+            {
+                sb.Append(string.Format("&rpt$ctl{0}$hidSngserialID={1}&rpt$ctl{0}$hidDualserialID={1}",
+                                        i < 10 ? "0" + i.ToString() : i.ToString(), i + 1));
             }
 
-            route.Stations = stations;
-            // save to isolatedstorage
+            sb.Append(
+                "&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=&hidY=");
 
-            return stations;
+            byte[] postData = Encoding.UTF8.GetBytes(sb.ToString());
+
+            using (Stream postStream = request.EndGetRequestStream(ar))
+            {
+                postStream.Write(postData, 0, postData.Length);
+            }
+            request.BeginGetResponse(StationDirectionResponseCallback, request);
+        }
+
+        private void StationDirectionResponseCallback(IAsyncResult ar)
+        {
+            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
+
+            // GET randomming.aspx for Session and Cookies
+            HttpWebRequest requestRandomming = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/randomming.aspx");
+            requestRandomming.Accept = "image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5";
+            requestRandomming.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
+            request.Headers["Accept-Encoding"] = "gzip, deflate";
+            request.Headers["Accept-Language"] = "zh-CN";
+            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
+            requestRandomming.CookieContainer = (Application.Current as App).Container;
+
+            requestRandomming.BeginGetResponse(iar => { }, requestRandomming);
+
+            string result;
+
+            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            {
+                result = reader.ReadToEnd();
+
+                // viewstate save
+                (Application.Current as App).ViewState = Common.GetViewState(result);
+
+                Dispatcher.BeginInvoke(() =>
+                                           {
+                                               _isListBoxDataBinded = true;
+
+                                               // Resolve Stations
+                                               // todo: can't resolve other direction
+                                               if (Directions == null)
+                                               {
+                                                   // first load the directions
+                                                   Directions = Common.ResolveStations(result);
+                                               }
+                                               else
+                                               {
+                                                   // switch the direction
+                                                   // save the download stations to current direction
+                                                   Direction newDirection = Common.ResolveStations(result).First(d => d.IsSelected);
+                                                   Directions.First(d => d.Value == newDirection.Value).Stations = newDirection.Stations;
+                                               }
+
+                                               stationsList.ItemsSource = Directions.First(d => d.IsSelected).Stations;
+
+                                               if (!_isAddedDirectionButton)
+                                               {
+                                                   if (Directions.Count > 1)
+                                                   {
+                                                       ApplicationBarIconButton button = new ApplicationBarIconButton()
+                                                       {
+                                                           IconUri =
+                                                               new Uri(
+                                                               "Assets/Icons/dark/appbar.refresh.rest.png",
+                                                               UriKind.Relative),
+                                                           IsEnabled = true,
+                                                           Text = "Direction"
+                                                       };
+
+                                                       button.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
+
+                                                       ApplicationBar.Buttons.Add(button);
+                                                       _isAddedDirectionButton = true;
+                                                   }
+                                               }
+                                               txtInformation.Text = Directions.First(d => d.IsSelected).Name;
+
+                                               stationsList.SelectedIndex = -1;
+                                               _isListBoxDataBinded = false;
+
+                                               if (Directions.First(d => d.IsSelected).Stations == null)
+                                               {
+                                                   // todo: Async save Stations information
+                                                   IsolatedStorage.SaveToFile(Directions,
+                                                                              string.Format("Data\\{0}.data",
+                                                                                            Route.Value));
+                                               }
+
+                                               GlobalLoading.Instance.IsLoading = false;
+                                           });
+            }
+        }
+
+        private void ApplicationBarIconButtonDirection_Click(object sender, EventArgs e)
+        {
+            // 前面添加direction按钮的时候已经检查过是否只有单条线路，所以这里不检查
+            _direction = Directions.First(d => !d.IsSelected);
+            Direction direSelected = Directions.First(d => d.IsSelected);
+
+            _direction.IsSelected = true;
+            direSelected.IsSelected = false;
+
+            // 如果为null表示该route的此方向站点信息并没有收录过，需要访问网络获取
+            if (_direction.Stations == null)
+            {
+                LoadStations(direSelected.StationsCount);
+            }
+            else
+            {
+                stationsList.ItemsSource = _direction.Stations;
+                txtInformation.Text = _direction.Name;
+            }
         }
 
         private void stationsList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //WebClient client = new WebClient();
-            //Uri uri = new Uri("http://218.90.160.85:9090/bustravelguide/default.aspx", UriKind.Absolute);
-
-            //client.Headers["Content-Type"] = "application/x-www-form-urlencoded";
-
-            //StringBuilder formatBuilder = new StringBuilder("__EVENTTARGET=&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&ddlSegment=33450414&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=203&hidY=119");
-            //string value;
-            //for (int index = 0; index < route.Stations.Count; index++)
-            //{
-            //    value = index < 10 ? "0" + index.ToString() : index.ToString();
-            //    formatBuilder.Append("rpt$ctl" + value + "$hidSngserialID=" + (index + 1).ToString() + "&");
-            //    formatBuilder.Append("rpt$ctl" + value + "$hidDualserialID=" + (index + 1).ToString() + "&");
-            //}
-            //int selectIndex = (stationsList.SelectedItem as Station).Value;
-            //value = selectIndex < 10 ? "0" + selectIndex.ToString() : selectIndex.ToString();
-            //formatBuilder.Append("rpt$ctl" + value + "$imgBtn.x=6" + "rpt$ctl" + value + "$imgBtn.y=13");
-            //string postString = string.Format(formatBuilder.ToString(), (Application.Current as App).ViewState, route.Value);
-
-            //client.UploadStringCompleted += new UploadStringCompletedEventHandler(BusInformationDownloaded);
-            //client.UploadStringAsync(uri, "POST", postString);
-            //GlobalLoading.Instance.IsLoading = true;
+            if (!_isListBoxDataBinded)
+            {
+            }
         }
 
         // 下载车辆信息
         private void BusInformationDownloaded(object sender, UploadStringCompletedEventArgs e)
         {
-            if (e.Result == null || e.Error != null)
-            {
-                MessageBox.Show("There was an error downloading the Bus Information!");
-            }
-            else
-            {
-                // Resolve Busses
-                List<Bus> busses= ResolveBusses(e.Result);
-            }
+            // Resolve Busses
+            List<Bus> busses = Common.ResolveBusses(e.Result);
+
             GlobalLoading.Instance.IsLoading = false;
         }
 
-        // 解析页面获得车辆信息
-        public List<Bus> ResolveBusses(string rawhtml)
+        private void ApplicationBarIconButtonRefresh_Click(object sender, EventArgs e)
         {
-            return null;
+            if (MessageBoxResult.Cancel ==
+                MessageBox.Show(string.Format("Are you want to refresh route {0}?", Route.Name), "Refresh Stations", MessageBoxButton.OKCancel))
+            {
+                return;
+            }
+            LoadStations();
         }
     }
 }

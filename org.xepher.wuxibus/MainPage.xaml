@@ -50,7 +50,7 @@
     <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
             <shell:ApplicationBar.Buttons>
-                <shell:ApplicationBarIconButton Text="Refresh" IconUri="Assets/Icons/dark/appbar.refresh.rest.png" Click="ApplicationBarIconButtonRefresh_Click" IsEnabled="False"/>
+                <shell:ApplicationBarIconButton Text="Refresh" IconUri="Assets/Icons/dark/appbar.refresh.rest.png" Click="ApplicationBarIconButtonRefresh_Click"/>
                 <shell:ApplicationBarIconButton Text="Search" IconUri="Assets/Icons/dark/appbar.feature.search.rest.png" Click="ApplicationBarIconButtonSearch_Click"/>
             </shell:ApplicationBar.Buttons>
             <shell:ApplicationBar.MenuItems>

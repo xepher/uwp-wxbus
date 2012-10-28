@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Net;
-using System.Text.RegularExpressions;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
@@ -12,20 +12,77 @@ namespace org.xepher.wuxibus
 {
     public partial class MainPage : PhoneApplicationPage
     {
+        // 处理重新绑定ListBox数据源时会触发SelectionChanged事件
+        private bool _isListBoxDataBinded = false;
+
         // Constructor
         public MainPage()
         {
             InitializeComponent();
-            if ((Application.Current as App).GetIsNetworkAvailable())
+            LoadRoutes();
+        }
+
+        private void LoadRoutes()
+        {
+            // GET /bustravelguide/ for all routes
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/");
+            request.Accept = "text/html, application/xhtml+xml, */*";
+            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
+            request.Headers["Accept-Encoding"] = "gzip, deflate";
+            request.Headers["Accept-Language"] = "zh-CN";
+            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
+            
+            request.CookieContainer = (Application.Current as App).Container;
+
+            request.BeginGetResponse(RoutesResponseCallback, request);
+
+            GlobalLoading.Instance.IsLoading = true;
+        }
+
+        private void RoutesResponseCallback(IAsyncResult ar)
+        {
+            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
+
+            // GET randomming.aspx for Session and Cookies
+            HttpWebRequest requestRandomming = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/randomming.aspx");
+            requestRandomming.Accept = "image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5";
+            requestRandomming.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
+            requestRandomming.CookieContainer = (Application.Current as App).Container;
+            request.Headers["Accept-Encoding"] = "gzip, deflate";
+            request.Headers["Accept-Language"] = "zh-CN";
+            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
+
+            requestRandomming.BeginGetResponse(iar => { }, requestRandomming);
+
+            string result;
+
+            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
             {
-                // start loading
-                WebClient downloader = new WebClient();
-                Uri uri = new Uri("http://218.90.160.85:9090/bustravelguide/", UriKind.Absolute);
-                downloader.DownloadStringCompleted += new DownloadStringCompletedEventHandler(RoutesDownloaded);
-                downloader.DownloadStringAsync(uri);
-                GlobalLoading.Instance.IsLoading = true;
+                result = reader.ReadToEnd();
+                Dispatcher.BeginInvoke(() =>
+                                           {
+                                               // viewstate save
+                                               (Application.Current as App).ViewState = Common.GetViewState(result);
+
+                                               _isListBoxDataBinded = true;
+
+                                               // Resolve Routes
+                                               // todo:比较 (Application.Current as App).Routes 与 Common.ResolveRoutes(e.Result) 是否一样
+                                               // 不一样需要将Common.ResolveRoutes(e.Result)写入
+                                               routesList.ItemsSource =
+                                                   (Application.Current as App).Routes = Common.ResolveRoutes(result);
+
+                                               routesList.SelectedIndex = -1;
+                                               _isListBoxDataBinded = false;
+
+                                               // todo: Async save Routes information
+                                               IsolatedStorage.SaveToFile((Application.Current as App).Routes,
+                                                                          "Data\\Routes.data");
+
+                                               GlobalLoading.Instance.IsLoading = false;
+                                           });
             }
-            //routesList.ItemsSource = (Application.Current as App).ReadFromFile();
         }
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
@@ -41,86 +98,22 @@ namespace org.xepher.wuxibus
             NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
 
-        private void RoutesDownloaded(object sender, DownloadStringCompletedEventArgs e)
-        {
-            if (e.Result == null || e.Error != null)
-            {
-                MessageBox.Show("There was an error downloading the Routes!");
-            }
-            else
-            {
-                // Resolve Routes
-                routesList.ItemsSource = (Application.Current as App).Routes = ResolveRoutes(e.Result);
-
-                // save routes to IsolateStorage
-                // todo: Async Save
-                //(Application.Current as App).SaveToFile((Application.Current as App).Routes);
-            }
-            GlobalLoading.Instance.IsLoading = false;
-        }
-
-        private List<Route> ResolveRoutes(string rawhtml)
-        {
-            (Application.Current as App).ViewState = Common.GetViewState(rawhtml);
-
-            int iBegin = rawhtml.IndexOf("<select name=\"ddlRoute\" id=\"ddlRoute\">");
-            int iEnd = rawhtml.IndexOf("</select>") + 9;
-            string RawddlRoute = rawhtml.Substring(iBegin, iEnd - iBegin);
-
-            string pattern = "<option value=\"([^\"]*)\">([^<]*)</option>";
-            Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
-
-            MatchCollection collection = regex.Matches(RawddlRoute);
-
-            List<Route> routes = new List<Route>();
-
-            int index = 0;
-            foreach (Match match in collection)
-            {
-                index++;
-                Route route = new Route()
-                {
-                    Name = match.Groups[2].Value,
-                    Value = int.Parse(match.Groups[1].Value)
-                };
-                routes.Add(route);
-            }
-
-            return routes;
-        }
-
         private void routesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //Route route = new Route()
-            //{
-            //    Name = (routesList.SelectedItem as Route).Name,
-            //    Value = (routesList.SelectedItem as Route).Value
-            //};
-            (Application.Current as App).SelectedRoute = routesList.SelectedItem as Route;
-            NavigationService.Navigate(new Uri("/StationsPage.xaml", UriKind.Relative));
+            if (!_isListBoxDataBinded)
+            {
+                (Application.Current as App).SelectedRoute = routesList.SelectedItem as Route;
+                NavigationService.Navigate(new Uri("/StationsPage.xaml", UriKind.Relative));
+            }
         }
 
         // refresh routes, download routes information
         private void ApplicationBarIconButtonRefresh_Click(object sender, EventArgs e)
         {
-            RefreshRoutes();
-        }
-
-        private void RefreshRoutes()
-        {
-            if (MessageBoxResult.Cancel ==
+            if (MessageBoxResult.OK ==
                 MessageBox.Show("Are you want to refresh routes?", "Refresh Routes", MessageBoxButton.OKCancel))
             {
-                return;
-            }
-
-            if ((Application.Current as App).GetIsNetworkAvailable())
-            {
-                // start loading
-                WebClient downloader = new WebClient();
-                Uri uri = new Uri("http://218.90.160.85:9090/bustravelguide/", UriKind.Absolute);
-                downloader.DownloadStringCompleted += new DownloadStringCompletedEventHandler(RoutesDownloaded);
-                downloader.DownloadStringAsync(uri);
+                LoadRoutes();
             }
         }
 

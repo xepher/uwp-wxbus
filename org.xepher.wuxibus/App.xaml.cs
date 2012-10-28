@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.IsolatedStorage;
+﻿using System;
+using System.Collections.Generic;
+using System.Net;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
@@ -21,6 +21,18 @@ namespace org.xepher.wuxibus
         public List<Route> Routes { get; set; }
         public Route SelectedRoute { get; set; }
         public string ViewState { get; set; }
+        private CookieContainer _container;
+        public CookieContainer Container
+        {
+            get
+            {
+                if (_container == null)
+                {
+                    _container = new CookieContainer();
+                }
+                return _container;
+            }
+        }
 
         /// <summary>
         /// Constructor for the Application object.
@@ -62,6 +74,11 @@ namespace org.xepher.wuxibus
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            Object obj = IsolatedStorage.ReadFromFile("Data\\Routes.data", typeof(List<Route>));
+            if (obj != null)
+            {
+                Routes = obj as List<Route>;
+            }
         }
 
         // Code to execute when the application is activated (brought to foreground)
@@ -141,39 +158,5 @@ namespace org.xepher.wuxibus
         }
 
         #endregion
-
-        // 保存到独立存储，同时检查独立存储中的公交线路数目是否更新，如有更新需要写入
-        // todo: 更新独立存储
-        public void SaveToFile(List<Route> routes)
-        {
-            IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
-            if (!isolatedStorageFile.DirectoryExists("Routes"))
-                isolatedStorageFile.CreateDirectory("Routes");
-            using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream("Routes\\Routes.data", FileMode.Create, isolatedStorageFile))
-            {
-                IsolatedStorage.Serialize(stream, routes);
-            }
-        }
-
-        public List<Route> ReadFromFile()
-        {
-            IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
-            if (!isolatedStorageFile.FileExists("Routes\\Routes.data")) return new List<Route>();
-            IsolatedStorageFileStream stream = new IsolatedStorageFileStream("Routes\\Routes.data", FileMode.Open, isolatedStorageFile);
-            List<Route> routes = IsolatedStorage.Deserialize(stream, typeof(List<Route>)) as List<Route>;
-
-            return routes;
-        }
-
-        public bool GetIsNetworkAvailable()
-        {
-            // is there network connection available
-            if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
-            {
-                MessageBox.Show("No network connection available!");
-                return false;
-            }
-            return true;
-        }
     }
 }

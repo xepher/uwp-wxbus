@@ -10,7 +10,7 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    mc:Ignorable="d" d:DesignHeight="696" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -28,7 +28,8 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-        	<ListBox x:Name="stationsList" ItemsSource="{Binding}" Margin="0,0,0,72" SelectionChanged="stationsList_SelectionChanged">
+        	<TextBlock x:Name="txtInformation" TextWrapping="Wrap" d:LayoutOverrides="Width" VerticalAlignment="Top" Height="28" Margin="20,-10,20,0" FontSize="24"/>
+        	<ListBox x:Name="stationsList" ItemsSource="{Binding}" Margin="0,28,0,0" SelectionChanged="stationsList_SelectionChanged">
         		<ListBox.ItemTemplate>
         			<DataTemplate>
         				<Grid Height="50">
@@ -45,15 +46,10 @@
     </Grid>
  
     <!--Sample code showing usage of ApplicationBar-->
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
+    <phone:PhoneApplicationPage.ApplicationBar>
         <shell:ApplicationBar IsVisible="True" IsMenuEnabled="True">
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button1.png" Text="Button 1"/>
-            <shell:ApplicationBarIconButton IconUri="/Images/appbar_button2.png" Text="Button 2"/>
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="MenuItem 1"/>
-                <shell:ApplicationBarMenuItem Text="MenuItem 2"/>
-            </shell:ApplicationBar.MenuItems>
+            <shell:ApplicationBarIconButton Text="Refresh" IconUri="Assets/Icons/dark/appbar.refresh.rest.png" Click="ApplicationBarIconButtonRefresh_Click"/>
         </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
+    </phone:PhoneApplicationPage.ApplicationBar>
 
 </phone:PhoneApplicationPage>

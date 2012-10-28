@@ -14,11 +14,7 @@ namespace org.xepher.wuxibus
         public SearchPage()
         {
             InitializeComponent();
-            //if (NavigationContext.QueryString.Count == 0) return;
-            //if (NavigationContext.QueryString["search"] == "route")
-            //{
-            //    PageTitle.Text = "Route Search";
-            //}
+
             Routes = (Application.Current as App).Routes;
             List<string> source = new List<string>();
             Routes.ForEach(r => source.Add(r.Name));
@@ -35,10 +31,6 @@ namespace org.xepher.wuxibus
             {
                 if ((item as Route).Name.ToString().ToLower().IndexOf(search) >= 0)
                     return true;
-                //List<Route> routes = (List<Route>) item;
-                //var query = routes.Where(r => r.Name.Contains(search));
-                //if (query.Count() > 0)
-                //    return true;
             }
             return false;
         }
