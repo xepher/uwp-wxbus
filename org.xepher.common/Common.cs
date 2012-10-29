@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Linq;
@@ -10,12 +9,12 @@ namespace org.xepher.common
 {
     public class Common
     {
-        public static bool GetIsNetworkAvailable()
+        public static bool GetIsNetworkAvailable(string message)
         {
             // is there network connection available
             if (!System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable())
             {
-                MessageBox.Show("No network connection available!");
+                MessageBox.Show(message);
                 return false;
             }
             return true;
@@ -90,7 +89,6 @@ namespace org.xepher.common
 
             Direction result = directions.FirstOrDefault(d => d.IsSelected);
             result.Stations = stations;
-            result.StationsCount = stations.Count;
 
             return directions;
         }

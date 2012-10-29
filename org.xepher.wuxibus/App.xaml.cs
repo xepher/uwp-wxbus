@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Net;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using org.xepher.common;
+using org.xepher.lang;
 using org.xepher.model;
 
 namespace org.xepher.wuxibus
@@ -39,6 +41,9 @@ namespace org.xepher.wuxibus
         /// </summary>
         public App()
         {
+            // Localization initialization
+            InitializeLanguage();
+
             // Global handler for uncaught exceptions. 
             UnhandledException += Application_UnhandledException;
 
@@ -68,6 +73,16 @@ namespace org.xepher.wuxibus
                 PhoneApplicationService.Current.UserIdleDetectionMode = IdleDetectionMode.Disabled;
             }
 
+        }
+
+        private void InitializeLanguage()
+        {
+            string _lang = AppSettingHelper.GetValueOrDefault("language", string.Empty);
+            if (string.IsNullOrEmpty(_lang))
+            {
+                AppSettingHelper.AddOrUpdateValue("language","zh-cn");
+            }
+            AppResource.Culture = new CultureInfo(_lang);
         }
 
         // Code to execute when the application is launching (eg, from Start)
@@ -143,7 +158,7 @@ namespace org.xepher.wuxibus
 
             // 初始化自定义全局Loading
             GlobalLoading.Instance.Initialize(RootFrame);
-            GlobalLoading.Instance.LoadingText = Resources["LoadingText"].ToString();
+            GlobalLoading.Instance.LoadingText = AppResource.SystemTrayLoadingText;
         }
 
         // Do not add any additional code to this method

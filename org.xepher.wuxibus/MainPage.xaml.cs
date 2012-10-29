@@ -1,11 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using org.xepher.common;
+using org.xepher.lang;
 using org.xepher.model;
 
 namespace org.xepher.wuxibus
@@ -19,24 +22,70 @@ namespace org.xepher.wuxibus
         public MainPage()
         {
             InitializeComponent();
-            LoadRoutes();
+
+            ApplicationBarLocalization();
+
+            Object obj = IsolatedStorage.ReadFromFile(string.Format("Data\\Routes.data"), typeof(List<Route>));
+
+            if (obj == null)
+            {
+                ApplicationBar.IsMenuEnabled = false;
+                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                {
+                    button.IsEnabled = false;
+                }
+
+                Downloader.LoadRoutes(RoutesResponseCallback, (Application.Current as App).Container);
+            }
+            else
+            {
+                routesList.ItemsSource = obj as List<Route>;
+            }
         }
 
-        private void LoadRoutes()
+        private void ApplicationBarLocalization()
         {
-            // GET /bustravelguide/ for all routes
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/");
-            request.Accept = "text/html, application/xhtml+xml, */*";
-            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
-            request.Headers["Accept-Encoding"] = "gzip, deflate";
-            request.Headers["Accept-Language"] = "zh-CN";
-            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
-            
-            request.CookieContainer = (Application.Current as App).Container;
+            ApplicationBar.Buttons.Clear();
+            ApplicationBar.MenuItems.Clear();
 
-            request.BeginGetResponse(RoutesResponseCallback, request);
+            // add buttons
+            ApplicationBarIconButton refreshButton = new ApplicationBarIconButton()
+                                                         {
+                                                             Text = AppResource.ApplicationBarIconButtonRefresh,
+                                                             IconUri =
+                                                                 new Uri("Assets/Icons/dark/appbar.refresh.rest.png",
+                                                                         UriKind.Relative),
+                                                         };
+            refreshButton.Click += new EventHandler(ApplicationBarIconButtonRefresh_Click);
 
-            GlobalLoading.Instance.IsLoading = true;
+            ApplicationBarIconButton searchButton = new ApplicationBarIconButton()
+                                                         {
+                                                             Text = AppResource.ApplicationBarIconButtonSearch,
+                                                             IconUri =
+                                                                 new Uri(
+                                                                 "Assets/Icons/dark/appbar.feature.search.rest.png",
+                                                                 UriKind.Relative)
+                                                         };
+            searchButton.Click += new EventHandler(ApplicationBarIconButtonSearch_Click);
+
+            ApplicationBar.Buttons.Add(refreshButton);
+            ApplicationBar.Buttons.Add(searchButton);
+
+            // add menuitems
+            ApplicationBarMenuItem settingsMenuItem = new ApplicationBarMenuItem()
+            {
+                Text = AppResource.ApplicationBarMenuItemSettings
+            };
+            settingsMenuItem.Click += new EventHandler(ApplicationBarMenuItemSettings_Click);
+
+            ApplicationBarMenuItem aboutMenuItem = new ApplicationBarMenuItem()
+                                                      {
+                                                          Text = AppResource.ApplicationBarMenuItemAbout
+                                                      };
+            aboutMenuItem.Click += new EventHandler(ApplicationBarMenuItemAbout_Click);
+
+            ApplicationBar.MenuItems.Add(settingsMenuItem);
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
         }
 
         private void RoutesResponseCallback(IAsyncResult ar)
@@ -44,16 +93,7 @@ namespace org.xepher.wuxibus
             HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
             HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-            // GET randomming.aspx for Session and Cookies
-            HttpWebRequest requestRandomming = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/randomming.aspx");
-            requestRandomming.Accept = "image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5";
-            requestRandomming.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
-            requestRandomming.CookieContainer = (Application.Current as App).Container;
-            request.Headers["Accept-Encoding"] = "gzip, deflate";
-            request.Headers["Accept-Language"] = "zh-CN";
-            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
-
-            requestRandomming.BeginGetResponse(iar => { }, requestRandomming);
+            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
 
             string result;
 
@@ -80,6 +120,12 @@ namespace org.xepher.wuxibus
                                                IsolatedStorage.SaveToFile((Application.Current as App).Routes,
                                                                           "Data\\Routes.data");
 
+                                               ApplicationBar.IsMenuEnabled = true;
+                                               foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                                               {
+                                                   button.IsEnabled = true;
+                                               }
+
                                                GlobalLoading.Instance.IsLoading = false;
                                            });
             }
@@ -87,22 +133,28 @@ namespace org.xepher.wuxibus
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            if (MessageBoxResult.Cancel == MessageBox.Show("Are you want to exit application?", "Exit Application", MessageBoxButton.OKCancel))
+            if (MessageBoxResult.Cancel == MessageBox.Show(AppResource.MsgExitApplication, AppResource.TitleExitApplication, MessageBoxButton.OKCancel))
             {
                 e.Cancel = true;
             }
-        }
-
-        private void ApplicationBarMenuItemAbout_OnClick(object sender, EventArgs e)
-        {
-            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
 
         private void routesList_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (!_isListBoxDataBinded)
             {
-                (Application.Current as App).SelectedRoute = routesList.SelectedItem as Route;
+                Route selectedRoute = routesList.SelectedItem as Route;
+                if (string.IsNullOrEmpty((Application.Current as App).ViewState))
+                {
+                    object obj = IsolatedStorage.ReadFromFile(string.Format("Data\\{0}.data", selectedRoute.Value),
+                                                              typeof(List<Direction>));
+                    if (obj == null)
+                    {
+                        MessageBox.Show(AppResource.MsgRefreshToken);
+                        return;
+                    }
+                }
+                (Application.Current as App).SelectedRoute = selectedRoute;
                 NavigationService.Navigate(new Uri("/StationsPage.xaml", UriKind.Relative));
             }
         }
@@ -111,9 +163,15 @@ namespace org.xepher.wuxibus
         private void ApplicationBarIconButtonRefresh_Click(object sender, EventArgs e)
         {
             if (MessageBoxResult.OK ==
-                MessageBox.Show("Are you want to refresh routes?", "Refresh Routes", MessageBoxButton.OKCancel))
+                MessageBox.Show(AppResource.MsgRefreshRoutes, AppResource.TitleRefreshRoutes, MessageBoxButton.OKCancel))
             {
-                LoadRoutes();
+                ApplicationBar.IsMenuEnabled = false;
+                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                {
+                    button.IsEnabled = false;
+                }
+
+                Downloader.LoadRoutes(RoutesResponseCallback, (Application.Current as App).Container);
             }
         }
 
@@ -121,6 +179,16 @@ namespace org.xepher.wuxibus
         private void ApplicationBarIconButtonSearch_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/SearchPage.xaml?search=route", UriKind.Relative));
+        }
+
+        private void ApplicationBarMenuItemAbout_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+        }
+
+        private void ApplicationBarMenuItemSettings_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/SettingPage.xaml", UriKind.Relative));
         }
     }
 }

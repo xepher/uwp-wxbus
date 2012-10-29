@@ -9,6 +9,7 @@ using Microsoft.Phone.Controls;
 using System.Linq;
 using Microsoft.Phone.Shell;
 using org.xepher.common;
+using org.xepher.lang;
 using org.xepher.model;
 
 namespace org.xepher.wuxibus
@@ -22,12 +23,14 @@ namespace org.xepher.wuxibus
         private List<Direction> Directions { get; set; }
         private bool _isAddedDirectionButton = false;
         private int _stationCount;
-
+        private ApplicationBarIconButton btnDirection;
         private Direction _direction;
 
         public StationsPage()
         {
             InitializeComponent();
+
+            ApplicationBarLocalization();
 
             Route = (Application.Current as App).SelectedRoute;
             PageTitle.Text = Route.Name;
@@ -36,7 +39,13 @@ namespace org.xepher.wuxibus
 
             if (obj == null)
             {
-                LoadStations();
+                ApplicationBar.IsMenuEnabled = false;
+                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                {
+                    button.IsEnabled = false;
+                }
+
+                Downloader.LoadStations(StationsRequestCallback, (Application.Current as App).Container);
             }
             else
             {
@@ -46,19 +55,7 @@ namespace org.xepher.wuxibus
                 {
                     if (Directions.Count > 1)
                     {
-                        ApplicationBarIconButton button = new ApplicationBarIconButton()
-                                                              {
-                                                                  IconUri =
-                                                                      new Uri(
-                                                                      "Assets/Icons/dark/appbar.next.rest.png",
-                                                                      UriKind.Relative),
-                                                                  IsEnabled = true,
-                                                                  Text = "Direction"
-                                                              };
-
-                        button.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
-
-                        ApplicationBar.Buttons.Add(button);
+                        AddDirectionButton();
                         _isAddedDirectionButton = true;
                     }
                 }
@@ -66,22 +63,55 @@ namespace org.xepher.wuxibus
             }
         }
 
-        private void LoadStations()
+        private void ApplicationBarLocalization()
         {
-            // GET /bustravelguide/ for all routes
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/default.aspx");
-            request.Accept = "text/html, application/xhtml+xml, */*";
-            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
-            request.Headers["Accept-Encoding"] = "gzip, deflate";
-            request.Headers["Accept-Language"] = "zh-CN";
-            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Method = "POST";
-            request.CookieContainer = (Application.Current as App).Container;
+            ApplicationBar.Buttons.Clear();
+            ApplicationBar.MenuItems.Clear();
 
-            request.BeginGetRequestStream(StationsRequestCallback, request);
+            // add buttons
+            ApplicationBarIconButton refreshButton = new ApplicationBarIconButton()
+                                                         {
+                                                             Text = AppResource.ApplicationBarIconButtonRefresh,
+                                                             IconUri =
+                                                                 new Uri("Assets/Icons/dark/appbar.refresh.rest.png",
+                                                                         UriKind.Relative),
+                                                         };
+            refreshButton.Click += new EventHandler(ApplicationBarIconButtonRefresh_Click);
 
-            GlobalLoading.Instance.IsLoading = true;
+            ApplicationBar.Buttons.Add(refreshButton);
+
+            // add menuitems
+            ApplicationBarMenuItem settingsMenuItem = new ApplicationBarMenuItem()
+            {
+                Text = AppResource.ApplicationBarMenuItemSettings
+            };
+            settingsMenuItem.Click += new EventHandler(ApplicationBarMenuItemSettings_Click);
+
+            ApplicationBarMenuItem aboutMenuItem = new ApplicationBarMenuItem()
+                                                       {
+                                                           Text = AppResource.ApplicationBarMenuItemAbout
+                                                       };
+            aboutMenuItem.Click += new EventHandler(ApplicationBarMenuItemAbout_Click);
+
+            ApplicationBar.MenuItems.Add(settingsMenuItem);
+            ApplicationBar.MenuItems.Add(aboutMenuItem);
+        }
+
+        private void AddDirectionButton()
+        {
+            btnDirection = new ApplicationBarIconButton()
+                               {
+                                   IconUri =
+                                       new Uri(
+                                       "Assets/Icons/dark/appbar.next.rest.png",
+                                       UriKind.Relative),
+                                   IsEnabled = true,
+                                   Text = AppResource.ApplicationBarIconButtonDirection
+                               };
+
+            btnDirection.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
+
+            ApplicationBar.Buttons.Add(btnDirection);
         }
 
         private void StationsRequestCallback(IAsyncResult ar)
@@ -104,16 +134,7 @@ namespace org.xepher.wuxibus
             HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
             HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-            // GET randomming.aspx for Session and Cookies
-            HttpWebRequest requestRandomming = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/randomming.aspx");
-            requestRandomming.Accept = "image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5";
-            requestRandomming.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
-            request.Headers["Accept-Encoding"] = "gzip, deflate";
-            request.Headers["Accept-Language"] = "zh-CN";
-            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
-            requestRandomming.CookieContainer = (Application.Current as App).Container;
-
-            requestRandomming.BeginGetResponse(iar => { }, requestRandomming);
+            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
 
             string result;
 
@@ -129,38 +150,16 @@ namespace org.xepher.wuxibus
                                                _isListBoxDataBinded = true;
 
                                                // Resolve Stations
-                                               if (Directions == null)
-                                               {
-                                                   // first load the directions
-                                                   Directions = Common.ResolveStations(result);
-                                               }
-                                               else
-                                               {
-                                                   // switch the direction
-                                                   // save the download stations to current direction
-                                                   Direction newDirection = Common.ResolveStations(result).First(d => d.IsSelected);
-                                                   Directions.First(d => d.Value == newDirection.Value).Stations = newDirection.Stations;
-                                               }
+                                               Directions = Common.ResolveStations(result);
+                                               Direction newDirection = Directions.First(d => d.IsSelected);
 
-                                               stationsList.ItemsSource = Directions.First(d => d.IsSelected).Stations;
+                                               stationsList.ItemsSource = newDirection.Stations;
 
                                                if (!_isAddedDirectionButton)
                                                {
                                                    if (Directions.Count > 1)
                                                    {
-                                                       ApplicationBarIconButton button = new ApplicationBarIconButton()
-                                                                                             {
-                                                                                                 IconUri =
-                                                                                                     new Uri(
-                                                                                                     "Assets/Icons/dark/appbar.next.rest.png",
-                                                                                                     UriKind.Relative),
-                                                                                                 IsEnabled = true,
-                                                                                                 Text = "Direction"
-                                                                                             };
-
-                                                       button.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
-
-                                                       ApplicationBar.Buttons.Add(button);
+                                                       AddDirectionButton();
                                                        _isAddedDirectionButton = true;
                                                    }
                                                }
@@ -169,12 +168,13 @@ namespace org.xepher.wuxibus
                                                stationsList.SelectedIndex = -1;
                                                _isListBoxDataBinded = false;
 
-                                               if (Directions.First(d => d.IsSelected).Stations == null)
+                                               // todo: Async save Stations information
+                                               IsolatedStorage.SaveToFile(Directions, string.Format("Data\\{0}.data", Route.Value));
+
+                                               ApplicationBar.IsMenuEnabled = true;
+                                               foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
                                                {
-                                                   // todo: Async save Stations information
-                                                   IsolatedStorage.SaveToFile(Directions,
-                                                                              string.Format("Data\\{0}.data",
-                                                                                            Route.Value));
+                                                   button.IsEnabled = true;
                                                }
 
                                                GlobalLoading.Instance.IsLoading = false;
@@ -182,31 +182,11 @@ namespace org.xepher.wuxibus
             }
         }
 
-        private void LoadStations(int stationCount)
-        {
-
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/default.aspx");
-            request.Accept = "text/html, application/xhtml+xml, */*";
-            request.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
-            request.Headers["Accept-Encoding"] = "gzip, deflate";
-            request.Headers["Accept-Language"] = "zh-CN";
-            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
-            request.ContentType = "application/x-www-form-urlencoded";
-            request.Method = "POST";
-            request.CookieContainer = (Application.Current as App).Container;
-
-            _stationCount = stationCount;
-
-            request.BeginGetRequestStream(StationDirectionRequestCallback, request);
-
-            GlobalLoading.Instance.IsLoading = true;
-        }
-
         private void StationDirectionRequestCallback(IAsyncResult ar)
         {
             HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
 
-            const string formatString = "__EVENTTARGET=ddlSegment&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&ddlSegment={2}";
+            const string formatString = "__EVENTTARGET=ddlSegment&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&ddlSegment={2}&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=&hidY=";
             string postString = string.Format(formatString, (Application.Current as App).ViewState, Route.Value,
                                               _direction.Value);
 
@@ -217,9 +197,6 @@ namespace org.xepher.wuxibus
                 sb.Append(string.Format("&rpt$ctl{0}$hidSngserialID={1}&rpt$ctl{0}$hidDualserialID={1}",
                                         i < 10 ? "0" + i.ToString() : i.ToString(), i + 1));
             }
-
-            sb.Append(
-                "&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=&hidY=");
 
             byte[] postData = Encoding.UTF8.GetBytes(sb.ToString());
 
@@ -235,16 +212,7 @@ namespace org.xepher.wuxibus
             HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
             HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-            // GET randomming.aspx for Session and Cookies
-            HttpWebRequest requestRandomming = (HttpWebRequest)WebRequest.Create("http://218.90.160.85:9090/bustravelguide/randomming.aspx");
-            requestRandomming.Accept = "image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5";
-            requestRandomming.UserAgent = "Mozilla/5.0 (Windows NT 6.1; rv:16.0) Gecko/20100101 Firefox/16.0 (wbs wp 1.0)";
-            request.Headers["Accept-Encoding"] = "gzip, deflate";
-            request.Headers["Accept-Language"] = "zh-CN";
-            request.Headers["Referer"] = "http://218.90.160.85:9090/bustravelguide/default.aspx";
-            requestRandomming.CookieContainer = (Application.Current as App).Container;
-
-            requestRandomming.BeginGetResponse(iar => { }, requestRandomming);
+            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
 
             string result;
 
@@ -260,39 +228,28 @@ namespace org.xepher.wuxibus
                                                _isListBoxDataBinded = true;
 
                                                // Resolve Stations
-                                               // todo: can't resolve other direction
-                                               if (Directions == null)
+                                               Direction newDirection =
+                                                   Common.ResolveStations(result).First(d => d.IsSelected);
+                                               Direction matchedDirection =
+                                                   Directions.First(d => d.Value == newDirection.Value);
+                                               if (matchedDirection.Stations == null)
                                                {
-                                                   // first load the directions
-                                                   Directions = Common.ResolveStations(result);
-                                               }
-                                               else
-                                               {
-                                                   // switch the direction
-                                                   // save the download stations to current direction
-                                                   Direction newDirection = Common.ResolveStations(result).First(d => d.IsSelected);
-                                                   Directions.First(d => d.Value == newDirection.Value).Stations = newDirection.Stations;
+                                                   matchedDirection.Stations = newDirection.Stations;
+
+                                                   // 设置回默认的线路顺序
+                                                   _direction = Directions.First(d => !d.IsSelected);
+
+                                                   _direction.IsSelected = true;
+                                                   matchedDirection.IsSelected = false;
                                                }
 
-                                               stationsList.ItemsSource = Directions.First(d => d.IsSelected).Stations;
+                                               stationsList.ItemsSource = newDirection.Stations;
 
                                                if (!_isAddedDirectionButton)
                                                {
                                                    if (Directions.Count > 1)
                                                    {
-                                                       ApplicationBarIconButton button = new ApplicationBarIconButton()
-                                                       {
-                                                           IconUri =
-                                                               new Uri(
-                                                               "Assets/Icons/dark/appbar.refresh.rest.png",
-                                                               UriKind.Relative),
-                                                           IsEnabled = true,
-                                                           Text = "Direction"
-                                                       };
-
-                                                       button.Click += new EventHandler(ApplicationBarIconButtonDirection_Click);
-
-                                                       ApplicationBar.Buttons.Add(button);
+                                                       AddDirectionButton();
                                                        _isAddedDirectionButton = true;
                                                    }
                                                }
@@ -301,37 +258,17 @@ namespace org.xepher.wuxibus
                                                stationsList.SelectedIndex = -1;
                                                _isListBoxDataBinded = false;
 
-                                               if (Directions.First(d => d.IsSelected).Stations == null)
+                                               // todo: Async save Stations information
+                                               IsolatedStorage.SaveToFile(Directions, string.Format("Data\\{0}.data", Route.Value));
+
+                                               ApplicationBar.IsMenuEnabled = true;
+                                               foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
                                                {
-                                                   // todo: Async save Stations information
-                                                   IsolatedStorage.SaveToFile(Directions,
-                                                                              string.Format("Data\\{0}.data",
-                                                                                            Route.Value));
+                                                   button.IsEnabled = true;
                                                }
 
                                                GlobalLoading.Instance.IsLoading = false;
                                            });
-            }
-        }
-
-        private void ApplicationBarIconButtonDirection_Click(object sender, EventArgs e)
-        {
-            // 前面添加direction按钮的时候已经检查过是否只有单条线路，所以这里不检查
-            _direction = Directions.First(d => !d.IsSelected);
-            Direction direSelected = Directions.First(d => d.IsSelected);
-
-            _direction.IsSelected = true;
-            direSelected.IsSelected = false;
-
-            // 如果为null表示该route的此方向站点信息并没有收录过，需要访问网络获取
-            if (_direction.Stations == null)
-            {
-                LoadStations(direSelected.StationsCount);
-            }
-            else
-            {
-                stationsList.ItemsSource = _direction.Stations;
-                txtInformation.Text = _direction.Name;
             }
         }
 
@@ -353,12 +290,57 @@ namespace org.xepher.wuxibus
 
         private void ApplicationBarIconButtonRefresh_Click(object sender, EventArgs e)
         {
-            if (MessageBoxResult.Cancel ==
-                MessageBox.Show(string.Format("Are you want to refresh route {0}?", Route.Name), "Refresh Stations", MessageBoxButton.OKCancel))
+            if (MessageBoxResult.OK ==
+                MessageBox.Show(string.Format(AppResource.MsgRefreshStations, Route.Name), AppResource.TitleRefreshStations, MessageBoxButton.OKCancel))
             {
-                return;
+
+                ApplicationBar.IsMenuEnabled = false;
+                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                {
+                    button.IsEnabled = false;
+                }
+
+                Downloader.LoadStations(StationsRequestCallback, (Application.Current as App).Container);
             }
-            LoadStations();
+        }
+
+        private void ApplicationBarIconButtonDirection_Click(object sender, EventArgs e)
+        {
+            // 前面添加direction按钮的时候已经检查过是否只有单条线路，所以这里不检查
+            _direction = Directions.First(d => !d.IsSelected);
+            Direction direSelected = Directions.First(d => d.IsSelected);
+
+            _direction.IsSelected = true;
+            direSelected.IsSelected = false;
+
+            // 如果为null表示该route的此方向站点信息并没有收录过，需要访问网络获取
+            if (_direction.Stations == null)
+            {
+                _stationCount = direSelected.Stations.Count;
+
+                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                {
+                    button.IsEnabled = false;
+                }
+                ApplicationBar.IsMenuEnabled = false;
+
+                Downloader.LoadStations(StationDirectionRequestCallback, (Application.Current as App).Container);
+            }
+            else
+            {
+                stationsList.ItemsSource = _direction.Stations;
+                txtInformation.Text = _direction.Name;
+            }
+        }
+
+        private void ApplicationBarMenuItemAbout_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+        }
+
+        private void ApplicationBarMenuItemSettings_Click(object sender, EventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/SettingPage.xaml", UriKind.Relative));
         }
     }
 }

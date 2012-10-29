@@ -12,7 +12,5 @@ namespace org.xepher.model
         public List<Station> Stations { get; set; }
         // 是否选中
         public bool IsSelected { get; set; }
-        // 站台数
-        public int StationsCount { get; set; }
     }
 }
