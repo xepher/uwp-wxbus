@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{54DE8500-553A-4154-8F73-74377F496464}</ProjectGuid>
+    <ProjectGuid>{9191A7A8-7774-4C48-8C45-76EA19538C1A}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>org.xepher.common</RootNamespace>
-    <AssemblyName>org.xepher.common</AssemblyName>
+    <RootNamespace>org.xepher.control</RootNamespace>
+    <AssemblyName>org.xepher.control</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <TargetFrameworkProfile>WindowsPhone71</TargetFrameworkProfile>
@@ -41,31 +41,15 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Phone" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Net" />
     <Reference Include="mscorlib.extensions" />
-    <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common.cs" />
-    <Compile Include="Downloader.cs" />
-    <Compile Include="GlobalLoading.cs" />
-    <Compile Include="IsolatedStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\org.xepher.lang\org.xepher.lang.csproj">
-      <Project>{7E023168-3AE3-401A-829A-C4243325526B}</Project>
-      <Name>org.xepher.lang</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\org.xepher.model\org.xepher.model.csproj">
-      <Project>{0C51683B-F757-4FA4-8340-43D5DE48E9D2}</Project>
-      <Name>org.xepher.model</Name>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />

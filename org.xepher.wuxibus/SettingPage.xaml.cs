@@ -1,5 +1,4 @@
-﻿using System.Globalization;
-using System.Windows.Controls;
+﻿using System.Windows.Controls;
 using Microsoft.Phone.Controls;
 using org.xepher.lang;
 
@@ -12,6 +11,9 @@ namespace org.xepher.wuxibus
         public SettingPage()
         {
             InitializeComponent();
+
+            InitializeControls();
+
             string lang = AppSettingHelper.GetValueOrDefault("language", "zh-CN");
             for (int index = 0; index < lstPickerLang.Items.Count; index++)
             {
@@ -21,7 +23,17 @@ namespace org.xepher.wuxibus
                     break;
                 }
             }
+
+            lstPickerNetwork.SelectedIndex = AppSettingHelper.GetValueOrDefault("network", 0);
+
             _isListPickerSelected = true;
+        }
+
+        private void InitializeControls()
+        {
+            lstPickerNetwork.Items.Add(AppResource.SettingsNetworkTelecom);
+            lstPickerNetwork.Items.Add(AppResource.SettingsNetworkMobile);
+            lstPickerNetwork.Items.Add(AppResource.SettingsNetworkUnicom);
         }
 
         private void lstPickerLang_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -36,6 +48,25 @@ namespace org.xepher.wuxibus
                     case "zh-CN":
                         AppSettingHelper.AddOrUpdateValue("language", "zh-CN");
                         break;
+                }
+            }
+        }
+
+        private void lstPickerNetwork_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isListPickerSelected)
+            {
+                if (lstPickerNetwork.SelectedItem.ToString() == AppResource.SettingsNetworkTelecom)
+                {
+                    AppSettingHelper.AddOrUpdateValue("network", 0);
+                }
+                if (lstPickerNetwork.SelectedItem.ToString() == AppResource.SettingsNetworkMobile)
+                {
+                    AppSettingHelper.AddOrUpdateValue("network", 1);
+                }
+                if (lstPickerNetwork.SelectedItem.ToString() == AppResource.SettingsNetworkUnicom)
+                {
+                    AppSettingHelper.AddOrUpdateValue("network", 2);
                 }
             }
         }

@@ -31,11 +31,13 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-        	<TextBlock x:Name="txtLang" Margin="12,12,12,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Language:" FontSize="26.667" d:LayoutOverrides="HorizontalMargin"/>
+        	<TextBlock x:Name="txtLang" Margin="12,12,12,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="Language : " FontSize="26.667" d:LayoutOverrides="HorizontalMargin"/>
         	<toolkit:ListPicker x:Name="lstPickerLang" Margin="16,60,16,0" VerticalAlignment="Top" SelectionChanged="lstPickerLang_SelectionChanged" BorderThickness="3" FontSize="25.333">
                 <sys:String>en-US</sys:String>
                 <sys:String>zh-CN</sys:String>
             </toolkit:ListPicker>
+            <TextBlock x:Name="txtNetwork" Margin="12,190,12,0" TextWrapping="Wrap" VerticalAlignment="Top" Text="{Binding Path=LocalizedResources.SettingsNetwork, Source={StaticResource LocalizedStrings}}" FontSize="26.667" d:LayoutOverrides="HorizontalMargin"/>
+            <toolkit:ListPicker x:Name="lstPickerNetwork" Margin="16,230,16,0" VerticalAlignment="Top" SelectionChanged="lstPickerNetwork_SelectionChanged"  BorderThickness="3" FontSize="25.333"></toolkit:ListPicker>
         </Grid>
     </Grid>
  

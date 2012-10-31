@@ -24,11 +24,11 @@ namespace org.xepher.wuxibus
             InitializeComponent();
 
             ApplicationBarLocalization();
+            
+            //Object obj = IsolatedStorage.ReadFromFile(string.Format("Data\\Routes.data"), typeof(List<Route>));
 
-            Object obj = IsolatedStorage.ReadFromFile(string.Format("Data\\Routes.data"), typeof(List<Route>));
-
-            if (obj == null)
-            {
+            //if (obj == null)
+            //{
                 ApplicationBar.IsMenuEnabled = false;
                 foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
                 {
@@ -36,11 +36,11 @@ namespace org.xepher.wuxibus
                 }
 
                 Downloader.LoadRoutes(RoutesResponseCallback, (Application.Current as App).Container);
-            }
-            else
-            {
-                routesList.ItemsSource = obj as List<Route>;
-            }
+            //}
+            //else
+            //{
+            //    routesList.ItemsSource = obj as List<Route>;
+            //}
         }
 
         private void ApplicationBarLocalization()
@@ -99,7 +99,7 @@ namespace org.xepher.wuxibus
 
             using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
             {
-                result = reader.ReadToEnd();
+                (Application.Current as App).RawDefaultHtml = result = reader.ReadToEnd();
                 Dispatcher.BeginInvoke(() =>
                                            {
                                                // viewstate save
@@ -178,6 +178,12 @@ namespace org.xepher.wuxibus
         // navigate to search page
         private void ApplicationBarIconButtonSearch_Click(object sender, EventArgs e)
         {
+            // todo: if you search uncached route, there will throw an exception, because the token is null
+            if (string.IsNullOrEmpty((Application.Current as App).ViewState))
+            {
+                MessageBox.Show(AppResource.MsgRefreshToken);
+                return;
+            }
             NavigationService.Navigate(new Uri("/SearchPage.xaml?search=route", UriKind.Relative));
         }
 
@@ -189,6 +195,13 @@ namespace org.xepher.wuxibus
         private void ApplicationBarMenuItemSettings_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/SettingPage.xaml", UriKind.Relative));
+        }
+
+        private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            _isListBoxDataBinded = true;
+            routesList.SelectedIndex = -1;
+            _isListBoxDataBinded = false;
         }
     }
 }

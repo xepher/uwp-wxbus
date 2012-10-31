@@ -118,81 +118,81 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="ApplicationBarIconButtonDirection" xml:space="preserve">
-    <value>Switch</value>
+    <value>切换</value>
   </data>
   <data name="ApplicationBarIconButtonRefresh" xml:space="preserve">
-    <value>Refresh</value>
+    <value>刷新</value>
   </data>
   <data name="ApplicationBarIconButtonSearch" xml:space="preserve">
-    <value>Search</value>
+    <value>查询</value>
   </data>
   <data name="ApplicationBarMenuItemAbout" xml:space="preserve">
-    <value>About</value>
+    <value>关于</value>
   </data>
   <data name="ApplicationBarMenuItemSettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>设置</value>
   </data>
   <data name="ApplicationTitle" xml:space="preserve">
-    <value>Wuxi Public Transportation Search(WP)</value>
+    <value>无锡公交查询(WP)</value>
   </data>
   <data name="Author" xml:space="preserve">
-    <value>Author : xepher</value>
+    <value>作者 : xepher</value>
   </data>
   <data name="MsgExitApplication" xml:space="preserve">
-    <value>Are you want to exit application?</value>
+    <value>确定退出程序吗？</value>
   </data>
   <data name="MsgNetworkUnavailable" xml:space="preserve">
-    <value>No network connection available!</value>
+    <value>无网络连接！</value>
   </data>
   <data name="MsgRefreshRoutes" xml:space="preserve">
-    <value>Are you want to refresh routes?</value>
+    <value>确定刷新线路吗？</value>
   </data>
   <data name="MsgRefreshStations" xml:space="preserve">
-    <value>Are you want to refresh route {0}?</value>
+    <value>确定刷新 {0} 吗？</value>
   </data>
   <data name="MsgRefreshToken" xml:space="preserve">
-    <value>Please press refresh button to get token first.</value>
+    <value>你当前选中的线路还没有被缓存过，请按刷新按钮来获取令牌然后再查询该线路信息。</value>
   </data>
   <data name="PageAbout" xml:space="preserve">
-    <value>About</value>
+    <value>关于</value>
   </data>
   <data name="PageBusses" xml:space="preserve">
-    <value>Busses</value>
+    <value>车辆</value>
   </data>
   <data name="PageMain" xml:space="preserve">
-    <value>Routes</value>
+    <value>线路</value>
   </data>
   <data name="PageSearch" xml:space="preserve">
-    <value>Search</value>
+    <value>查询</value>
   </data>
   <data name="PageSettings" xml:space="preserve">
-    <value>Settings</value>
+    <value>设置</value>
   </data>
   <data name="PageStations" xml:space="preserve">
-    <value>Stations</value>
+    <value>站台</value>
   </data>
   <data name="SettingsNetwork" xml:space="preserve">
-    <value>Network : </value>
+    <value>网络 : </value>
   </data>
   <data name="SettingsNetworkMobile" xml:space="preserve">
-    <value>ChinaMobile</value>
+    <value>中国移动</value>
   </data>
   <data name="SettingsNetworkTelecom" xml:space="preserve">
-    <value>ChinaTelecom</value>
+    <value>中国电信</value>
   </data>
   <data name="SettingsNetworkUnicom" xml:space="preserve">
-    <value>ChinaUnicom</value>
+    <value>中国联通</value>
   </data>
   <data name="SystemTrayLoadingText" xml:space="preserve">
-    <value>Loading...</value>
+    <value>加载中...</value>
   </data>
   <data name="TitleExitApplication" xml:space="preserve">
-    <value>Exit Application</value>
+    <value>退出程序</value>
   </data>
   <data name="TitleRefreshRoutes" xml:space="preserve">
-    <value>Refresh Routes</value>
+    <value>刷新线路</value>
   </data>
   <data name="TitleRefreshStations" xml:space="preserve">
-    <value>Refresh Stations</value>
+    <value>刷新站台</value>
   </data>
 </root>

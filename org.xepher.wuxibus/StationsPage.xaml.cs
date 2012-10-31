@@ -31,7 +31,7 @@ namespace org.xepher.wuxibus
             InitializeComponent();
 
             ApplicationBarLocalization();
-
+            
             Route = (Application.Current as App).SelectedRoute;
             PageTitle.Text = Route.Name;
 
@@ -50,6 +50,7 @@ namespace org.xepher.wuxibus
             else
             {
                 Directions = (List<Direction>)obj;
+                (Application.Current as App).SelectedDirection = Directions.First(d => d.IsSelected);
                 stationsList.ItemsSource = Directions.First(d => d.IsSelected).Stations;
                 if (!_isAddedDirectionButton)
                 {
@@ -151,7 +152,9 @@ namespace org.xepher.wuxibus
 
                                                // Resolve Stations
                                                Directions = Common.ResolveStations(result);
-                                               Direction newDirection = Directions.First(d => d.IsSelected);
+                                               Direction newDirection =
+                                                   (Application.Current as App).SelectedDirection =
+                                                   Directions.First(d => d.IsSelected);
 
                                                stationsList.ItemsSource = newDirection.Stations;
 
@@ -169,7 +172,9 @@ namespace org.xepher.wuxibus
                                                _isListBoxDataBinded = false;
 
                                                // todo: Async save Stations information
-                                               IsolatedStorage.SaveToFile(Directions, string.Format("Data\\{0}.data", Route.Value));
+                                               IsolatedStorage.SaveToFile(Directions,
+                                                                          string.Format("Data\\{0}.data",
+                                                                                        Route.Value));
 
                                                ApplicationBar.IsMenuEnabled = true;
                                                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
@@ -188,7 +193,7 @@ namespace org.xepher.wuxibus
 
             const string formatString = "__EVENTTARGET=ddlSegment&__EVENTARGUMENT=&__LASTFOCUS=&__VIEWSTATE={0}&txtRandom=&ddlRoute={1}&ddlSegment={2}&hidSngserialIDValue=&hidSngserialIDValueList=&hidJudgeFlg=&hidsngserialID=&hiddualserialID=&hidX=&hidY=";
             string postString = string.Format(formatString, (Application.Current as App).ViewState, Route.Value,
-                                              _direction.Value);
+                                              (Application.Current as App).SelectedDirection.Value);
 
             // add rpt$ctl00$hidSngserialID,rpt$ctl00$hidDualserialID etc
             StringBuilder sb = new StringBuilder(postString);
@@ -259,7 +264,9 @@ namespace org.xepher.wuxibus
                                                _isListBoxDataBinded = false;
 
                                                // todo: Async save Stations information
-                                               IsolatedStorage.SaveToFile(Directions, string.Format("Data\\{0}.data", Route.Value));
+                                               IsolatedStorage.SaveToFile(Directions,
+                                                                          string.Format("Data\\{0}.data",
+                                                                                        Route.Value));
 
                                                ApplicationBar.IsMenuEnabled = true;
                                                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
@@ -276,16 +283,9 @@ namespace org.xepher.wuxibus
         {
             if (!_isListBoxDataBinded)
             {
+                (Application.Current as App).SelectedStation = stationsList.SelectedItem as Station;
+                //NavigationService.Navigate(new Uri("/BussesPage.xaml", UriKind.Relative));
             }
-        }
-
-        // 下载车辆信息
-        private void BusInformationDownloaded(object sender, UploadStringCompletedEventArgs e)
-        {
-            // Resolve Busses
-            List<Bus> busses = Common.ResolveBusses(e.Result);
-
-            GlobalLoading.Instance.IsLoading = false;
         }
 
         private void ApplicationBarIconButtonRefresh_Click(object sender, EventArgs e)
@@ -335,12 +335,23 @@ namespace org.xepher.wuxibus
 
         private void ApplicationBarMenuItemAbout_Click(object sender, EventArgs e)
         {
-            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
+            if (!_isListBoxDataBinded)
+            {
+                (Application.Current as App).SelectedStation = stationsList.SelectedItem as Station;
+                NavigationService.Navigate(new Uri("/BussesPage.xaml", UriKind.Relative));
+            }
         }
 
         private void ApplicationBarMenuItemSettings_Click(object sender, EventArgs e)
         {
             NavigationService.Navigate(new Uri("/SettingPage.xaml", UriKind.Relative));
+        }
+
+        private void PhoneApplicationPage_Loaded(object sender, RoutedEventArgs e)
+        {
+            _isListBoxDataBinded = true;
+            stationsList.SelectedIndex = -1;
+            _isListBoxDataBinded = false;
         }
     }
 }

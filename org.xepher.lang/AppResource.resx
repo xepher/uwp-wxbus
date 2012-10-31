@@ -151,10 +151,13 @@
     <value>确定刷新 {0} 吗？</value>
   </data>
   <data name="MsgRefreshToken" xml:space="preserve">
-    <value>你当前选中的线路还没有被缓存过，请按刷新按钮来获取令牌然后再查询该线路信息。</value>
+    <value>请先按刷新按钮获取令牌。</value>
   </data>
   <data name="PageAbout" xml:space="preserve">
     <value>关于</value>
+  </data>
+  <data name="PageBusses" xml:space="preserve">
+    <value>车辆</value>
   </data>
   <data name="PageMain" xml:space="preserve">
     <value>线路</value>
@@ -167,6 +170,18 @@
   </data>
   <data name="PageStations" xml:space="preserve">
     <value>站台</value>
+  </data>
+  <data name="SettingsNetwork" xml:space="preserve">
+    <value>网络 : </value>
+  </data>
+  <data name="SettingsNetworkMobile" xml:space="preserve">
+    <value>中国移动</value>
+  </data>
+  <data name="SettingsNetworkTelecom" xml:space="preserve">
+    <value>中国电信</value>
+  </data>
+  <data name="SettingsNetworkUnicom" xml:space="preserve">
+    <value>中国联通</value>
   </data>
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>加载中...</value>

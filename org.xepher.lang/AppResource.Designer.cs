@@ -160,7 +160,7 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 你当前选中的线路还没有被缓存过，请按刷新按钮来获取令牌然后再查询该线路信息。.
+        ///   Looks up a localized string similar to 请先按刷新按钮获取令牌。.
         /// </summary>
         public static string MsgRefreshToken {
             get {
@@ -174,6 +174,15 @@ namespace org.xepher.lang {
         public static string PageAbout {
             get {
                 return ResourceManager.GetString("PageAbout", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 车辆.
+        /// </summary>
+        public static string PageBusses {
+            get {
+                return ResourceManager.GetString("PageBusses", resourceCulture);
             }
         }
         
@@ -210,6 +219,42 @@ namespace org.xepher.lang {
         public static string PageStations {
             get {
                 return ResourceManager.GetString("PageStations", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 网络 : .
+        /// </summary>
+        public static string SettingsNetwork {
+            get {
+                return ResourceManager.GetString("SettingsNetwork", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 中国移动.
+        /// </summary>
+        public static string SettingsNetworkMobile {
+            get {
+                return ResourceManager.GetString("SettingsNetworkMobile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 中国电信.
+        /// </summary>
+        public static string SettingsNetworkTelecom {
+            get {
+                return ResourceManager.GetString("SettingsNetworkTelecom", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 中国联通.
+        /// </summary>
+        public static string SettingsNetworkUnicom {
+            get {
+                return ResourceManager.GetString("SettingsNetworkUnicom", resourceCulture);
             }
         }
         

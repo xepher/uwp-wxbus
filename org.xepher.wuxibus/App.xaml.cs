@@ -22,6 +22,9 @@ namespace org.xepher.wuxibus
 
         public List<Route> Routes { get; set; }
         public Route SelectedRoute { get; set; }
+        public Station SelectedStation { get; set; }
+        public Direction SelectedDirection { get; set; }
+        public string RawDefaultHtml { get; set; }
         public string ViewState { get; set; }
         private CookieContainer _container;
         public CookieContainer Container
