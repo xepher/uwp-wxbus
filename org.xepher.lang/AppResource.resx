@@ -142,7 +142,7 @@
     <value>确定退出程序吗？</value>
   </data>
   <data name="MsgNetworkUnavailable" xml:space="preserve">
-    <value>无网络连接！</value>
+    <value>无网络连接！请确认网络连接后重启客户端！</value>
   </data>
   <data name="MsgRefreshRoutes" xml:space="preserve">
     <value>确定刷新线路吗？</value>
@@ -151,7 +151,7 @@
     <value>确定刷新 {0} 吗？</value>
   </data>
   <data name="MsgRefreshToken" xml:space="preserve">
-    <value>请先按刷新按钮获取令牌。</value>
+    <value>你当前选中的线路还没有被缓存过，请按刷新按钮来获取令牌然后再查询该线路信息。</value>
   </data>
   <data name="PageAbout" xml:space="preserve">
     <value>关于</value>

@@ -24,14 +24,13 @@ namespace org.xepher.wuxibus
         private bool _isAddedDirectionButton = false;
         private int _stationCount;
         private ApplicationBarIconButton btnDirection;
-        private Direction _direction;
 
         public StationsPage()
         {
             InitializeComponent();
 
             ApplicationBarLocalization();
-            
+
             Route = (Application.Current as App).SelectedRoute;
             PageTitle.Text = Route.Name;
 
@@ -45,7 +44,8 @@ namespace org.xepher.wuxibus
                     button.IsEnabled = false;
                 }
 
-                Downloader.LoadStations(StationsRequestCallback, (Application.Current as App).Container);
+                if (Common.GetIsNetworkAvailable(AppResource.MsgNetworkUnavailable))
+                    Downloader.LoadStations(StationsRequestCallback, (Application.Current as App).Container);
             }
             else
             {
@@ -83,9 +83,9 @@ namespace org.xepher.wuxibus
 
             // add menuitems
             ApplicationBarMenuItem settingsMenuItem = new ApplicationBarMenuItem()
-            {
-                Text = AppResource.ApplicationBarMenuItemSettings
-            };
+                                                          {
+                                                              Text = AppResource.ApplicationBarMenuItemSettings
+                                                          };
             settingsMenuItem.Click += new EventHandler(ApplicationBarMenuItemSettings_Click);
 
             ApplicationBarMenuItem aboutMenuItem = new ApplicationBarMenuItem()
@@ -132,58 +132,67 @@ namespace org.xepher.wuxibus
 
         private void StationsResponseCallback(IAsyncResult ar)
         {
-            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
-
-            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
-
-            string result;
-
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            try
             {
-                result = reader.ReadToEnd();
+                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-                // viewstate save
-                (Application.Current as App).ViewState = Common.GetViewState(result);
+                Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
 
-                Dispatcher.BeginInvoke(() =>
-                                           {
-                                               _isListBoxDataBinded = true;
+                string result;
 
-                                               // Resolve Stations
-                                               Directions = Common.ResolveStations(result);
-                                               Direction newDirection =
-                                                   (Application.Current as App).SelectedDirection =
-                                                   Directions.First(d => d.IsSelected);
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
 
-                                               stationsList.ItemsSource = newDirection.Stations;
+                    // viewstate save
+                    (Application.Current as App).ViewState = Common.GetViewState(result);
 
-                                               if (!_isAddedDirectionButton)
-                                               {
-                                                   if (Directions.Count > 1)
-                                                   {
-                                                       AddDirectionButton();
-                                                       _isAddedDirectionButton = true;
-                                                   }
-                                               }
-                                               txtInformation.Text = Directions.First(d => d.IsSelected).Name;
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        _isListBoxDataBinded = true;
 
-                                               stationsList.SelectedIndex = -1;
-                                               _isListBoxDataBinded = false;
+                        // Resolve Stations
+                        Directions = Common.ResolveStations(result);
+                        Direction newDirection =
+                            (Application.Current as App).SelectedDirection =
+                            Directions.First(d => d.IsSelected);
 
-                                               // todo: Async save Stations information
-                                               IsolatedStorage.SaveToFile(Directions,
-                                                                          string.Format("Data\\{0}.data",
-                                                                                        Route.Value));
+                        stationsList.ItemsSource = newDirection.Stations;
 
-                                               ApplicationBar.IsMenuEnabled = true;
-                                               foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
-                                               {
-                                                   button.IsEnabled = true;
-                                               }
+                        if (!_isAddedDirectionButton)
+                        {
+                            if (Directions.Count > 1)
+                            {
+                                AddDirectionButton();
+                                _isAddedDirectionButton = true;
+                            }
+                        }
+                        txtInformation.Text = Directions.First(d => d.IsSelected).Name;
 
-                                               GlobalLoading.Instance.IsLoading = false;
-                                           });
+                        stationsList.SelectedIndex = -1;
+                        _isListBoxDataBinded = false;
+
+                        // todo: Async save Stations information
+                        IsolatedStorage.SaveToFile(Directions,
+                                                   string.Format("Data\\{0}.data",
+                                                                 Route.Value));
+
+                        ApplicationBar.IsMenuEnabled = true;
+                        foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                        {
+                            button.IsEnabled = true;
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.BeginInvoke(() => MessageBox.Show(ex.Message));
+            }
+            finally
+            {
+                Dispatcher.BeginInvoke(() => GlobalLoading.Instance.IsLoading = false);
             }
         }
 
@@ -214,68 +223,68 @@ namespace org.xepher.wuxibus
 
         private void StationDirectionResponseCallback(IAsyncResult ar)
         {
-            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
-
-            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
-
-            string result;
-
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            try
             {
-                result = reader.ReadToEnd();
+                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-                // viewstate save
-                (Application.Current as App).ViewState = Common.GetViewState(result);
+                Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
 
-                Dispatcher.BeginInvoke(() =>
-                                           {
-                                               _isListBoxDataBinded = true;
+                string result;
 
-                                               // Resolve Stations
-                                               Direction newDirection =
-                                                   Common.ResolveStations(result).First(d => d.IsSelected);
-                                               Direction matchedDirection =
-                                                   Directions.First(d => d.Value == newDirection.Value);
-                                               if (matchedDirection.Stations == null)
-                                               {
-                                                   matchedDirection.Stations = newDirection.Stations;
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
 
-                                                   // 设置回默认的线路顺序
-                                                   _direction = Directions.First(d => !d.IsSelected);
+                    // viewstate save
+                    (Application.Current as App).ViewState = Common.GetViewState(result);
 
-                                                   _direction.IsSelected = true;
-                                                   matchedDirection.IsSelected = false;
-                                               }
+                    // Resolve Stations
+                    Direction newDirection = Common.ResolveStations(result).First(d => d.Value == (Application.Current as App).SelectedDirection.Value);
+                    Direction matchedDirection = Directions.First(d => d.Value == newDirection.Value);
+                    if (matchedDirection.Stations == null)
+                    {
+                        matchedDirection.Stations = newDirection.Stations;
+                    }
 
-                                               stationsList.ItemsSource = newDirection.Stations;
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        _isListBoxDataBinded = true;
 
-                                               if (!_isAddedDirectionButton)
-                                               {
-                                                   if (Directions.Count > 1)
-                                                   {
-                                                       AddDirectionButton();
-                                                       _isAddedDirectionButton = true;
-                                                   }
-                                               }
-                                               txtInformation.Text = Directions.First(d => d.IsSelected).Name;
+                        stationsList.ItemsSource = newDirection.Stations;
+                        txtInformation.Text = newDirection.Name;
 
-                                               stationsList.SelectedIndex = -1;
-                                               _isListBoxDataBinded = false;
+                        if (!_isAddedDirectionButton)
+                        {
+                            if (Directions.Count > 1)
+                            {
+                                AddDirectionButton();
+                                _isAddedDirectionButton = true;
+                            }
+                        }
 
-                                               // todo: Async save Stations information
-                                               IsolatedStorage.SaveToFile(Directions,
-                                                                          string.Format("Data\\{0}.data",
-                                                                                        Route.Value));
+                        stationsList.SelectedIndex = -1;
+                        _isListBoxDataBinded = false;
 
-                                               ApplicationBar.IsMenuEnabled = true;
-                                               foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
-                                               {
-                                                   button.IsEnabled = true;
-                                               }
 
-                                               GlobalLoading.Instance.IsLoading = false;
-                                           });
+                        ApplicationBar.IsMenuEnabled = true;
+                        foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                        {
+                            button.IsEnabled = true;
+                        }
+                    });
+
+                    // todo: Async save Stations information
+                    IsolatedStorage.SaveToFile(Directions, string.Format("Data\\{0}.data", Route.Value));
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.BeginInvoke(() => MessageBox.Show(ex.Message));
+            }
+            finally
+            {
+                Dispatcher.BeginInvoke(() => GlobalLoading.Instance.IsLoading = false);
             }
         }
 
@@ -300,21 +309,22 @@ namespace org.xepher.wuxibus
                     button.IsEnabled = false;
                 }
 
-                Downloader.LoadStations(StationsRequestCallback, (Application.Current as App).Container);
+                if (Common.GetIsNetworkAvailable(AppResource.MsgNetworkUnavailable))
+                    Downloader.LoadStations(StationsRequestCallback, (Application.Current as App).Container);
             }
         }
 
         private void ApplicationBarIconButtonDirection_Click(object sender, EventArgs e)
         {
             // 前面添加direction按钮的时候已经检查过是否只有单条线路，所以这里不检查
-            _direction = Directions.First(d => !d.IsSelected);
+            (Application.Current as App).SelectedDirection = Directions.First(d => !d.IsSelected);
             Direction direSelected = Directions.First(d => d.IsSelected);
 
-            _direction.IsSelected = true;
+            (Application.Current as App).SelectedDirection.IsSelected = true;
             direSelected.IsSelected = false;
 
             // 如果为null表示该route的此方向站点信息并没有收录过，需要访问网络获取
-            if (_direction.Stations == null)
+            if ((Application.Current as App).SelectedDirection.Stations == null)
             {
                 _stationCount = direSelected.Stations.Count;
 
@@ -324,22 +334,19 @@ namespace org.xepher.wuxibus
                 }
                 ApplicationBar.IsMenuEnabled = false;
 
-                Downloader.LoadStations(StationDirectionRequestCallback, (Application.Current as App).Container);
+                if (Common.GetIsNetworkAvailable(AppResource.MsgNetworkUnavailable))
+                    Downloader.LoadStations(StationDirectionRequestCallback, (Application.Current as App).Container);
             }
             else
             {
-                stationsList.ItemsSource = _direction.Stations;
-                txtInformation.Text = _direction.Name;
+                stationsList.ItemsSource = (Application.Current as App).SelectedDirection.Stations;
+                txtInformation.Text = (Application.Current as App).SelectedDirection.Name;
             }
         }
 
         private void ApplicationBarMenuItemAbout_Click(object sender, EventArgs e)
         {
-            if (!_isListBoxDataBinded)
-            {
-                (Application.Current as App).SelectedStation = stationsList.SelectedItem as Station;
-                NavigationService.Navigate(new Uri("/BussesPage.xaml", UriKind.Relative));
-            }
+            NavigationService.Navigate(new Uri("/AboutPage.xaml", UriKind.Relative));
         }
 
         private void ApplicationBarMenuItemSettings_Click(object sender, EventArgs e)

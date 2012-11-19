@@ -142,7 +142,7 @@
     <value>Are you want to exit application?</value>
   </data>
   <data name="MsgNetworkUnavailable" xml:space="preserve">
-    <value>No network connection available!</value>
+    <value>No network connection available!Confirm your network settings and restart application!</value>
   </data>
   <data name="MsgRefreshRoutes" xml:space="preserve">
     <value>Are you want to refresh routes?</value>

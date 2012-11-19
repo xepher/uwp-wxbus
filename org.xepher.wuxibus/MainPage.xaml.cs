@@ -24,17 +24,18 @@ namespace org.xepher.wuxibus
             InitializeComponent();
 
             ApplicationBarLocalization();
-            
+
             //Object obj = IsolatedStorage.ReadFromFile(string.Format("Data\\Routes.data"), typeof(List<Route>));
 
             //if (obj == null)
             //{
-                ApplicationBar.IsMenuEnabled = false;
-                foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
-                {
-                    button.IsEnabled = false;
-                }
+            ApplicationBar.IsMenuEnabled = false;
+            foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+            {
+                button.IsEnabled = false;
+            }
 
+            if (Common.GetIsNetworkAvailable(AppResource.MsgNetworkUnavailable))
                 Downloader.LoadRoutes(RoutesResponseCallback, (Application.Current as App).Container);
             //}
             //else
@@ -90,44 +91,53 @@ namespace org.xepher.wuxibus
 
         private void RoutesResponseCallback(IAsyncResult ar)
         {
-            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
-
-            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
-
-            string result;
-
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            try
             {
-                (Application.Current as App).RawDefaultHtml = result = reader.ReadToEnd();
-                Dispatcher.BeginInvoke(() =>
-                                           {
-                                               // viewstate save
-                                               (Application.Current as App).ViewState = Common.GetViewState(result);
+                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-                                               _isListBoxDataBinded = true;
+                Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
 
-                                               // Resolve Routes
-                                               // todo:比较 (Application.Current as App).Routes 与 Common.ResolveRoutes(e.Result) 是否一样
-                                               // 不一样需要将Common.ResolveRoutes(e.Result)写入
-                                               routesList.ItemsSource =
-                                                   (Application.Current as App).Routes = Common.ResolveRoutes(result);
+                string result;
 
-                                               routesList.SelectedIndex = -1;
-                                               _isListBoxDataBinded = false;
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    (Application.Current as App).RawDefaultHtml = result = reader.ReadToEnd();
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        // viewstate save
+                        (Application.Current as App).ViewState = Common.GetViewState(result);
 
-                                               // todo: Async save Routes information
-                                               IsolatedStorage.SaveToFile((Application.Current as App).Routes,
-                                                                          "Data\\Routes.data");
+                        _isListBoxDataBinded = true;
 
-                                               ApplicationBar.IsMenuEnabled = true;
-                                               foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
-                                               {
-                                                   button.IsEnabled = true;
-                                               }
+                        // Resolve Routes
+                        // todo:比较 (Application.Current as App).Routes 与 Common.ResolveRoutes(e.Result) 是否一样
+                        // 不一样需要将Common.ResolveRoutes(e.Result)写入
+                        routesList.ItemsSource =
+                            (Application.Current as App).Routes = Common.ResolveRoutes(result);
 
-                                               GlobalLoading.Instance.IsLoading = false;
-                                           });
+                        routesList.SelectedIndex = -1;
+                        _isListBoxDataBinded = false;
+
+                        // todo: Async save Routes information
+                        IsolatedStorage.SaveToFile((Application.Current as App).Routes,
+                                                   "Data\\Routes.data");
+
+                        ApplicationBar.IsMenuEnabled = true;
+                        foreach (ApplicationBarIconButton button in ApplicationBar.Buttons)
+                        {
+                            button.IsEnabled = true;
+                        }
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.BeginInvoke(() => MessageBox.Show(ex.Message));
+            }
+            finally
+            {
+                Dispatcher.BeginInvoke(() => GlobalLoading.Instance.IsLoading = false);
             }
         }
 
@@ -171,14 +181,14 @@ namespace org.xepher.wuxibus
                     button.IsEnabled = false;
                 }
 
-                Downloader.LoadRoutes(RoutesResponseCallback, (Application.Current as App).Container);
+                if (Common.GetIsNetworkAvailable(AppResource.MsgNetworkUnavailable))
+                    Downloader.LoadRoutes(RoutesResponseCallback, (Application.Current as App).Container);
             }
         }
 
         // navigate to search page
         private void ApplicationBarIconButtonSearch_Click(object sender, EventArgs e)
         {
-            // todo: if you search uncached route, there will throw an exception, because the token is null
             if (string.IsNullOrEmpty((Application.Current as App).ViewState))
             {
                 MessageBox.Show(AppResource.MsgRefreshToken);

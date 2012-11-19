@@ -133,7 +133,7 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 无网络连接！.
+        ///   Looks up a localized string similar to 无网络连接！请确认网络连接后重启客户端！.
         /// </summary>
         public static string MsgNetworkUnavailable {
             get {
@@ -160,7 +160,7 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 请先按刷新按钮获取令牌。.
+        ///   Looks up a localized string similar to 你当前选中的线路还没有被缓存过，请按刷新按钮来获取令牌然后再查询该线路信息。.
         /// </summary>
         public static string MsgRefreshToken {
             get {

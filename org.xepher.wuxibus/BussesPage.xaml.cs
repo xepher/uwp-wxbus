@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Windows;
 using Microsoft.Phone.Controls;
 using org.xepher.common;
+using org.xepher.lang;
 using org.xepher.model;
 
 namespace org.xepher.wuxibus
@@ -16,10 +16,10 @@ namespace org.xepher.wuxibus
         private Route Route { get; set; }
         private Station Station { get; set; }
         private Direction Direction { get; set; }
-        private List<Bus> Busses { get; set; }
+        //private List<Bus> Busses { get; set; }
         private List<string> _paramsList;
         private string _randomming;
-        public static ManualResetEvent allDone = new ManualResetEvent(false);
+        //public static ManualResetEvent allDone = new ManualResetEvent(false);
 
         public BussesPage()
         {
@@ -29,7 +29,8 @@ namespace org.xepher.wuxibus
             Station = (Application.Current as App).SelectedStation;
             Direction = (Application.Current as App).SelectedDirection;
 
-            Downloader.LoadBusses(BussesPreRequestCallback, (Application.Current as App).Container);
+            if (Common.GetIsNetworkAvailable(AppResource.MsgNetworkUnavailable))
+                Downloader.LoadBusses(BussesPreRequestCallback, (Application.Current as App).Container);
         }
 
         private void BussesPreRequestCallback(IAsyncResult ar)
@@ -59,37 +60,46 @@ namespace org.xepher.wuxibus
 
         private void BussesPreResponseCallback(IAsyncResult ar)
         {
-            HttpWebRequest preRequest = (HttpWebRequest)ar.AsyncState;
-            HttpWebResponse preResponse = (HttpWebResponse)preRequest.EndGetResponse(ar);
-
-            Downloader.GetRandomming(iar =>
-                                         {
-                                             HttpWebRequest request = (HttpWebRequest)iar.AsyncState;
-                                             HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(iar);
-
-                                             _randomming = response.Cookies["CheckCode"].ToString();
-                                         }, (Application.Current as App).Container);
-
-            string result;
-
-            using (StreamReader reader = new StreamReader(preResponse.GetResponseStream(), Encoding.UTF8))
+            try
             {
-                result = reader.ReadToEnd();
+                HttpWebRequest preRequest = (HttpWebRequest)ar.AsyncState;
+                HttpWebResponse preResponse = (HttpWebResponse)preRequest.EndGetResponse(ar);
 
-                // viewstate save
-                (Application.Current as App).ViewState = Common.GetViewState(result);
+                Downloader.GetRandomming(iar =>
+                {
+                    HttpWebRequest request = (HttpWebRequest)iar.AsyncState;
+                    HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(iar);
 
-                _paramsList = Common.GetParamsList(result);
+                    _randomming = response.Cookies["CheckCode"].ToString();
+                }, (Application.Current as App).Container);
 
-                Dispatcher.BeginInvoke(() =>
-                                           {
-                                               StringBuilder sb = new StringBuilder();
-                                               _paramsList.ForEach(p => sb.Append(p).Append("|"));
+                string result;
 
-                                               txtData.Text = sb.ToString();
+                using (StreamReader reader = new StreamReader(preResponse.GetResponseStream(), Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
 
-                                               GlobalLoading.Instance.IsLoading = false;
-                                           });
+                    // viewstate save
+                    (Application.Current as App).ViewState = Common.GetViewState(result);
+
+                    _paramsList = Common.GetParamsList(result);
+
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        StringBuilder sb = new StringBuilder();
+                        _paramsList.ForEach(p => sb.Append(p).Append("|"));
+
+                        txtData.Text = sb.ToString();
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.BeginInvoke(() => MessageBox.Show(ex.Message));
+            }
+            finally
+            {
+                Dispatcher.BeginInvoke(() => GlobalLoading.Instance.IsLoading = false);
             }
         }
 
@@ -122,26 +132,37 @@ namespace org.xepher.wuxibus
 
         private void BussesResponseCallback(IAsyncResult ar)
         {
-            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-            HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
-
-            Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
-
-            string result;
-
-            using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+            try
             {
-                result = reader.ReadToEnd();
-                Dispatcher.BeginInvoke(() =>
-                                           {
-                                               // viewstate save
-                                               (Application.Current as App).ViewState = Common.GetViewState(result);
+                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
+                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
 
-                                               List<Bus> busses = Common.ResolveBusses(result);
-                                               MessageBox.Show("Bus ID: " + busses[0].ID + " Station: " +
-                                                               busses[0].Station + " Time: " + busses[0].Time + " TTL: " +
-                                                               busses[0].TTL);
-                                           });
+                Downloader.GetRandomming(iar => { }, (Application.Current as App).Container);
+
+                string result;
+
+                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
+                {
+                    result = reader.ReadToEnd();
+                    Dispatcher.BeginInvoke(() =>
+                    {
+                        // viewstate save
+                        (Application.Current as App).ViewState = Common.GetViewState(result);
+
+                        List<Bus> busses = Common.ResolveBusses(result);
+                        MessageBox.Show("Bus ID: " + busses[0].ID + " Station: " +
+                                        busses[0].Station + " Time: " + busses[0].Time + " TTL: " +
+                                        busses[0].TTL);
+                    });
+                }
+            }
+            catch (Exception ex)
+            {
+                Dispatcher.BeginInvoke(() => MessageBox.Show(ex.Message));
+            }
+            finally
+            {
+                Dispatcher.BeginInvoke(() => GlobalLoading.Instance.IsLoading = false);
             }
         }
 
