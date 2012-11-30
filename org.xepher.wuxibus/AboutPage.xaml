@@ -30,7 +30,9 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
             <Image Margin="150,50,150,350" Source="/ApplicationIcon.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBlock Height="24" Margin="50,200,50,0" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Top" FontSize="20" HorizontalAlignment="Center"/>
-            <TextBlock Height="24" Margin="75,0,75,250" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.Author, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="18.667"/>
+            <TextBlock Height="24" Margin="75,0,75,320" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.Author, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="18.667"/>
+            <Button x:Name="btnMarketPlace" Content="Button" Margin="100,0,100,200" VerticalAlignment="Bottom" Click="btnMarketPlace_Click" />
+            <Button x:Name="btnDonate" Content="Button" Margin="100,0,100,110" VerticalAlignment="Bottom" IsEnabled="False" />
         </Grid>
     </Grid>
 

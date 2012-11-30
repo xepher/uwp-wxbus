@@ -293,7 +293,7 @@ namespace org.xepher.wuxibus
             if (!_isListBoxDataBinded)
             {
                 (Application.Current as App).SelectedStation = stationsList.SelectedItem as Station;
-                //NavigationService.Navigate(new Uri("/BussesPage.xaml", UriKind.Relative));
+                NavigationService.Navigate(new Uri("/BusesPage.xaml", UriKind.Relative));
             }
         }
 

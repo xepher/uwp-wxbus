@@ -61,6 +61,24 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 捐助.
+        /// </summary>
+        public static string AboutBtnDonate {
+            get {
+                return ResourceManager.GetString("AboutBtnDonate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 亲！给个好评吧。.
+        /// </summary>
+        public static string AboutBtnMarketPlace {
+            get {
+                return ResourceManager.GetString("AboutBtnMarketPlace", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 切换.
         /// </summary>
         public static string ApplicationBarIconButtonDirection {
@@ -124,6 +142,42 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 车辆：.
+        /// </summary>
+        public static string BusBusID {
+            get {
+                return ResourceManager.GetString("BusBusID", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 当前位置：.
+        /// </summary>
+        public static string BusStation {
+            get {
+                return ResourceManager.GetString("BusStation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 到达时间：.
+        /// </summary>
+        public static string BusTime {
+            get {
+                return ResourceManager.GetString("BusTime", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 距离：.
+        /// </summary>
+        public static string BusTTL {
+            get {
+                return ResourceManager.GetString("BusTTL", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 确定退出程序吗？.
         /// </summary>
         public static string MsgExitApplication {
@@ -180,9 +234,9 @@ namespace org.xepher.lang {
         /// <summary>
         ///   Looks up a localized string similar to 车辆.
         /// </summary>
-        public static string PageBusses {
+        public static string PageBuses {
             get {
-                return ResourceManager.GetString("PageBusses", resourceCulture);
+                return ResourceManager.GetString("PageBuses", resourceCulture);
             }
         }
         
@@ -264,6 +318,15 @@ namespace org.xepher.lang {
         public static string SystemTrayLoadingText {
             get {
                 return ResourceManager.GetString("SystemTrayLoadingText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 由于官网验证码问题，首次查询不到车辆信息的时候并不会显示下一班班车发车时间，请返回再查询一次。.
+        /// </summary>
+        public static string TipEmptyInfo {
+            get {
+                return ResourceManager.GetString("TipEmptyInfo", resourceCulture);
             }
         }
         

@@ -138,6 +138,18 @@
   <data name="Author" xml:space="preserve">
     <value>作者 : xepher</value>
   </data>
+  <data name="BusBusID" xml:space="preserve">
+    <value>车辆：</value>
+  </data>
+  <data name="BusStation" xml:space="preserve">
+    <value>当前位置：</value>
+  </data>
+  <data name="BusTime" xml:space="preserve">
+    <value>到达时间：</value>
+  </data>
+  <data name="BusTTL" xml:space="preserve">
+    <value>距离：</value>
+  </data>
   <data name="MsgExitApplication" xml:space="preserve">
     <value>确定退出程序吗？</value>
   </data>
@@ -156,7 +168,7 @@
   <data name="PageAbout" xml:space="preserve">
     <value>关于</value>
   </data>
-  <data name="PageBusses" xml:space="preserve">
+  <data name="PageBuses" xml:space="preserve">
     <value>车辆</value>
   </data>
   <data name="PageMain" xml:space="preserve">
@@ -186,6 +198,9 @@
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>加载中...</value>
   </data>
+  <data name="TipEmptyInfo" xml:space="preserve">
+    <value>由于官网验证码问题，首次查询不到车辆信息的时候并不会显示下一班班车发车时间，请返回再查询一次。</value>
+  </data>
   <data name="TitleExitApplication" xml:space="preserve">
     <value>退出程序</value>
   </data>
@@ -194,5 +209,11 @@
   </data>
   <data name="TitleRefreshStations" xml:space="preserve">
     <value>刷新站台</value>
+  </data>
+  <data name="AboutBtnDonate" xml:space="preserve">
+    <value>捐助</value>
+  </data>
+  <data name="AboutBtnMarketPlace" xml:space="preserve">
+    <value>亲！给个好评吧。</value>
   </data>
 </root>

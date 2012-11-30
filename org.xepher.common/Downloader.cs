@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net;
+using System.Threading;
 using org.xepher.lang;
 
 namespace org.xepher.common
@@ -68,12 +69,12 @@ namespace org.xepher.common
 
             request.CookieContainer = container;
 
-            request.BeginGetResponse(iar => { }, request);
-        }
+            request.BeginGetResponse(asyncCallback, request);
+        }        
 
-        public static void LoadBusses(AsyncCallback asyncCallback, CookieContainer container)
+        public static void LoadBuses(AsyncCallback asyncCallback, CookieContainer container)
         {
-            // GET /bustravelguide/ for all busses
+            // GET /bustravelguide/ for all buses
             HttpWebRequest request =
                 (HttpWebRequest)
                 WebRequest.Create(string.Format(DEFAULT_PAGE, GetISP(AppSettingHelper.GetValueOrDefault("network", 0))));
@@ -84,8 +85,6 @@ namespace org.xepher.common
             request.CookieContainer = container;
 
             request.BeginGetRequestStream(asyncCallback, request);
-
-            GlobalLoading.Instance.IsLoading = true;
         }
     }
 }

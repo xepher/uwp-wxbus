@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.Windows;
 using System.Linq;
+using org.xepher.lang;
 using org.xepher.model;
 
 namespace org.xepher.common
@@ -134,85 +135,43 @@ namespace org.xepher.common
         }
 
         // 解析页面获得车辆信息
-        public static List<Bus> ResolveBusses(string rawhtml)
+        public static List<Bus> ResolveBuses(string rawhtml,ref string gvInfo)
         {
-            int iBegin =
-                rawhtml.IndexOf(
-                    "<table id=\"gv\" cellspacing=\"0\" border=\"1\" style=\"width:100%;border-collapse:collapse;\" rules=\"all\">");
+            int iBegin = rawhtml.IndexOf("<tr class=\"td_gridView_header\">");
+            if (iBegin == -1)
+            {
+                string patternInfo = "<span id=\"lblgvInfo\" style=\"color:Red;\">([^<]*)</span>";
+                Regex regexInfo = new Regex(patternInfo, RegexOptions.IgnoreCase);
+                MatchCollection collectionInfo = regexInfo.Matches(rawhtml);
+                gvInfo = collectionInfo[0].Groups[1].Value;
+                if (string.IsNullOrEmpty(gvInfo))
+                    gvInfo = AppResource.TipEmptyInfo;
+                return null;
+            }
             string temphtml = rawhtml.Substring(iBegin);
             int iEnd = iBegin + temphtml.IndexOf("</table>") + 8;
             string RawBusInfo = rawhtml.Substring(iBegin, iEnd - iBegin);
 
-            string pattern =
-                "<img style=\"border-width:0px;\" src=\"Image/bus.gif\" id=\"gv_ctl([^_]*)_imgBus\">                                            </td><td>([^<]*)</td><td>([^<]*)</td><td>([^<]*)</td><td>([^<]*)</td>";
+            string pattern = "<td>([^<]*)</td><td>([^<]*)</td><td>([^<]*)</td><td>([^<]*)</td>";
             Regex regex = new Regex(pattern, RegexOptions.IgnoreCase);
 
             MatchCollection collection = regex.Matches(RawBusInfo);
 
-            List<Bus> busses = new List<Bus>();
+            List<Bus> buses = new List<Bus>();
 
             foreach (Match match in collection)
             {
                 Bus bus = new Bus()
                                 {
-                                    ID = int.Parse(match.Groups[2].Value),
-                                    Station = match.Groups[3].Value,
-                                    Time = Convert.ToDateTime(match.Groups[4].Value.Trim()),
-                                    TTL = int.Parse(match.Groups[5].Value)
+                                    ID = int.Parse(match.Groups[1].Value),
+                                    Station = match.Groups[2].Value,
+                                    Time = Convert.ToDateTime(match.Groups[3].Value.Trim()),
+                                    TTL = int.Parse(match.Groups[4].Value)
                                 };
-                busses.Add(bus);
+                buses.Add(bus);
             }
 
-            return busses;
-        }
-
-        public static List<string> GetParamsList(string rawhtml)
-        {
-            List<string> paramsList = new List<string>();
-
-            //<input id="hidSngserialIDValue" type="hidden" value="3" name="hidSngserialIDValue">
-            string sngserialIDValuePattern = "<input type=\"hidden\" name=\"hidSngserialIDValue\" id=\"hidSngserialIDValue\" value=\"([^<]*)\" />";
-            Regex regex = new Regex(sngserialIDValuePattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            //<input id="hidSngserialIDValueList" type="hidden" value="2" name="hidSngserialIDValueList">
-            string hidSngserialIDValueListPattern = "<input id=\"hidSngserialIDValueList\" type=\"hidden\" value=\"([^<]*)\" name=\"hidSngserialIDValueList\">";
-            regex = new Regex(hidSngserialIDValueListPattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            //<input id="hidJudgeFlg" type="hidden" value="2" name="hidJudgeFlg">
-            string hidJudgeFlgPattern = "<input id=\"hidJudgeFlg\" type=\"hidden\" value=\"([^<]*)\" name=\"hidJudgeFlg\">";
-            regex = new Regex(hidJudgeFlgPattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            //<input id="hidsngserialID" type="hidden" value="3" name="hidsngserialID">
-            string hidsngserialIDPattern = "<input id=\"hidsngserialID\" type=\"hidden\" value=\"([^<]*)\" name=\"hidsngserialID\">";
-            regex = new Regex(hidsngserialIDPattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            //<input id="hiddualserialID" type="hidden" value="3" name="hiddualserialID">
-            string hiddualserialIDPattern = "<input id=\"hiddualserialID\" type=\"hidden\" value=\"([^<]*)\" name=\"hiddualserialID\">";
-            regex = new Regex(hiddualserialIDPattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            //<input id="hidX" type="hidden" value="89" name="hidX">
-            string hidXPattern = "<input id=\"hidX\" type=\"hidden\" value=\"([^<]*)\" name=\"hidX\">";
-            regex = new Regex(hidXPattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            //<input id="hidY" type="hidden" value="113" name="hidY">
-            string hidYPattern = "<input id=\"hidY\" type=\"hidden\" value=\"([^<]*)\" name=\"hidY\">";
-            regex = new Regex(hidYPattern, RegexOptions.IgnoreCase);
-
-            paramsList.Add(regex.Match(rawhtml).Value);
-
-            return paramsList;
+            return buses;
         }
     }
 }

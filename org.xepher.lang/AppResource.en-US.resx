@@ -138,6 +138,18 @@
   <data name="Author" xml:space="preserve">
     <value>Author : xepher</value>
   </data>
+  <data name="BusBusID" xml:space="preserve">
+    <value>Bus: </value>
+  </data>
+  <data name="BusStation" xml:space="preserve">
+    <value>Station: </value>
+  </data>
+  <data name="BusTime" xml:space="preserve">
+    <value>Time of arrival: </value>
+  </data>
+  <data name="BusTTL" xml:space="preserve">
+    <value>Distances: </value>
+  </data>
   <data name="MsgExitApplication" xml:space="preserve">
     <value>Are you want to exit application?</value>
   </data>
@@ -156,8 +168,8 @@
   <data name="PageAbout" xml:space="preserve">
     <value>About</value>
   </data>
-  <data name="PageBusses" xml:space="preserve">
-    <value>Busses</value>
+  <data name="PageBuses" xml:space="preserve">
+    <value>Buses</value>
   </data>
   <data name="PageMain" xml:space="preserve">
     <value>Routes</value>
@@ -186,6 +198,9 @@
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>Loading...</value>
   </data>
+  <data name="TipEmptyInfo" xml:space="preserve">
+    <value>Please restart app and retry again.</value>
+  </data>
   <data name="TitleExitApplication" xml:space="preserve">
     <value>Exit Application</value>
   </data>
@@ -194,5 +209,11 @@
   </data>
   <data name="TitleRefreshStations" xml:space="preserve">
     <value>Refresh Stations</value>
+  </data>
+  <data name="AboutBtnDonate" xml:space="preserve">
+    <value>Donate</value>
+  </data>
+  <data name="AboutBtnMarketPlace" xml:space="preserve">
+    <value>Vote</value>
   </data>
 </root>

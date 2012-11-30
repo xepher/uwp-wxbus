@@ -68,8 +68,8 @@
     <Compile Include="AboutPage.xaml.cs">
       <DependentUpon>AboutPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BussesPage.xaml.cs">
-      <DependentUpon>BussesPage.xaml</DependentUpon>
+    <Compile Include="BusesPage.xaml.cs">
+      <DependentUpon>BusesPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
@@ -94,7 +94,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="BussesPage.xaml">
+    <Page Include="BusesPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -134,7 +134,8 @@
     <ProjectReference Include="..\org.xepher.common\org.xepher.common.csproj">
       <Project>{54DE8500-553A-4154-8F73-74377F496464}</Project>
       <Name>org.xepher.common</Name>
-    </ProjectReference>    <ProjectReference Include="..\org.xepher.lang\org.xepher.lang.csproj">
+    </ProjectReference>
+    <ProjectReference Include="..\org.xepher.lang\org.xepher.lang.csproj">
       <Project>{7E023168-3AE3-401A-829A-C4243325526B}</Project>
       <Name>org.xepher.lang</Name>
     </ProjectReference>
