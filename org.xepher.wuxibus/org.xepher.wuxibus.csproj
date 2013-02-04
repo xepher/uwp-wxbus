@@ -49,17 +49,28 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="GHAdSDK">
+      <HintPath>..\packages\Ads\GHAdSDK.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\SilverlightToolkitWP.4.2012.10.9\lib\sl4-windowsphone71\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone.Interop" />
+    <Reference Include="Mt.airAD.WindowsPhone">
+      <HintPath>..\packages\Ads\Mt.airAD.WindowsPhone.dll</HintPath>
+    </Reference>
+    <Reference Include="SmartMad.Ads.WindowsPhone7">
+      <HintPath>..\packages\Ads\SmartMad.Ads.WindowsPhone7.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Xml" />
     <Reference Include="mscorlib.extensions" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
@@ -71,6 +82,8 @@
     <Compile Include="BusesPage.xaml.cs">
       <DependentUpon>BusesPage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Misc\AdHelper.cs" />
+    <Compile Include="Misc\ReleaseResource.cs" />
     <Compile Include="SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
@@ -116,6 +129,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Resource Include="Data\wuxitraffic.zip" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml" />
@@ -147,11 +161,16 @@
       <Project>{0C51683B-F757-4FA4-8340-43D5DE48E9D2}</Project>
       <Name>org.xepher.model</Name>
     </ProjectReference>
+    <ProjectReference Include="..\org.xepher.webservice\org.xepher.webservice.csproj">
+      <Project>{2245FECB-D389-4681-86E3-1F589D8331C3}</Project>
+      <Name>org.xepher.webservice</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\Icons\dark\appbar.feature.search.rest.png" />
     <Content Include="Assets\Icons\dark\appbar.refresh.rest.png" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

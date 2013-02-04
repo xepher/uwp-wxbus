@@ -1,0 +1,18 @@
+﻿<configuration>
+    <system.serviceModel>
+        <bindings>
+            <basicHttpBinding>
+                <binding name="BusTravelGuideSoap" maxBufferSize="2147483647"
+                    maxReceivedMessageSize="2147483647">
+                    <security mode="None" />
+                </binding>
+            </basicHttpBinding>
+        </bindings>
+        <client>
+            <endpoint address="http://218.90.160.85:10086/BusTravelGuideWebService/bustravelguide.asmx"
+                binding="basicHttpBinding" bindingConfiguration="BusTravelGuideSoap"
+                contract="BusTravelGuideServiceReference.BusTravelGuideSoap"
+                name="BusTravelGuideSoap" />
+        </client>
+    </system.serviceModel>
+</configuration>

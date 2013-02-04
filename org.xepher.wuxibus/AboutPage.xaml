@@ -21,13 +21,13 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,12">
             <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageAbout, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0">
             <Image Margin="150,50,150,350" Source="/ApplicationIcon.png" Stretch="None" HorizontalAlignment="Center" VerticalAlignment="Center"/>
             <TextBlock Height="24" Margin="50,200,50,0" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Top" FontSize="20" HorizontalAlignment="Center"/>
             <TextBlock Height="24" Margin="75,0,75,320" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.Author, Source={StaticResource LocalizedStrings}}" VerticalAlignment="Bottom" HorizontalAlignment="Center" FontSize="18.667"/>

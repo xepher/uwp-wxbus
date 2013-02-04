@@ -21,22 +21,22 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,12">
             <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageStations, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+			<TextBlock x:Name="LineInfo" Text="首班123456" HorizontalAlignment="Left" Margin="28,0,0,0"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-        	<TextBlock x:Name="txtInformation" TextWrapping="Wrap" d:LayoutOverrides="Width" VerticalAlignment="Top" Height="28" Margin="20,-10,20,0" FontSize="24"/>
-        	<ListBox x:Name="stationsList" ItemsSource="{Binding}" Margin="0,28,0,0" SelectionChanged="stationsList_SelectionChanged">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0">
+        	<ListBox x:Name="stationList" ItemsSource="{Binding}" Margin="12,0,0,0" SelectionChanged="stationList_SelectionChanged">
         		<ListBox.ItemTemplate>
         			<DataTemplate>
         				<Grid Height="50">
         					<StackPanel Margin="10,15,0,0"
         						Height="60"
         						VerticalAlignment="Top">
-        						<TextBlock Text="{Binding Name}" 
+                                <TextBlock Text="{Binding station_name}" 
         							FontSize="30"/>
         					</StackPanel>
         				</Grid>

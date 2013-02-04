@@ -133,7 +133,7 @@
     <value>Settings</value>
   </data>
   <data name="ApplicationTitle" xml:space="preserve">
-    <value>Wuxi Public Transportation Search(WP)</value>
+    <value>Wuxi Public Transportation(WP)</value>
   </data>
   <data name="Author" xml:space="preserve">
     <value>Author : xepher</value>
@@ -154,16 +154,13 @@
     <value>Are you want to exit application?</value>
   </data>
   <data name="MsgNetworkUnavailable" xml:space="preserve">
-    <value>No network connection available!Confirm your network settings and restart application!</value>
+    <value>No network connection available! Confirm your network settings!</value>
   </data>
   <data name="MsgRefreshRoutes" xml:space="preserve">
-    <value>Are you want to refresh routes?</value>
+    <value>Are you want to refresh lines?</value>
   </data>
   <data name="MsgRefreshStations" xml:space="preserve">
-    <value>Are you want to refresh route {0}?</value>
-  </data>
-  <data name="MsgRefreshToken" xml:space="preserve">
-    <value>Please press refresh button to get token first.</value>
+    <value>Are you want to refresh line {0}?</value>
   </data>
   <data name="PageAbout" xml:space="preserve">
     <value>About</value>
@@ -172,7 +169,7 @@
     <value>Buses</value>
   </data>
   <data name="PageMain" xml:space="preserve">
-    <value>Routes</value>
+    <value>Lines</value>
   </data>
   <data name="PageSearch" xml:space="preserve">
     <value>Search</value>
@@ -198,14 +195,11 @@
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>Loading...</value>
   </data>
-  <data name="TipEmptyInfo" xml:space="preserve">
-    <value>Please restart app and retry again.</value>
-  </data>
   <data name="TitleExitApplication" xml:space="preserve">
     <value>Exit Application</value>
   </data>
   <data name="TitleRefreshRoutes" xml:space="preserve">
-    <value>Refresh Routes</value>
+    <value>Refresh Lines</value>
   </data>
   <data name="TitleRefreshStations" xml:space="preserve">
     <value>Refresh Stations</value>

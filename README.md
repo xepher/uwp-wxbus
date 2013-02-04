@@ -6,6 +6,13 @@ Wuxi Public Transportation Information System on Windows Phone Platform
 ####Author: [xepher][ref_Author]  
 
 **Release Notes:**  
+Release 1.1(Market Place 1.1.2.24)  
+1. add wuxitraffic.zip  
+2. add release zip file to IsolatedStorage when app startup  
+3. add db search  
+4. add bus search via SOAP  
+5. add ads  
+
 Release 1.0(Market Place 1.0.0.0)  
 1. only contain routes search  
 

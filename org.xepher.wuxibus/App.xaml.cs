@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Net;
+﻿using System.Globalization;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
@@ -9,6 +6,7 @@ using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.lang;
 using org.xepher.model;
+using org.xepher.wuxibus.misc;
 
 namespace org.xepher.wuxibus
 {
@@ -20,23 +18,15 @@ namespace org.xepher.wuxibus
         /// <returns>The root frame of the Phone Application.</returns>
         public PhoneApplicationFrame RootFrame { get; private set; }
 
-        public List<Route> Routes { get; set; }
-        public Route SelectedRoute { get; set; }
+        public Line SelectedLine { get; set; }
         public Station SelectedStation { get; set; }
-        public Direction SelectedDirection { get; set; }
-        public string RawDefaultHtml { get; set; }
-        public string ViewState { get; set; }
-        private CookieContainer _container;
-        public CookieContainer Container
+        public Segment SelectedSegment { get; set; }
+        public int StationSplitNumber { get; set; }
+
+        private SQLiteHelper _daHelper;
+        public SQLiteHelper DAHelper
         {
-            get
-            {
-                if (_container == null)
-                {
-                    _container = new CookieContainer();
-                }
-                return _container;
-            }
+            get { return _daHelper ?? (_daHelper = new SQLiteHelper()); }
         }
 
         /// <summary>
@@ -92,11 +82,8 @@ namespace org.xepher.wuxibus
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            Object obj = IsolatedStorage.ReadFromFile("Data\\Routes.data", typeof(List<Route>));
-            if (obj != null)
-            {
-                Routes = obj as List<Route>;
-            }
+            //释放zip到IsolatedStorage
+            IsolatedStorage.Zip2IS(ReleaseResource.GetResource("/org.xepher.wuxibus;component/Data/wuxitraffic.zip"));
         }
 
         // Code to execute when the application is activated (brought to foreground)

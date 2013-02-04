@@ -24,21 +24,21 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,12">
             <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageSettings, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0">
         	<StackPanel Margin="12,12,12,0" Orientation="Vertical" VerticalAlignment="Top">
         		<TextBlock x:Name="txtLang" TextWrapping="Wrap" Text="Language : " FontSize="26.667"/>
         		<toolkit:ListPicker x:Name="lstPickerLang" Margin="4,0" SelectionChanged="lstPickerLang_SelectionChanged" BorderThickness="3" FontSize="25.333">
         			<sys:String>en-US</sys:String>
         			<sys:String>zh-CN</sys:String>
         		</toolkit:ListPicker>
-        		<TextBlock x:Name="txtNetwork" TextWrapping="Wrap" Text="{Binding LocalizedResources.SettingsNetwork, Source={StaticResource LocalizedStrings}}" FontSize="26.667"/>
-        		<toolkit:ListPicker x:Name="lstPickerNetwork" Margin="4,0" SelectionChanged="lstPickerNetwork_SelectionChanged"  BorderThickness="3" FontSize="25.333"/>
+        		<TextBlock x:Name="txtNetwork" TextWrapping="Wrap" Text="{Binding LocalizedResources.SettingsNetwork, Source={StaticResource LocalizedStrings}}" FontSize="26.667" Visibility="Collapsed" />
+        		<toolkit:ListPicker x:Name="lstPickerNetwork" Margin="4,0" SelectionChanged="lstPickerNetwork_SelectionChanged"  BorderThickness="3" FontSize="25.333" Visibility="Collapsed" />
         	</StackPanel>
         </Grid>
     </Grid>

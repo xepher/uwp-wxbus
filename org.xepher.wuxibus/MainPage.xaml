@@ -22,21 +22,21 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,28">
+        <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,12">
             <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
             <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageMain, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,0,0">
-            <ListBox x:Name="routesList" SelectionChanged="routesList_SelectionChanged" BorderThickness="12,0,0,0">
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="0">
+            <ListBox x:Name="linesList" SelectionChanged="linesList_SelectionChanged" BorderThickness="0" Margin="12,0,0,0">
                 <ListBox.ItemTemplate>
                     <DataTemplate>
                         <Grid Height="60">
                             <StackPanel Margin="10,15,0,0"
                                         Height="50"
                                         VerticalAlignment="Top">
-                                <TextBlock Text="{Binding Name}" 
+                                <TextBlock Text="{Binding line_name}" 
                                            FontSize="30" />
                             </StackPanel>
                         </Grid>

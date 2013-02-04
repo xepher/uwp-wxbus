@@ -1,0 +1,416 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:tns="http://tempuri.org/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" targetNamespace="http://tempuri.org/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="http://tempuri.org/">
+      <s:element name="getBusALStationInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="routeid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="segmentID" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="dualserialIDs" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBusALStationInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getBusALStationInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBusALStationInfo2">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="subrouteName" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="statinoNo" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="telphone" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBusALStationInfo2Response">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getBusALStationInfo2Result" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getQDBusALStationInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="routeid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="segmentid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="stationseq" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getQDBusALStationInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getQDBusALStationInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBusALStationInfoCommon">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="routeid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="segmentid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="stationseq" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="fdisMsg" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getBusALStationInfoCommonResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getBusALStationInfoCommonResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+            <s:element minOccurs="0" maxOccurs="1" name="fdisMsg" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getRouteInfo">
+        <s:complexType />
+      </s:element>
+      <s:element name="getRouteInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getRouteInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getSegmentInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="routeid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getSegmentInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getSegmentInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getStationInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="stationid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="stationname" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getStationInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getStationInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getSegmentStationInfo">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="routeid" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="segmentid" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getSegmentStationInfoResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getSegmentStationInfoResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="getBusALStationInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getBusALStationInfo" />
+  </wsdl:message>
+  <wsdl:message name="getBusALStationInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getBusALStationInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getBusALStationInfo2SoapIn">
+    <wsdl:part name="parameters" element="tns:getBusALStationInfo2" />
+  </wsdl:message>
+  <wsdl:message name="getBusALStationInfo2SoapOut">
+    <wsdl:part name="parameters" element="tns:getBusALStationInfo2Response" />
+  </wsdl:message>
+  <wsdl:message name="getQDBusALStationInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getQDBusALStationInfo" />
+  </wsdl:message>
+  <wsdl:message name="getQDBusALStationInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getQDBusALStationInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getBusALStationInfoCommonSoapIn">
+    <wsdl:part name="parameters" element="tns:getBusALStationInfoCommon" />
+  </wsdl:message>
+  <wsdl:message name="getBusALStationInfoCommonSoapOut">
+    <wsdl:part name="parameters" element="tns:getBusALStationInfoCommonResponse" />
+  </wsdl:message>
+  <wsdl:message name="getRouteInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getRouteInfo" />
+  </wsdl:message>
+  <wsdl:message name="getRouteInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getRouteInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getSegmentInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getSegmentInfo" />
+  </wsdl:message>
+  <wsdl:message name="getSegmentInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getSegmentInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getStationInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getStationInfo" />
+  </wsdl:message>
+  <wsdl:message name="getStationInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getStationInfoResponse" />
+  </wsdl:message>
+  <wsdl:message name="getSegmentStationInfoSoapIn">
+    <wsdl:part name="parameters" element="tns:getSegmentStationInfo" />
+  </wsdl:message>
+  <wsdl:message name="getSegmentStationInfoSoapOut">
+    <wsdl:part name="parameters" element="tns:getSegmentStationInfoResponse" />
+  </wsdl:message>
+  <wsdl:portType name="BusTravelGuideSoap">
+    <wsdl:operation name="getBusALStationInfo">
+      <wsdl:input message="tns:getBusALStationInfoSoapIn" />
+      <wsdl:output message="tns:getBusALStationInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getBusALStationInfo2">
+      <wsdl:input message="tns:getBusALStationInfo2SoapIn" />
+      <wsdl:output message="tns:getBusALStationInfo2SoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getQDBusALStationInfo">
+      <wsdl:input message="tns:getQDBusALStationInfoSoapIn" />
+      <wsdl:output message="tns:getQDBusALStationInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getBusALStationInfoCommon">
+      <wsdl:input message="tns:getBusALStationInfoCommonSoapIn" />
+      <wsdl:output message="tns:getBusALStationInfoCommonSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getRouteInfo">
+      <wsdl:input message="tns:getRouteInfoSoapIn" />
+      <wsdl:output message="tns:getRouteInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getSegmentInfo">
+      <wsdl:input message="tns:getSegmentInfoSoapIn" />
+      <wsdl:output message="tns:getSegmentInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getStationInfo">
+      <wsdl:input message="tns:getStationInfoSoapIn" />
+      <wsdl:output message="tns:getStationInfoSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getSegmentStationInfo">
+      <wsdl:input message="tns:getSegmentStationInfoSoapIn" />
+      <wsdl:output message="tns:getSegmentStationInfoSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="BusTravelGuideSoap" type="tns:BusTravelGuideSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getBusALStationInfo">
+      <soap:operation soapAction="http://tempuri.org/getBusALStationInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBusALStationInfo2">
+      <soap:operation soapAction="http://tempuri.org/getBusALStationInfo2" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getQDBusALStationInfo">
+      <soap:operation soapAction="http://tempuri.org/getQDBusALStationInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBusALStationInfoCommon">
+      <soap:operation soapAction="http://tempuri.org/getBusALStationInfoCommon" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRouteInfo">
+      <soap:operation soapAction="http://tempuri.org/getRouteInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSegmentInfo">
+      <soap:operation soapAction="http://tempuri.org/getSegmentInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStationInfo">
+      <soap:operation soapAction="http://tempuri.org/getStationInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSegmentStationInfo">
+      <soap:operation soapAction="http://tempuri.org/getSegmentStationInfo" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:binding name="BusTravelGuideSoap12" type="tns:BusTravelGuideSoap">
+    <soap12:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getBusALStationInfo">
+      <soap12:operation soapAction="http://tempuri.org/getBusALStationInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBusALStationInfo2">
+      <soap12:operation soapAction="http://tempuri.org/getBusALStationInfo2" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getQDBusALStationInfo">
+      <soap12:operation soapAction="http://tempuri.org/getQDBusALStationInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getBusALStationInfoCommon">
+      <soap12:operation soapAction="http://tempuri.org/getBusALStationInfoCommon" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getRouteInfo">
+      <soap12:operation soapAction="http://tempuri.org/getRouteInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSegmentInfo">
+      <soap12:operation soapAction="http://tempuri.org/getSegmentInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getStationInfo">
+      <soap12:operation soapAction="http://tempuri.org/getStationInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getSegmentStationInfo">
+      <soap12:operation soapAction="http://tempuri.org/getSegmentStationInfo" style="document" />
+      <wsdl:input>
+        <soap12:body use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap12:body use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="BusTravelGuide">
+    <wsdl:port name="BusTravelGuideSoap" binding="tns:BusTravelGuideSoap">
+      <soap:address location="http://218.90.160.85/BusTravelGuideWebService/bustravelguide.asmx" />
+    </wsdl:port>
+    <wsdl:port name="BusTravelGuideSoap12" binding="tns:BusTravelGuideSoap12">
+      <soap12:address location="http://218.90.160.85/BusTravelGuideWebService/bustravelguide.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>

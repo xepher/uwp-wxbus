@@ -41,7 +41,13 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Community.CsharpSqlite.WP">
+      <HintPath>..\packages\Community.CsharpSqlite.WP.0.6.1\Community.CsharpSqlite.WP.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Phone" />
+    <Reference Include="SharpZipLib.WindowsPhone7">
+      <HintPath>..\packages\SharpZipLib.Silverlight.0.86.0.518\SharpZipLib.WindowsPhone7.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
@@ -51,11 +57,10 @@
     <Reference Include="System.Xml.Serialization" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Common.cs" />
-    <Compile Include="Downloader.cs" />
     <Compile Include="GlobalLoading.cs" />
     <Compile Include="IsolatedStorage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLiteHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\org.xepher.lang\org.xepher.lang.csproj">

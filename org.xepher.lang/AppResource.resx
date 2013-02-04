@@ -133,7 +133,7 @@
     <value>设置</value>
   </data>
   <data name="ApplicationTitle" xml:space="preserve">
-    <value>无锡公交查询(WP)</value>
+    <value>无锡公交(WP)</value>
   </data>
   <data name="Author" xml:space="preserve">
     <value>作者 : xepher</value>
@@ -154,16 +154,13 @@
     <value>确定退出程序吗？</value>
   </data>
   <data name="MsgNetworkUnavailable" xml:space="preserve">
-    <value>无网络连接！请确认网络连接后重启客户端！</value>
+    <value>无网络连接！请确认网络连接！</value>
   </data>
   <data name="MsgRefreshRoutes" xml:space="preserve">
     <value>确定刷新线路吗？</value>
   </data>
   <data name="MsgRefreshStations" xml:space="preserve">
     <value>确定刷新 {0} 吗？</value>
-  </data>
-  <data name="MsgRefreshToken" xml:space="preserve">
-    <value>你当前选中的线路还没有被缓存过，请按刷新按钮来获取令牌然后再查询该线路信息。</value>
   </data>
   <data name="PageAbout" xml:space="preserve">
     <value>关于</value>
@@ -197,9 +194,6 @@
   </data>
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>加载中...</value>
-  </data>
-  <data name="TipEmptyInfo" xml:space="preserve">
-    <value>由于官网验证码问题，首次查询不到车辆信息的时候并不会显示下一班班车发车时间，请返回再查询一次。</value>
   </data>
   <data name="TitleExitApplication" xml:space="preserve">
     <value>退出程序</value>
