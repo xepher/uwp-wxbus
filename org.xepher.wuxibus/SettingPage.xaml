@@ -14,10 +14,13 @@
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="True" BackKeyPress="SettingPage_OnBackKeyPress">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot">
+    	<Grid.Background>
+    		<ImageBrush Stretch="None" ImageSource="/Assets/Images/pano_dark_theme.jpg"/>
+    	</Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -37,8 +40,8 @@
         			<sys:String>en-US</sys:String>
         			<sys:String>zh-CN</sys:String>
         		</toolkit:ListPicker>
-        		<TextBlock x:Name="txtNetwork" TextWrapping="Wrap" Text="{Binding LocalizedResources.SettingsNetwork, Source={StaticResource LocalizedStrings}}" FontSize="26.667" Visibility="Collapsed" />
-        		<toolkit:ListPicker x:Name="lstPickerNetwork" Margin="4,0" SelectionChanged="lstPickerNetwork_SelectionChanged"  BorderThickness="3" FontSize="25.333" Visibility="Collapsed" />
+                <TextBlock x:Name="txtUpdate" Text="{Binding Path=LocalizedResources.SettingsTxtUpdate, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" FontSize="26.667"/>
+                <Button x:Name="btnUpdate" Content="{Binding Path=LocalizedResources.SettingsBtnUpdate, Source={StaticResource LocalizedStrings}}" Click="BtnUpdate_OnClick"/>
         	</StackPanel>
         </Grid>
     </Grid>

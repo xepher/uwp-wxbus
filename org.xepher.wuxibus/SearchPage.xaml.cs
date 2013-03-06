@@ -1,61 +1,57 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
+using org.xepher.lang;
+using org.xepher.model;
 
 namespace org.xepher.wuxibus
 {
     public partial class SearchPage : PhoneApplicationPage
     {
-        //public List<Route> Routes { get; set; }
+        private App _app;
 
         public SearchPage()
         {
             InitializeComponent();
 
-            //Routes = (Application.Current as App).Routes;
-            //List<string> source = new List<string>();
-            //Routes.ForEach(r => source.Add(r.Name));
-            //ACBSearch.DataContext = Routes;
-            //ACBSearch.ItemsSource = Routes;
-            //ACBSearch.ValueMemberPath = "Name";
-            //ACBSearch.ItemFilter += SearchRoutes;
+            InitializeUIComponent();
         }
 
-        //// 模糊搜索
-        //private bool SearchRoutes(string search, object item)
-        //{
-        //    if (item != null)
-        //    {
-        //        if ((item as Route).Name.ToString().ToLower().IndexOf(search) >= 0)
-        //            return true;
-        //    }
-        //    return false;
-        //}
+        private void InitializeUIComponent()
+        {
+            _app = (Application.Current as App);
+
+            ACBSearch.DataContext = _app.Lines;
+            ACBSearch.ItemsSource = _app.Lines;
+            ACBSearch.ValueMemberPath = "line_name";
+            ACBSearch.ItemFilter += SearchLine;
+            ACBSearch.KeyUp += ACBSearch_KeyUp;
+        }
+
+        private bool SearchLine(string search, object item)
+        {
+            Line _line = item as Line;
+            return _line != null && _line.line_name.Contains(search);
+        }
 
         private void ACBSearch_KeyUp(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
-                Serach_Click(sender, e);
+                Line _line = ACBSearch.SelectedItem as Line;
+                if (_line == null)
+                {
+                    ToastPrompt toast = new ToastPrompt();
+                    toast.Message = AppResource.MsgNoLine;
+                    toast.Show();
+                    ACBSearch.Text = string.Empty;
+                    return;
+                }
+                _app.SelectedLine = _line;
+                NavigationService.Navigate(new Uri("/StationPage.xaml", UriKind.Relative));
             }
-        }
-
-        private void Serach_Click(object sender, EventArgs e)
-        {
-            //Route route = ACBSearch.SelectedItem as Route;
-            //if (route == null)
-            //{
-            //    foreach (Route r in Routes)
-            //    {
-            //        if (r.Name.Contains(ACBSearch.Text))
-            //        {
-            //            ACBSearch.SelectedItem = r;
-            //            return;
-            //        }
-            //    }
-            //}
-            //(Application.Current as App).SelectedRoute = route;
-            //NavigationService.Navigate(new Uri("/StationsPage.xaml", UriKind.Relative));
         }
     }
 }

@@ -1,72 +1,30 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.IO.IsolatedStorage;
-using System.Text;
-using System.Xml.Serialization;
 using ICSharpCode.SharpZipLib.Zip;
+using org.xepher.lang;
 
 namespace org.xepher.common
 {
     public static class IsolatedStorage
     {
-        //private static void Serialize(Stream streamObject, object objForSerialization)
-        //{
-        //    if (objForSerialization == null || streamObject == null)
-        //        return;
-
-        //    XmlSerializer serializer = new XmlSerializer(objForSerialization.GetType());
-        //    serializer.Serialize(streamObject, objForSerialization);
-        //}
-
-        //private static object Deserialize(Stream streamObject, Type serializedObjectType)
-        //{
-        //    if (serializedObjectType == null || streamObject == null)
-        //        return null;
-
-        //    XmlSerializer serializer = new XmlSerializer(serializedObjectType);
-        //    return serializer.Deserialize(streamObject);
-        //}
-
-        //// 保存到独立存储，同时检查独立存储中的公交线路数目是否更新，如有更新需要写入
-        //public static void SaveToFile(object obj, string path)
-        //{
-        //    IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
-        //    string[] pathArray = path.Split('\\');
-        //    StringBuilder sbDirectory = new StringBuilder();
-        //    for (int index = 0; index < pathArray.Length - 1; index++)
-        //    {
-        //        sbDirectory.Append(pathArray[index]);
-        //    }
-        //    if (!isolatedStorageFile.DirectoryExists(sbDirectory.ToString()))
-        //        isolatedStorageFile.CreateDirectory(sbDirectory.ToString());
-        //    using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(path, FileMode.Create, isolatedStorageFile))
-        //    {
-        //        Serialize(stream, obj);
-        //    }
-        //}
-
-        //public static Object ReadFromFile(string path, Type type)
-        //{
-        //    IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
-        //    if (!isolatedStorageFile.FileExists(path)) return null;
-        //    object deserializeObj;
-        //    using (IsolatedStorageFileStream stream = new IsolatedStorageFileStream(path, FileMode.Open, isolatedStorageFile))
-        //    {
-        //        deserializeObj = Deserialize(stream, type);
-        //    }
-
-        //    return deserializeObj;
-        //}
-
-        public static void Zip2IS(Stream zipStream)
+        // 释放自带数据库
+        // 判断原来数据库版本,低于程序版本就更新到新版本
+        public static void Zip2IS(Stream zipStream, bool isForced = false)
         {
+#if DEBUG
+            // 测试自动更新用
+            AppSettingHelper.AddOrUpdateValue("VersionCode", 26);
+#endif
+
             byte[] data = new byte[2048];
             int size = 2048;
 
             IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
 
             // 判断是否存在wuxitraffic.db
-            if (!isolatedStorageFile.FileExists(SQLiteHelper.DATABASE_URI))
+            if (!isolatedStorageFile.FileExists(SQLiteHelper.DATABASE_URI) || isForced)
             {
                 using (ZipInputStream zipInputStream = new ZipInputStream(zipStream))
                 {
@@ -77,14 +35,101 @@ namespace org.xepher.common
                         string fileName = zipEntry.Name;
                         if (fileName != String.Empty)
                         {
-                            if (!Directory.Exists("Data")) isolatedStorageFile.CreateDirectory("Data");
+                            if (!Directory.Exists(SQLiteHelper.DATABASE_FOLDER_URI)) isolatedStorageFile.CreateDirectory(SQLiteHelper.DATABASE_FOLDER_URI);
+                            using (IsolatedStorageFileStream fileStream = new IsolatedStorageFileStream(SQLiteHelper.DATABASE_URI, FileMode.Create, isolatedStorageFile))
+                            {
+                                Debug.WriteLine("------DebugLog------Release Zip to IsolatedStorageFile Begin------");
+                                while (true)
+                                {
+                                    size = zipInputStream.Read(data, 0, data.Length);
+                                    if (size <= 0)
+                                    {
+                                        Debug.WriteLine("------DebugLog------Release Zip to IsolatedStorageFile End------");
+                                        break;
+                                    }
+                                    fileStream.Write(data, 0, size);
+                                }
+                                AppSettingHelper.AddOrUpdateValue("VersionCode", 27);
+                            }
+                        }
+                    }
+                }
+            }
+
+            isolatedStorageFile.Dispose();
+        }
+
+        // 释放更新的android APK
+        public static void AppUpdateApk(Stream zipStream)
+        {
+            byte[] data = new byte[2048];
+            int size = 2048;
+
+            IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
+
+            using (ZipInputStream zipInputStream = new ZipInputStream(zipStream))
+            {
+                ZipEntry zipEntry;
+                do
+                {
+                    zipEntry = zipInputStream.GetNextEntry();
+                    if (zipEntry == null) throw new Exception();
+                } while (!zipEntry.Name.ToLower().Contains(".zip"));
+
+
+
+                // Unzip zip file
+                using (IsolatedStorageFileStream fileStream = new IsolatedStorageFileStream(SQLiteHelper.DATABASE_ZIP_URI, FileMode.Create, isolatedStorageFile))
+                {
+                    while (true)
+                    {
+                        size = zipInputStream.Read(data, 0, data.Length);
+                        if (size <= 0)
+                        {
+                            break;
+                        }
+                        fileStream.Write(data, 0, size);
+                    }
+                }
+            }
+
+            isolatedStorageFile.Dispose();
+        }
+
+        // 释放APK中zip包到IsolatedStorage
+        public static void AppUpdateDB()
+        {
+            byte[] data = new byte[2048];
+            int size = 2048;
+
+            IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
+
+            // 备份原始数据库
+            isolatedStorageFile.CopyFile(SQLiteHelper.DATABASE_URI, SQLiteHelper.DATABASE_BAK_URI, true);
+
+            using (
+                IsolatedStorageFileStream fileStreamZip = new IsolatedStorageFileStream(SQLiteHelper.DATABASE_ZIP_URI,
+                                                                                     FileMode.Open, isolatedStorageFile)
+                )
+            {
+                using (ZipInputStream zipInputStream = new ZipInputStream(fileStreamZip))
+                {
+                    ZipEntry zipEntry = zipInputStream.GetNextEntry();
+
+                    if (zipEntry != null)
+                    {
+                        string fileName = zipEntry.Name;
+                        if (fileName != String.Empty)
+                        {
                             using (IsolatedStorageFileStream fileStream = new IsolatedStorageFileStream(SQLiteHelper.DATABASE_URI, FileMode.Create, isolatedStorageFile))
                             {
                                 while (true)
                                 {
                                     size = zipInputStream.Read(data, 0, data.Length);
                                     if (size <= 0)
+                                    {
                                         break;
+                                    }
                                     fileStream.Write(data, 0, size);
                                 }
                             }
@@ -92,6 +137,17 @@ namespace org.xepher.common
                     }
                 }
             }
+
+            isolatedStorageFile.Dispose();
+        }
+
+        // 回滚数据库
+        public static void RestoreDB()
+        {
+            IsolatedStorageFile isolatedStorageFile = IsolatedStorageFile.GetUserStoreForApplication();
+
+            // 还原数据库
+            isolatedStorageFile.CopyFile(SQLiteHelper.DATABASE_BAK_URI, SQLiteHelper.DATABASE_URI, true);
         }
     }
 }

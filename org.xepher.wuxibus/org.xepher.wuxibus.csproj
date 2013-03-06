@@ -26,6 +26,8 @@
     <SilverlightAppEntry>org.xepher.wuxibus.App</SilverlightAppEntry>
     <ValidateXaml>true</ValidateXaml>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <Utf8Output>true</Utf8Output>
+    <ExpressionBlendVersion>4.0.30816.0</ExpressionBlendVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -49,52 +51,82 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GHAdSDK">
-      <HintPath>..\packages\Ads\GHAdSDK.dll</HintPath>
+    <Reference Include="AdChina.WindowsPhone.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Adwo.Ad, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Coding4Fun.Toolkit.Controls">
+      <HintPath>..\packages\Coding4Fun.Toolkit (Windows Phone 7)\Coding4Fun.Toolkit.Controls.dll</HintPath>
     </Reference>
+    <Reference Include="Com.MSN.Ads.WindowsPhone7, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="LazyListBox">
+      <HintPath>..\packages\LazyListBox\LazyListBox.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Advertising.Mobile, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone" />
+    <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
+    <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\SilverlightToolkitWP.4.2012.10.9\lib\sl4-windowsphone71\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone.Interop" />
-    <Reference Include="Mt.airAD.WindowsPhone">
-      <HintPath>..\packages\Ads\Mt.airAD.WindowsPhone.dll</HintPath>
+    <Reference Include="MoAds">
+      <HintPath>..\packages\Ads\MoAds.dll</HintPath>
     </Reference>
-    <Reference Include="SmartMad.Ads.WindowsPhone7">
-      <HintPath>..\packages\Ads\SmartMad.Ads.WindowsPhone7.dll</HintPath>
+    <Reference Include="mogo_WP7_sdk">
+      <HintPath>..\packages\Ads\mogo_WP7_sdk.dll</HintPath>
     </Reference>
+    <Reference Include="Mt.airAD.WindowsPhone, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="Nokia.Ads.Silverlight, Version=1.0.913.3694, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SharpZipLib.WindowsPhone7, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="SmartMad.Ads.WindowsPhone7, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL" />
+    <Reference Include="System.Device" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
     <Reference Include="System.Xml" />
-    <Reference Include="mscorlib.extensions" />
     <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Xml.Serialization" />
+    <Reference Include="UIExtensionMethods">
+      <HintPath>..\packages\LazyListBox\UIExtensionMethods.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
-    <Compile Include="AboutPage.xaml.cs">
-      <DependentUpon>AboutPage.xaml</DependentUpon>
+    <Compile Include="BusPage.xaml.cs">
+      <DependentUpon>BusPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="BusesPage.xaml.cs">
-      <DependentUpon>BusesPage.xaml</DependentUpon>
+    <Compile Include="LocatePage.xaml.cs">
+      <DependentUpon>LocatePage.xaml</DependentUpon>
     </Compile>
+    <Compile Include="MainPage.xaml.cs">
+      <DependentUpon>MainPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Misc\About.cs" />
     <Compile Include="Misc\AdHelper.cs" />
+    <Compile Include="Misc\GeoCoordinateHelper.cs" />
+    <Compile Include="Misc\MapsTileSource\GoogleMapsTileSource\GoogleMapsAerialTileSource.cs" />
+    <Compile Include="Misc\MapsTileSource\GoogleMapsTileSource\GoogleMapsLabelsTileSource.cs" />
+    <Compile Include="Misc\MapsTileSource\GoogleMapsTileSource\GoogleMapsRoadTileSource.cs" />
+    <Compile Include="Misc\MapsTileSource\GoogleMapsTileSource\GoogleMapsTileSourceBase.cs" />
+    <Compile Include="Misc\MapsTileSource\NokiaMapsTileSource\NokiaMapsRoadTileSource.cs" />
+    <Compile Include="Misc\MapsTileSource\NokiaMapsTileSource\NokiaMapsSatelliteTileSource.cs" />
+    <Compile Include="Misc\MapsTileSource\NokiaMapsTileSource\NokiaMapsTerrainTileSource.cs" />
+    <Compile Include="Misc\MapsTileSource\NokiaMapsTileSource\NokiaTileSourceBase.cs" />
     <Compile Include="Misc\ReleaseResource.cs" />
+    <Compile Include="Misc\TrafficInfoHelper.cs" />
     <Compile Include="SearchPage.xaml.cs">
       <DependentUpon>SearchPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="SettingPage.xaml.cs">
       <DependentUpon>SettingPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="StationsPage.xaml.cs">
-      <DependentUpon>StationsPage.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MainPage.xaml.cs">
-      <DependentUpon>MainPage.xaml</DependentUpon>
+    <Compile Include="StationPage.xaml.cs">
+      <DependentUpon>StationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -103,11 +135,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </ApplicationDefinition>
-    <Page Include="AboutPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="BusPage.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="BusesPage.xaml">
+    <Page Include="LocatePage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="MainPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -119,16 +155,23 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="StationsPage.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MainPage.xaml">
+    <Page Include="StationPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Assets\Icons\dark\appbar.add.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.change.png" />
+    <Content Include="Assets\Icons\dark\appbar.minus.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.places.png" />
+    <Content Include="Assets\Background\map.background.png" />
+    <Content Include="Assets\Button\mypos_active.png" />
+    <Content Include="Assets\Button\mypos_inactive.png" />
+    <Content Include="Assets\Images\bus.png" />
+    <Content Include="Assets\Images\pano_dark_theme.jpg" />
+    <Content Include="Assets\Images\station.png" />
+    <Content Include="SplashScreenImage.jpg" />
     <Resource Include="Data\wuxitraffic.zip" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
@@ -142,7 +185,6 @@
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="SplashScreenImage.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\org.xepher.common\org.xepher.common.csproj">

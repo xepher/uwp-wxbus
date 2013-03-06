@@ -120,8 +120,8 @@
   <data name="ApplicationBarIconButtonDirection" xml:space="preserve">
     <value>切换</value>
   </data>
-  <data name="ApplicationBarIconButtonRefresh" xml:space="preserve">
-    <value>刷新</value>
+  <data name="ApplicationBarIconButtonLocate" xml:space="preserve">
+    <value>定位</value>
   </data>
   <data name="ApplicationBarIconButtonSearch" xml:space="preserve">
     <value>查询</value>
@@ -135,8 +135,8 @@
   <data name="ApplicationTitle" xml:space="preserve">
     <value>无锡公交(WP)</value>
   </data>
-  <data name="Author" xml:space="preserve">
-    <value>作者 : xepher</value>
+  <data name="AuthorContent" xml:space="preserve">
+    <value>xepher</value>
   </data>
   <data name="BusBusID" xml:space="preserve">
     <value>车辆：</value>
@@ -156,19 +156,13 @@
   <data name="MsgNetworkUnavailable" xml:space="preserve">
     <value>无网络连接！请确认网络连接！</value>
   </data>
-  <data name="MsgRefreshRoutes" xml:space="preserve">
-    <value>确定刷新线路吗？</value>
+  <data name="MsgNoLine" xml:space="preserve">
+    <value>无此线路信息！</value>
   </data>
-  <data name="MsgRefreshStations" xml:space="preserve">
-    <value>确定刷新 {0} 吗？</value>
-  </data>
-  <data name="PageAbout" xml:space="preserve">
-    <value>关于</value>
-  </data>
-  <data name="PageBuses" xml:space="preserve">
+  <data name="PageBus" xml:space="preserve">
     <value>车辆</value>
   </data>
-  <data name="PageMain" xml:space="preserve">
+  <data name="PageLine" xml:space="preserve">
     <value>线路</value>
   </data>
   <data name="PageSearch" xml:space="preserve">
@@ -180,34 +174,94 @@
   <data name="PageStations" xml:space="preserve">
     <value>站台</value>
   </data>
-  <data name="SettingsNetwork" xml:space="preserve">
-    <value>网络 : </value>
-  </data>
-  <data name="SettingsNetworkMobile" xml:space="preserve">
-    <value>中国移动</value>
-  </data>
-  <data name="SettingsNetworkTelecom" xml:space="preserve">
-    <value>中国电信</value>
-  </data>
-  <data name="SettingsNetworkUnicom" xml:space="preserve">
-    <value>中国联通</value>
-  </data>
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>加载中...</value>
   </data>
   <data name="TitleExitApplication" xml:space="preserve">
     <value>退出程序</value>
   </data>
-  <data name="TitleRefreshRoutes" xml:space="preserve">
-    <value>刷新线路</value>
+  <data name="PageLocate" xml:space="preserve">
+    <value>定位</value>
   </data>
-  <data name="TitleRefreshStations" xml:space="preserve">
-    <value>刷新站台</value>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright © 2012-2013 All Rights Reserved.</value>
   </data>
-  <data name="AboutBtnDonate" xml:space="preserve">
-    <value>捐助</value>
+  <data name="DataSourceContent" xml:space="preserve">
+    <value>无锡公交,锡惠公交</value>
   </data>
-  <data name="AboutBtnMarketPlace" xml:space="preserve">
-    <value>亲！给个好评吧。</value>
+  <data name="Email" xml:space="preserve">
+    <value>xepher@126.com</value>
+  </data>
+  <data name="AuthorTitle" xml:space="preserve">
+    <value>me</value>
+  </data>
+  <data name="DataSourceTitle" xml:space="preserve">
+    <value>数据来源</value>
+  </data>
+  <data name="UpdateInformation" xml:space="preserve">
+    <value>更新说明</value>
+  </data>
+  <data name="PopupLineText" xml:space="preserve">
+    <value>线路:</value>
+  </data>
+  <data name="PopupLoadingText" xml:space="preserve">
+    <value>加载中...</value>
+  </data>
+  <data name="ApplicationBarIconButtonAddStationsTile" xml:space="preserve">
+    <value>添加附近站台图层</value>
+  </data>
+  <data name="ApplicationBarIconButtonMinusTile" xml:space="preserve">
+    <value>删除图层</value>
+  </data>
+  <data name="ApplicationBarIconButtonSwichRoadTile" xml:space="preserve">
+    <value>切换引擎</value>
+  </data>
+  <data name="ApplicationBarIconButtonChange" xml:space="preserve">
+    <value>换乘</value>
+  </data>
+  <data name="MsgGPSServiceNotOpen" xml:space="preserve">
+    <value>GPS服务未打开！</value>
+  </data>
+  <data name="PageTrafficInfo" xml:space="preserve">
+    <value>公交信息</value>
+  </data>
+  <data name="PageOther" xml:space="preserve">
+    <value>其他</value>
+  </data>
+  <data name="LoadingTextPrepareLines" xml:space="preserve">
+    <value>加载线路信息...</value>
+  </data>
+  <data name="LoadingTextReleaseDB" xml:space="preserve">
+    <value>释放数据库...</value>
+  </data>
+  <data name="BtnLoadTrafficInfo" xml:space="preserve">
+    <value>点击加载最新公交信息</value>
+  </data>
+  <data name="SettingsBtnUpdate" xml:space="preserve">
+    <value>点击检查更新</value>
+  </data>
+  <data name="SettingsTxtUpdate" xml:space="preserve">
+    <value>数据库更新：</value>
+  </data>
+  <data name="SettingsUpdateAlreadyLatest" xml:space="preserve">
+    <value>数据库已是最新版！</value>
+  </data>
+  <data name="SettingsUpdateFailured" xml:space="preserve">
+    <value>更新出错，数据库已回滚！</value>
+  </data>
+  <data name="SettingsUpdateFetchInfoError" xml:space="preserve">
+    <value>读取更新信息失败！</value>
+  </data>
+  <data name="SettingsUpdateSuccessed" xml:space="preserve">
+    <value>更新成功！</value>
+  </data>
+  <data name="SettingsUpdateUnknownError" xml:space="preserve">
+    <value>未知错误！</value>
+  </data>
+  <data name="SettingsUpdateTip" xml:space="preserve">
+    <value>Tip: 更新信息来自无锡公交官网，若不包含数据库更新，请忽略。</value>
+  </data>
+  <data name="LoadingTextDBDestroyed" xml:space="preserve">
+    <value>数据库损毁，尝试修复...</value>
   </data>
 </root>

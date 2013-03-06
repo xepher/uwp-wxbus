@@ -44,9 +44,6 @@
     <Reference Include="System.Windows" />
     <Reference Include="system" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Net" />
-    <Reference Include="mscorlib.extensions" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AppResource.Designer.cs">
@@ -54,8 +51,12 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResource.resx</DependentUpon>
     </Compile>
-    <Compile Include="AppSettingHelper.cs" />
-    <Compile Include="LocalizedStrings.cs" />
+    <Compile Include="AppSettingHelper.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="LocalizedStrings.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

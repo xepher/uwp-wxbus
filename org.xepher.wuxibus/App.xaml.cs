@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using System.Collections.Generic;
+using System.Globalization;
 using System.Windows;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
@@ -21,12 +22,17 @@ namespace org.xepher.wuxibus
         public Line SelectedLine { get; set; }
         public Station SelectedStation { get; set; }
         public Segment SelectedSegment { get; set; }
-        public int StationSplitNumber { get; set; }
+        public List<Line> Lines { get; set; }
 
-        private SQLiteHelper _daHelper;
-        public SQLiteHelper DAHelper
+        private SQLiteHelper _dAHelperInstance;
+        public SQLiteHelper DAHelperInstance
         {
-            get { return _daHelper ?? (_daHelper = new SQLiteHelper()); }
+            get { return _dAHelperInstance ?? (_dAHelperInstance = new SQLiteHelper()); }
+        }
+        private AdHelper _adHelperInstance;
+        internal AdHelper AdHelperInstance
+        {
+            get { return _adHelperInstance ?? (_adHelperInstance = new AdHelper()); }
         }
 
         /// <summary>
@@ -82,26 +88,27 @@ namespace org.xepher.wuxibus
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            //释放zip到IsolatedStorage
-            IsolatedStorage.Zip2IS(ReleaseResource.GetResource("/org.xepher.wuxibus;component/Data/wuxitraffic.zip"));
         }
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            DAHelperInstance.OpenConnection();
         }
 
         // Code to execute when the application is deactivated (sent to background)
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
+            DAHelperInstance.DisposeConnection();
         }
 
         // Code to execute when the application is closing (eg, user hit Back)
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
+            DAHelperInstance.DisposeConnection();
         }
 
         // Code to execute if a navigation fails

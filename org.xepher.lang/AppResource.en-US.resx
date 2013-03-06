@@ -120,9 +120,6 @@
   <data name="ApplicationBarIconButtonDirection" xml:space="preserve">
     <value>Switch</value>
   </data>
-  <data name="ApplicationBarIconButtonRefresh" xml:space="preserve">
-    <value>Refresh</value>
-  </data>
   <data name="ApplicationBarIconButtonSearch" xml:space="preserve">
     <value>Search</value>
   </data>
@@ -135,8 +132,8 @@
   <data name="ApplicationTitle" xml:space="preserve">
     <value>Wuxi Public Transportation(WP)</value>
   </data>
-  <data name="Author" xml:space="preserve">
-    <value>Author : xepher</value>
+  <data name="AuthorContent" xml:space="preserve">
+    <value>xepher</value>
   </data>
   <data name="BusBusID" xml:space="preserve">
     <value>Bus: </value>
@@ -156,19 +153,10 @@
   <data name="MsgNetworkUnavailable" xml:space="preserve">
     <value>No network connection available! Confirm your network settings!</value>
   </data>
-  <data name="MsgRefreshRoutes" xml:space="preserve">
-    <value>Are you want to refresh lines?</value>
+  <data name="PageBus" xml:space="preserve">
+    <value>Bus</value>
   </data>
-  <data name="MsgRefreshStations" xml:space="preserve">
-    <value>Are you want to refresh line {0}?</value>
-  </data>
-  <data name="PageAbout" xml:space="preserve">
-    <value>About</value>
-  </data>
-  <data name="PageBuses" xml:space="preserve">
-    <value>Buses</value>
-  </data>
-  <data name="PageMain" xml:space="preserve">
+  <data name="PageLine" xml:space="preserve">
     <value>Lines</value>
   </data>
   <data name="PageSearch" xml:space="preserve">
@@ -180,34 +168,100 @@
   <data name="PageStations" xml:space="preserve">
     <value>Stations</value>
   </data>
-  <data name="SettingsNetwork" xml:space="preserve">
-    <value>Network : </value>
-  </data>
-  <data name="SettingsNetworkMobile" xml:space="preserve">
-    <value>ChinaMobile</value>
-  </data>
-  <data name="SettingsNetworkTelecom" xml:space="preserve">
-    <value>ChinaTelecom</value>
-  </data>
-  <data name="SettingsNetworkUnicom" xml:space="preserve">
-    <value>ChinaUnicom</value>
-  </data>
   <data name="SystemTrayLoadingText" xml:space="preserve">
     <value>Loading...</value>
   </data>
   <data name="TitleExitApplication" xml:space="preserve">
     <value>Exit Application</value>
   </data>
-  <data name="TitleRefreshRoutes" xml:space="preserve">
-    <value>Refresh Lines</value>
+  <data name="ApplicationBarIconButtonLocate" xml:space="preserve">
+    <value>Locate</value>
   </data>
-  <data name="TitleRefreshStations" xml:space="preserve">
-    <value>Refresh Stations</value>
+  <data name="MsgNoLine" xml:space="preserve">
+    <value>No this line info!</value>
   </data>
-  <data name="AboutBtnDonate" xml:space="preserve">
-    <value>Donate</value>
+  <data name="PageLocate" xml:space="preserve">
+    <value>Locate</value>
   </data>
-  <data name="AboutBtnMarketPlace" xml:space="preserve">
-    <value>Vote</value>
+  <data name="Copyright" xml:space="preserve">
+    <value>Copyright © 2012-2013 All Rights Reserved.</value>
+  </data>
+  <data name="DataSourceContent" xml:space="preserve">
+    <value>无锡公交,锡惠公交</value>
+  </data>
+  <data name="Email" xml:space="preserve">
+    <value>xepher@126.com</value>
+  </data>
+  <data name="AuthorTitle" xml:space="preserve">
+    <value>me</value>
+  </data>
+  <data name="DataSourceTitle" xml:space="preserve">
+    <value>Source</value>
+  </data>
+  <data name="UpdateInformation" xml:space="preserve">
+    <value>Info</value>
+  </data>
+  <data name="PopupLineText" xml:space="preserve">
+    <value>Line:</value>
+  </data>
+  <data name="PopupLoadingText" xml:space="preserve">
+    <value>Loading...</value>
+  </data>
+  <data name="ApplicationBarIconButtonAddStationsTile" xml:space="preserve">
+    <value>AddStationsTile</value>
+  </data>
+  <data name="ApplicationBarIconButtonMinusTile" xml:space="preserve">
+    <value>DeleteTile</value>
+  </data>
+  <data name="ApplicationBarIconButtonSwichRoadTile" xml:space="preserve">
+    <value>SwitchEngine</value>
+  </data>
+  <data name="ApplicationBarIconButtonChange" xml:space="preserve">
+    <value>Change</value>
+  </data>
+  <data name="MsgGPSServiceNotOpen" xml:space="preserve">
+    <value>GPS Service not open!</value>
+  </data>
+  <data name="PageTrafficInfo" xml:space="preserve">
+    <value>Traffic Info</value>
+  </data>
+  <data name="PageOther" xml:space="preserve">
+    <value>Other</value>
+  </data>
+  <data name="LoadingTextPrepareLines" xml:space="preserve">
+    <value>Loading Line Information...</value>
+  </data>
+  <data name="LoadingTextReleaseDB" xml:space="preserve">
+    <value>Release Database...</value>
+  </data>
+  <data name="BtnLoadTrafficInfo" xml:space="preserve">
+    <value>Press to load latest traffic information</value>
+  </data>
+  <data name="SettingsBtnUpdate" xml:space="preserve">
+    <value>Press to update</value>
+  </data>
+  <data name="SettingsTxtUpdate" xml:space="preserve">
+    <value>Database Update:</value>
+  </data>
+  <data name="SettingsUpdateAlreadyLatest" xml:space="preserve">
+    <value>The database is already latest!</value>
+  </data>
+  <data name="SettingsUpdateFailured" xml:space="preserve">
+    <value>Update failured, database has been restored!</value>
+  </data>
+  <data name="SettingsUpdateFetchInfoError" xml:space="preserve">
+    <value>Fetch update information error!</value>
+  </data>
+  <data name="SettingsUpdateSuccessed" xml:space="preserve">
+    <value>Update successed!</value>
+  </data>
+  <data name="SettingsUpdateUnknownError" xml:space="preserve">
+    <value>Unknown error!</value>
+  </data>
+  <data name="SettingsUpdateTip" xml:space="preserve">
+    <value>Tip: the information comes from wuxibus.com, if this update does not contaion database update, please ignore it.</value>
+  </data>
+  <data name="LoadingTextDBDestroyed" xml:space="preserve">
+    <value>Database is destroyed, try to repair it...</value>
   </data>
 </root>

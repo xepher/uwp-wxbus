@@ -1,16 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2009/deployment" AppPlatformVersion="7.1">
-  <App xmlns="" ProductID="{050602a8-c3f6-48ca-83a0-c60482537205}" Title="无锡公交" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="org.xepher.wuxibus author" Description="Sample description" Publisher="org.xepher.wuxibus">
+  <App xmlns="" ProductID="{050602a8-c3f6-48ca-83a0-c60482537205}" Title="无锡公交" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="xepher" Description="Sample description" Publisher="org.xepher.wuxibus">
     <IconPath IsRelative="true" IsResource="false">ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
-      <!--嵌入果合SDK所需要的-->
-      <Capability Name="ID_CAP_NETWORKING"/>
-      <Capability Name="ID_CAP_WEBBROWSERCOMPONENT"/>
+      <!--嵌入芒果SDK所需要的-->
       <Capability Name="ID_CAP_IDENTITY_DEVICE"/>
-      <Capability Name="ID_CAP_PHONEDIALER"/>
       <Capability Name="ID_CAP_IDENTITY_USER"/>
+      <Capability Name="ID_CAP_WEBBROWSERCOMPONENT"/>
+      <Capability Name="ID_CAP_PHONEDIALER"/>
+      <Capability Name="ID_CAP_LOCATION"/>
       <Capability Name="ID_CAP_MEDIALIB"/>
+      <!--使用AirAd需要添加下面的权限-->
+      <!--<Capability Name="ID_CAP_SENSORS"/>-->
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="MainPage.xaml" />

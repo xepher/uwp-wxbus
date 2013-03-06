@@ -11,11 +11,14 @@
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True">
+    mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="480"
+    shell:SystemTray.IsVisible="False">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot" Background="Transparent">
+    <Grid x:Name="LayoutRoot">
+    	<Grid.Background>
+    		<ImageBrush Stretch="None" ImageSource="/Assets/Images/pano_dark_theme.jpg"/>
+    	</Grid.Background>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -29,7 +32,7 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" VerticalAlignment="Bottom">
-            <toolkit:AutoCompleteBox x:Name="ACBSearch" Height="85" Margin="12,0" Grid.Row="1" VerticalAlignment="Bottom" FontSize="32" IsTextCompletionEnabled="True" KeyUp="ACBSearch_KeyUp">
+            <toolkit:AutoCompleteBox x:Name="ACBSearch" Height="80" Grid.Row="1" VerticalAlignment="Bottom" FontSize="32" IsTextCompletionEnabled="True">
                 <toolkit:AutoCompleteBox.InputScope>
                     <InputScope>
                         <InputScopeName NameValue="Bopomofo"></InputScopeName>
@@ -38,7 +41,7 @@
                 <toolkit:AutoCompleteBox.ItemTemplate>
                     <DataTemplate>
                         <StackPanel>
-                            <TextBlock Text="{Binding Path=Name}"/>
+                            <TextBlock Text="{Binding line_name}"/>
                         </StackPanel>
                     </DataTemplate>
                 </toolkit:AutoCompleteBox.ItemTemplate>
