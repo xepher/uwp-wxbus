@@ -9,9 +9,9 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
     xmlns:org_xepher_model="clr-namespace:org.xepher.model;assembly=org.xepher.model"
     xmlns:sys="clr-namespace:System;assembly=mscorlib" x:Class="org.xepher.wuxibus.SettingPage"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    FontFamily="{StaticResource CustomFontFamilyNormal}"
+    FontSize="{StaticResource CustomFontSizeNormal}"
+    Foreground="{StaticResource CustomForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
     shell:SystemTray.IsVisible="True" BackKeyPress="SettingPage_OnBackKeyPress">
@@ -28,8 +28,8 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,12">
-            <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageSettings, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource CustomTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageSettings, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource CustomTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->

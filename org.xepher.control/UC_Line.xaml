@@ -4,9 +4,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    FontFamily="{StaticResource CustomFontFamilyNormal}"
+    FontSize="{StaticResource CustomFontSizeNormal}"
+    Foreground="{StaticResource CustomForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot" Background="#FF80B8DB" Margin="0,1,0,0">

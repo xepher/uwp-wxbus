@@ -313,6 +313,15 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 短信查询由运营商收取0.1元通讯费，接收免费。.
+        /// </summary>
+        public static string MsgSendSMS {
+            get {
+                return ResourceManager.GetString("MsgSendSMS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 车辆.
         /// </summary>
         public static string PageBus {
@@ -489,6 +498,15 @@ namespace org.xepher.lang {
         public static string TitleExitApplication {
             get {
                 return ResourceManager.GetString("TitleExitApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 发送短信.
+        /// </summary>
+        public static string TitleSendSMS {
+            get {
+                return ResourceManager.GetString("TitleSendSMS", resourceCulture);
             }
         }
         

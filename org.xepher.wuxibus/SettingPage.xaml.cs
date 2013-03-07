@@ -1,8 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Serialization;
@@ -242,5 +244,21 @@ namespace org.xepher.wuxibus
         {
             if (GlobalLoading.Instance.IsLoading) e.Cancel = true;
         }
+
+        //protected override void OnBackKeyPress(CancelEventArgs e)
+        //{
+        //    if (_isListPickerSelected)
+        //    {
+        //        string lang = AppSettingHelper.GetValueOrDefault("language", "zh-CN");
+        //        CultureInfo ci = new CultureInfo(lang);
+        //        AppResource.Culture = Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = ci;
+        //        while (NavigationService.CanGoBack)
+        //        {
+        //            NavigationService.RemoveBackEntry();
+        //        }
+        //        NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
+        //    }
+        //    base.OnBackKeyPress(e);
+        //}
     }
 }

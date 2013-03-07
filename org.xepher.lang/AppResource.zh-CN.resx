@@ -264,4 +264,10 @@
   <data name="LoadingTextDBDestroyed" xml:space="preserve">
     <value>数据库损毁，尝试修复...</value>
   </data>
+  <data name="MsgSendSMS" xml:space="preserve">
+    <value>短信查询由运营商收取0.1元通讯费，接收免费。</value>
+  </data>
+  <data name="TitleSendSMS" xml:space="preserve">
+    <value>发送短信</value>
+  </data>
 </root>

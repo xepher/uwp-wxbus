@@ -264,4 +264,10 @@
   <data name="LoadingTextDBDestroyed" xml:space="preserve">
     <value>Database is destroyed, try to repair it...</value>
   </data>
+  <data name="MsgSendSMS" xml:space="preserve">
+    <value>The SMS query carriers charged a communication fee of 0.1 yuan, and receive free of charge.</value>
+  </data>
+  <data name="TitleSendSMS" xml:space="preserve">
+    <value>Send SMS</value>
+  </data>
 </root>

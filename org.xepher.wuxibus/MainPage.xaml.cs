@@ -34,9 +34,7 @@ namespace org.xepher.wuxibus
 
 #if DEBUG
             Application.Current.Host.Settings.EnableFrameRateCounter = true;
-#endif
-
-#if !DEBUG
+#else
             _app.AdHelperInstance.InitializeAds(LayoutRoot, panoramaContainer);
 #endif
         }
@@ -100,6 +98,10 @@ namespace org.xepher.wuxibus
                 if (MessageBoxResult.Cancel == result)
                 {
                     e.Cancel = true;
+                }
+                else if(MessageBoxResult.OK== result)
+                {
+                    // TODO: 退出
                 }
             }
         }
@@ -257,5 +259,14 @@ namespace org.xepher.wuxibus
             btnLoadTrafficInfo.Visibility = Visibility.Collapsed;
             FetchTrafficInfo();
         }
+
+        //protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
+        //{
+        //    Dispatcher.BeginInvoke(() =>
+        //        {
+        //            NavigationService.RemoveBackEntry();
+        //        });
+        //    base.OnNavigatedFrom(e);
+        //}
     }
 }

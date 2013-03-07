@@ -4,7 +4,6 @@ using System.Linq;
 using System.Windows;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Net.NetworkInformation;
-using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.control;
 using org.xepher.lang;
@@ -85,9 +84,13 @@ namespace org.xepher.wuxibus
                     warp.GetBusALStationInfoCommonAsync(Station.line_id, Station.segment_id, Station.station_num,
                                                         returnStr);
                 }
+                //catch (System.Reflection.TargetInvocationException ex)
+                //{
+                //    // TODO: system.reflection.targetinvocationexception 会抛出
+                //    throw;
+                //}
                 catch (Exception)
                 {
-
                     throw;
                 }
             }

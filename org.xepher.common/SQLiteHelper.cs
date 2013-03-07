@@ -10,7 +10,7 @@ namespace org.xepher.common
     {
         private const string SELECT_ALL_LINE = "SELECT line_id,line_name,line_info FROM bus_line";
         private const string SELECT_SEGMENT = "SELECT line_id,segment_id,segment_name FROM bus_segment WHERE line_id = @line_id";
-        private const string SELECT_STATION = "SELECT line_id,segment_id,station_num,station_name FROM bus_station a JOIN bus_stationinfo b ON a.station_id == b.station_id WHERE line_id = @line_id AND segment_id = @segment_id";
+        private const string SELECT_STATION = "SELECT line_id,segment_id,station_num,station_smsid,station_name FROM bus_station a JOIN (SELECT station_id,station_name FROM bus_stationinfo) b ON a.station_id == b.station_id WHERE line_id = @line_id AND segment_id = @segment_id";
 
         // GPS定位附近的点
         private const string SELECT_STATIONS_BY_LOCATION = "SELECT station_smsid,station_name,jd_str,wd_str FROM bus_station a JOIN bus_stationinfo b ON a.station_id == b.station_id WHERE CAST(jd_str AS REAL) BETWEEN @longitude - @longituderadius AND @longitude + @longituderadius AND CAST(wd_str AS REAL) BETWEEN @latitude - @latituderadius AND @latitude + @latituderadius";

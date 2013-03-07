@@ -10,9 +10,9 @@
     xmlns:c4f="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     xmlns:lazyListBox="clr-namespace:LazyListBox;assembly=LazyListBox"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
-    FontFamily="{StaticResource PhoneFontFamilyNormal}"
-    FontSize="{StaticResource PhoneFontSizeNormal}"
-    Foreground="{StaticResource PhoneForegroundBrush}"
+    FontFamily="{StaticResource CustomFontFamilyNormal}"
+    FontSize="{StaticResource CustomFontSizeNormal}"
+    Foreground="{StaticResource CustomForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="False"
     BackKeyPress="PhoneApplicationPage_BackKeyPress">

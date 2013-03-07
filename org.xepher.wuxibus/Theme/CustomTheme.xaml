@@ -1,0 +1,26 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:org.xepher.lang;assembly=org.xepher.lang">
+
+    <!-- Refer Relationship
+           App.xaml
+        -> CustomTheme.xaml
+        -> ToolkitGeneric.xaml
+        -> Coding4FunGeneric.xaml
+        -> SystemGeneric.xaml
+        -> System.Windows.xaml
+        -> ThemeResources.xaml
+    
+        use darkblue style
+        in X:\Program Files\Microsoft SDKs\Windows Phone\v7.1\Design
+    -->
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ToolkitGeneric.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+
+    <!-- Language -->
+    <local:LocalizedStrings x:Key="LocalizedStrings" />
+    
+</ResourceDictionary>

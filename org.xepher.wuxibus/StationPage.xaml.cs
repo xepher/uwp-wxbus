@@ -33,9 +33,11 @@ namespace org.xepher.wuxibus
             Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
             _app.SelectedSegment = SelectedSegment = Segments.First();
 
+            // TODO: 首次只加载第一个Segment
             foreach (Segment segment in Segments)
             {
                 List<Station> lstStation = _app.DAHelperInstance.GetStation(Line.line_id, segment.segment_id);
+                lstStation.ForEach(s => s.line_name = Line.line_name);
                 pivotContainer.Title = Line.line_info;
 
                 Grid grid = new Grid();
@@ -67,10 +69,11 @@ namespace org.xepher.wuxibus
             {
                 UC_StationInfo stationInfo = new UC_StationInfo();
                 stationInfo.Text = lstStation[index].station_name;
-                stationInfo.Station = lstStation[index];
+                stationInfo.Grid.Tag = lstStation[index];
 
                 if (index == 0)
                 {
+                    // TODO: 起始站台图标更换
                     stationInfo.ImageSource = new BitmapImage(new Uri("/Assets/Images/station.png", UriKind.Relative));
                 }
                 else if (index == lstStation.Count - 1)
@@ -79,17 +82,18 @@ namespace org.xepher.wuxibus
                 }
                 else
                 {
+                    // TODO: 终点站台图标更换
                     stationInfo.ImageSource = new BitmapImage(new Uri("/Assets/Images/station.png", UriKind.Relative));
                 }
 
-                stationInfo.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(stationInfo_Tap);
+                stationInfo.Grid.Tap += stationInfo_Tap;
                 stationList.Items.Add(stationInfo);
             }
         }
 
         private void stationInfo_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            _app.SelectedStation = (sender as UC_StationInfo).Station;
+            _app.SelectedStation = ((sender as Grid).Tag as Station);
             NavigationService.Navigate(new Uri("/BusPage.xaml", UriKind.Relative));
         }
     }
