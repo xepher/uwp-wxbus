@@ -44,7 +44,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Coding4Fun.Toolkit.Controls">
-      <HintPath>..\org.xepher.wuxibus\Bin\Release\Coding4Fun.Toolkit.Controls.dll</HintPath>
+      <HintPath>..\packages\Coding4Fun.Toolkit (Windows Phone 7)\Coding4Fun.Toolkit.Controls.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
@@ -60,6 +60,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UC_Line.xaml.cs">
       <DependentUpon>UC_Line.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UC_Segment.xaml.cs">
+      <DependentUpon>UC_Segment.xaml</DependentUpon>
     </Compile>
     <Compile Include="UC_SplashScreen.xaml.cs">
       <DependentUpon>UC_SplashScreen.xaml</DependentUpon>
@@ -85,6 +88,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="UC_Line.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UC_Segment.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

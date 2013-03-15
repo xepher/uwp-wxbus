@@ -17,7 +17,7 @@
     				<SolidColorBrush Color="Black"/>
     			</TextBlock.Foreground>
     		</TextBlock>
-            <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250"/>
+            <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250" Foreground="{StaticResource CustomProcessBarBrush}"/>
     	</StackPanel>
     </Grid>
 </UserControl>

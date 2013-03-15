@@ -19,10 +19,7 @@
 
     <!--LayoutRoot contains the root grid where all other page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <controls:Panorama x:Name="panoramaContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}">
-        	<controls:Panorama.Background>
-                <ImageBrush ImageSource="/Assets/Images/pano_dark_theme.jpg"/>
-        	</controls:Panorama.Background>
+        <controls:Panorama x:Name="panoramaContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Background="{StaticResource CustomBackgroundImageBrush}">
 
             <!--Panorama item one-->
             <controls:PanoramaItem Header="{Binding Path=LocalizedResources.PageTrafficInfo, Source={StaticResource LocalizedStrings}}">

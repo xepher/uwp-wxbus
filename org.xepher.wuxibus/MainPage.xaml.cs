@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
 using Microsoft.Phone.Controls;
 using org.xepher.common;
@@ -21,22 +24,34 @@ namespace org.xepher.wuxibus
         private BackgroundWorker _backroungWorker;
         private Popup _splashScreenPopup;
         private List<Line> _lstLine;
-        private Popup _trafficInfoPopup = new Popup();
-        private About _about = new About();
+        private ObservableCollection<UC_Line> _collectionLines;
+        private Popup _trafficInfoPopup;
+        private About _about;
+        private int _restoreTime;
 
         public MainPage()
         {
             InitializeComponent();
 
             _app = (Application.Current as App);
+            _trafficInfoPopup = new Popup();
+            _about = new About();
 
             InitializeResources();
 
 #if DEBUG
             Application.Current.Host.Settings.EnableFrameRateCounter = true;
-#else
+#endif
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
+
+#if !DEBUG
             _app.AdHelperInstance.InitializeAds(LayoutRoot, panoramaContainer);
 #endif
+
+            base.OnNavigatedTo(e);
         }
 
         private void InitializeResources()
@@ -78,7 +93,7 @@ namespace org.xepher.wuxibus
 
         private void _line_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            _app.SelectedLine = (sender as UC_Line).Line;
+            _app.SelectedLine = ((sender as Grid).Tag as Line);
             NavigationService.Navigate(new Uri("/StationPage.xaml", UriKind.Relative));
         }
 
@@ -99,7 +114,7 @@ namespace org.xepher.wuxibus
                 {
                     e.Cancel = true;
                 }
-                else if(MessageBoxResult.OK== result)
+                else if (MessageBoxResult.OK == result)
                 {
                     // TODO: 退出
                 }
@@ -115,10 +130,10 @@ namespace org.xepher.wuxibus
 
                 _lstLine = _app.Lines = _app.DAHelperInstance.GetAllLine();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 Dispatcher.BeginInvoke(
-                    () => { (_splashScreenPopup.Child as UC_SplashScreen).Text = AppResource.LoadingTextDBDestroyed; });
+                    () => { (_splashScreenPopup.Child as UC_SplashScreen).Text = string.Format(AppResource.LoadingTextDBDestroyed, ++_restoreTime); });
 
                 _app.DAHelperInstance.DisposeConnection();
 
@@ -129,23 +144,54 @@ namespace org.xepher.wuxibus
 
                 _app.DAHelperInstance.OpenConnection();
 
-                FetchLines();
+                if (_restoreTime < 3)
+                    FetchLines();
+                else
+                    throw ex;
             }
         }
 
         private void InitializeUIComponent()
         {
+            List<UC_Line> _lines = new List<UC_Line>();
+
+            // 添加收藏的线路
+            ObservableCollection<Line> collection = AppSettingHelper.GetValueOrDefault(StringConstants.FAVOURITE_LINES,
+                                                                                       new ObservableCollection<Line>());
+            foreach (Line favLine in collection)
+            {
+                UC_Line _line = new UC_Line();
+                _line.Text = favLine.line_name;
+                _line.Grid.Tag = favLine;
+
+                _line.Grid.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(_line_Tap);
+                _lines.Add(_line);
+            }
+
+            // 去除已经收藏的线路
+            foreach (Line favLine in from line in collection from favLine in _lstLine where line == favLine select favLine)
+            {
+                _lstLine.Remove(favLine);
+            }
+
+            // 添加没有加入收藏的线路
             foreach (Line line in _lstLine)
             {
-                UC_Line _line = new UC_Line()
-                {
-                    Text = line.line_name,
-                    Line = line
-                };
+                UC_Line _line = new UC_Line();
+                _line.Text = line.line_name;
+                _line.Grid.Tag = line;
 
-                _line.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(_line_Tap);
-                linesList.Items.Add(_line);
+                _line.Grid.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(_line_Tap);
+                _lines.Add(_line);
             }
+            _collectionLines = new ObservableCollection<UC_Line>(_lines);
+
+            foreach (UC_Line ucLine in _lines)
+            {
+                ucLine.ParentLineList = _collectionLines;
+            }
+
+            linesList.ItemsSource = _collectionLines;
         }
 
         private void FetchTrafficInfo()
@@ -259,14 +305,5 @@ namespace org.xepher.wuxibus
             btnLoadTrafficInfo.Visibility = Visibility.Collapsed;
             FetchTrafficInfo();
         }
-
-        //protected override void OnNavigatedFrom(System.Windows.Navigation.NavigationEventArgs e)
-        //{
-        //    Dispatcher.BeginInvoke(() =>
-        //        {
-        //            NavigationService.RemoveBackEntry();
-        //        });
-        //    base.OnNavigatedFrom(e);
-        //}
     }
 }

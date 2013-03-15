@@ -1,0 +1,39 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:org.xepher.lang;assembly=org.xepher.lang"
+    xmlns:System="clr-namespace:System;assembly=System">
+
+    <!-- Refer Relationship
+           App.xaml
+        -> CustomTheme.xaml
+        -> ToolkitGeneric.xaml
+        -> Coding4FunGeneric.xaml
+        -> SystemGeneric.xaml
+        -> System.Windows.xaml
+        -> ThemeResources.xaml
+    
+        use lightblue style
+        in X:\Program Files\Microsoft SDKs\Windows Phone\v7.1\Design
+    -->
+    
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="ToolkitGeneric.xaml"/>
+    </ResourceDictionary.MergedDictionaries>
+    
+    <!-- Background image -->
+    <ImageBrush x:Key="CustomBackgroundImageBrush" ImageSource="/Assets/Images/pano_white_theme.jpg" Stretch="None"/>
+
+    <!-- Map Background image -->
+    <ImageBrush x:Key="CustomMapBackgroundImageBrush" ImageSource="/Assets/Background/map.background.png"/>
+
+    <!-- Search button image -->
+    <ImageBrush x:Key="CustomSearchButtonImageBrush" ImageSource="/Assets/Images/search.jpg" Stretch="None"/>
+
+    <!-- ProcessBar Foreground color-->
+    <SolidColorBrush x:Key="CustomProcessBarBrush" Color="#000000"/>
+
+    <!-- Language -->
+    <local:LocalizedStrings x:Key="LocalizedStrings" />
+    
+</ResourceDictionary>

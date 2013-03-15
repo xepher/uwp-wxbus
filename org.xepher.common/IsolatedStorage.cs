@@ -15,7 +15,7 @@ namespace org.xepher.common
         {
 #if DEBUG
             // 测试自动更新用
-            AppSettingHelper.AddOrUpdateValue("VersionCode", 26);
+            AppSettingHelper.AddOrUpdateValue(StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE_TEST);
 #endif
 
             byte[] data = new byte[2048];
@@ -49,7 +49,7 @@ namespace org.xepher.common
                                     }
                                     fileStream.Write(data, 0, size);
                                 }
-                                AppSettingHelper.AddOrUpdateValue("VersionCode", 27);
+                                AppSettingHelper.AddOrUpdateValue(StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE);
                             }
                         }
                     }

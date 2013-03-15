@@ -51,17 +51,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AdChina.WindowsPhone.SDK, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Adwo.Ad, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="Coding4Fun.Toolkit.Controls">
       <HintPath>..\packages\Coding4Fun.Toolkit (Windows Phone 7)\Coding4Fun.Toolkit.Controls.dll</HintPath>
     </Reference>
-    <Reference Include="Com.MSN.Ads.WindowsPhone7, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="LazyListBox">
       <HintPath>..\packages\LazyListBox\LazyListBox.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Advertising.Mobile, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
-    <Reference Include="Microsoft.Advertising.Mobile.UI, Version=6.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone" />
     <Reference Include="Microsoft.Phone.Controls, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Phone.Controls.Maps, Version=7.0.0.0, Culture=neutral, PublicKeyToken=24eec0d8c86cda1e" />
@@ -69,16 +64,10 @@
       <HintPath>..\packages\SilverlightToolkitWP.4.2012.10.9\lib\sl4-windowsphone71\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Phone.Interop" />
-    <Reference Include="MoAds">
-      <HintPath>..\packages\Ads\MoAds.dll</HintPath>
-    </Reference>
     <Reference Include="mogo_WP7_sdk">
       <HintPath>..\packages\Ads\mogo_WP7_sdk.dll</HintPath>
     </Reference>
-    <Reference Include="Mt.airAD.WindowsPhone, Version=1.3.0.0, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="Nokia.Ads.Silverlight, Version=1.0.913.3694, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="SharpZipLib.WindowsPhone7, Version=0.86.0.518, Culture=neutral, processorArchitecture=MSIL" />
-    <Reference Include="SmartMad.Ads.WindowsPhone7, Version=2.0.3.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System.Device" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.ServiceModel" />
@@ -129,32 +118,56 @@
       <DependentUpon>StationPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Page Include="Theme\ToolkitGeneric.xaml">
+    <Compile Include="Theme\Themes.cs" />
+    <Page Include="SearchPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Theme\dark\ToolkitGeneric.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Resource Include="Theme\CustomTheme.xaml">
+    <Page Include="Theme\light\Coding4FunGeneric.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Resource Include="Theme\light\CustomTheme.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Resource>
+    <Page Include="Theme\light\System.Windows.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Theme\light\SystemGeneric.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Theme\light\ThemeResources.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Theme\light\ToolkitGeneric.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Resource Include="Theme\dark\CustomTheme.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Resource>
-    <Page Include="Properties\DesignTimeResources.xaml" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-      <ContainsDesignTimeResources>true</ContainsDesignTimeResources>
-    </Page>
-    <Page Include="Theme\Coding4FunGeneric.xaml">
+    <Page Include="Theme\dark\Coding4FunGeneric.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Theme\SystemGeneric.xaml">
+    <Page Include="Theme\dark\SystemGeneric.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Theme\System.Windows.xaml">
+    <Page Include="Theme\dark\System.Windows.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Theme\ThemeResources.xaml">
+    <Page Include="Theme\dark\ThemeResources.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -176,10 +189,6 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="SearchPage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="SettingPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -190,16 +199,31 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Assets\Icons\dark\appbar.add.rest.png" />
-    <Content Include="Assets\Icons\dark\appbar.change.png" />
-    <Content Include="Assets\Icons\dark\appbar.minus.rest.png" />
-    <Content Include="Assets\Icons\dark\appbar.places.png" />
     <Content Include="Assets\Background\map.background.png" />
     <Content Include="Assets\Button\mypos_active.png" />
     <Content Include="Assets\Button\mypos_inactive.png" />
+    <Content Include="Assets\Icons\dark\appbar.add.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.change.png" />
+    <Content Include="Assets\Icons\dark\appbar.favs.addto.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.feature.search.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.minus.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.next.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.refresh.rest.png" />
     <Content Include="Assets\Icons\dark\appbar.send.rest.png" />
+    <Content Include="Assets\Icons\dark\appbar.statusPost.Pin.png" />
+    <Content Include="Assets\Icons\light\appbar.add.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.change.png" />
+    <Content Include="Assets\Icons\light\appbar.favs.addto.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.feature.search.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.minus.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.next.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.refresh.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.send.rest.png" />
+    <Content Include="Assets\Icons\light\appbar.statusPost.Pin.png" />
     <Content Include="Assets\Images\bus.png" />
     <Content Include="Assets\Images\pano_dark_theme.jpg" />
+    <Content Include="Assets\Images\pano_white_theme.jpg" />
+    <Content Include="Assets\Images\search.jpg" />
     <Content Include="Assets\Images\station.png" />
     <Content Include="SplashScreenImage.jpg" />
     <Resource Include="Data\wuxitraffic.zip" />
@@ -211,7 +235,6 @@
     <Content Include="ApplicationIcon.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Assets\Icons\dark\appbar.next.rest.png" />
     <Content Include="Background.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -237,10 +260,6 @@
       <Project>{2245FECB-D389-4681-86E3-1F589D8331C3}</Project>
       <Name>org.xepher.webservice</Name>
     </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Assets\Icons\dark\appbar.feature.search.rest.png" />
-    <Content Include="Assets\Icons\dark\appbar.refresh.rest.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\Silverlight for Phone\$(TargetFrameworkVersion)\Microsoft.Silverlight.$(TargetFrameworkProfile).Overrides.targets" />

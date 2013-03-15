@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Imaging;
@@ -22,38 +23,67 @@ namespace org.xepher.wuxibus
         {
             InitializeComponent();
 
+            _app = (Application.Current as App);
+        }
+
+        protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
+        {
             InitializeUIComponent();
+
+#if !DEBUG
+            _app.AdHelperInstance.InitializeAds(LayoutRoot, pivotContainer);
+#endif
+
+            base.OnNavigatedTo(e);
         }
 
         private void InitializeUIComponent()
         {
-            _app = (Application.Current as App);
-
-            Line = _app.SelectedLine;
-            Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
-            _app.SelectedSegment = SelectedSegment = Segments.First();
-
-            // TODO: 首次只加载第一个Segment
-            foreach (Segment segment in Segments)
+            if (pivotContainer.Items.Count == 0)
             {
-                List<Station> lstStation = _app.DAHelperInstance.GetStation(Line.line_id, segment.segment_id);
-                lstStation.ForEach(s => s.line_name = Line.line_name);
-                pivotContainer.Title = Line.line_info;
+                // 正常访问(无参数)
+                if (NavigationContext.QueryString.Count != 1)
+                {
+                    Line = _app.SelectedLine;
+                    Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
+                    _app.SelectedSegment = SelectedSegment = Segments.First();
+                }
+                else
+                {
+                    // 开始屏幕砖块进入(带segment参数),以及从查询站台页面进入(带segment参数)
 
-                Grid grid = new Grid();
-                LazyListBox.LazyListBox stationList = new LazyListBox.LazyListBox();
-                PivotItem pivotItem = new PivotItem();
-                grid.Children.Add(stationList);
-                pivotItem.Header = segment.segment_name;
-                pivotItem.Content = grid;
-                pivotContainer.Items.Add(pivotItem);
+                    // 如果存在QueryString指定Segment，就将特定segmentId的Segment移动到第一个位置上
+                    int segmentId = int.Parse(NavigationContext.QueryString["segment"]);
 
-                BindStationList(stationList, lstStation);
+                    Line = _app.SelectedLine = _app.DAHelperInstance.GetLineBySegmentId(segmentId);
+                    Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
+
+                    Segment s = Segments.FirstOrDefault(t => t.segment_id == segmentId);
+                    Segments.Remove(s);
+                    Segments.Insert(0, s);
+
+                    _app.SelectedSegment = SelectedSegment = s;
+                }
+
+                // 构造空Pivot框架
+                foreach (Segment segment in Segments)
+                {
+                    pivotContainer.Title = Line.line_info;
+
+                    Grid grid = new Grid();
+                    LazyListBox.LazyListBox stationList = new LazyListBox.LazyListBox();
+                    PivotItem pivotItem = new PivotItem();
+                    grid.Children.Add(stationList);
+                    pivotItem.Header = segment.segment_name;
+                    pivotItem.Content = grid;
+                    pivotContainer.Items.Add(pivotItem);
+                }
             }
         }
 
         private void BindStationList(LazyListBox.LazyListBox stationList, List<Station> lstStation)
         {
+            if (lstStation == null || lstStation.Count == 0) return;
             int splitIndex = lstStation.Min(s => s.station_num) - 1;
             if (splitIndex != 0)
             {
@@ -95,6 +125,24 @@ namespace org.xepher.wuxibus
         {
             _app.SelectedStation = ((sender as Grid).Tag as Station);
             NavigationService.Navigate(new Uri("/BusPage.xaml", UriKind.Relative));
+        }
+
+        private void PivotContainer_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LazyListBox.LazyListBox stationList =
+                ((e.AddedItems[0] as PivotItem).Content as Grid).Children[0] as LazyListBox.LazyListBox;
+
+            if (stationList.Items.Count > 0) return;
+
+            Segment segment = Segments.First(s => s.segment_name == (e.AddedItems[0] as PivotItem).Header.ToString());
+
+            new Thread(() =>
+                {
+                    List<Station> lstStation = _app.DAHelperInstance.GetStation(Line.line_id, segment.segment_id);
+                    lstStation.ForEach(s => s.line_name = Line.line_name);
+
+                    Dispatcher.BeginInvoke(() => BindStationList(stationList, lstStation));
+                }).Start();
         }
     }
 }

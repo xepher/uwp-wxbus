@@ -262,12 +262,36 @@
     <value>Tip: the information comes from wuxibus.com, if this update does not contaion database update, please ignore it.</value>
   </data>
   <data name="LoadingTextDBDestroyed" xml:space="preserve">
-    <value>Database is destroyed, try to repair it...</value>
+    <value>Database is destroyed, try to repair it... {0}/3</value>
   </data>
   <data name="MsgSendSMS" xml:space="preserve">
     <value>The SMS query carriers charged a communication fee of 0.1 yuan, and receive free of charge.</value>
   </data>
   <data name="TitleSendSMS" xml:space="preserve">
     <value>Send SMS</value>
+  </data>
+  <data name="MenuPinToStart" xml:space="preserve">
+    <value>Pin to start</value>
+  </data>
+  <data name="MsgPinToStart" xml:space="preserve">
+    <value>Pin {0} to start?</value>
+  </data>
+  <data name="TitlePinToStart" xml:space="preserve">
+    <value>Pin to start</value>
+  </data>
+  <data name="SettingsTxtTheme" xml:space="preserve">
+    <value>Theme:</value>
+  </data>
+  <data name="AuthorWeiboContent" xml:space="preserve">
+    <value>http://weibo.cn/xepher</value>
+  </data>
+  <data name="AuthorWeiboTitle" xml:space="preserve">
+    <value>weibo</value>
+  </data>
+  <data name="PageSearchTitleLineSearch" xml:space="preserve">
+    <value>Line Search</value>
+  </data>
+  <data name="PageSearchTitleStationSearch" xml:space="preserve">
+    <value>Station Search</value>
   </data>
 </root>

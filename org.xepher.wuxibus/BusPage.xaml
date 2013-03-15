@@ -12,13 +12,10 @@
     Foreground="{StaticResource CustomForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="False">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot">
-    	<Grid.Background>
-    		<ImageBrush Stretch="None" ImageSource="/Assets/Images/pano_dark_theme.jpg"/>
-    	</Grid.Background>
+    <Grid x:Name="LayoutRoot" Background="{StaticResource CustomBackgroundImageBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>

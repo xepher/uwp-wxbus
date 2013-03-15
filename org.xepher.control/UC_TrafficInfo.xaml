@@ -9,7 +9,7 @@
     Foreground="{StaticResource CustomForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
     
-    <Grid x:Name="LayoutRoot" Background="#FF80B8DB" Margin="0,1,0,0">
+    <Grid x:Name="LayoutRoot" Background="#FF80B8DB">
         <Border Width="10" Background="#FF009BE3" HorizontalAlignment="Left" Margin="5,2.5,0,2.5"/>
         <TextBlock x:Name="txtTrafficInfo" Margin="17,5,0,5" FontSize="32" Width="463" />
     </Grid>

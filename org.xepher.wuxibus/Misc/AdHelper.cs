@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Windows;
 using System.Windows.Controls;
-using Microsoft.Phone.Controls;
 using mogo_WP7_sdk;
-using Microsoft.Phone.Shell;
 using mogo_WP7_sdk.Common.EventArgs;
 
 namespace org.xepher.wuxibus.misc
@@ -12,13 +10,13 @@ namespace org.xepher.wuxibus.misc
     {
         private const string AD_UNIT_ID = "4ebaee716906425db9fd0afd16f9f008";
         private AdsMogoView _adsmogo;
-        private Panorama _panorama;
+        private Control _container;
 
-        internal void InitializeAds(Panel panel, Panorama panorama)
+        internal void InitializeAds(Panel panel, Control container)
         {
             if (_adsmogo == null)
             {
-                _panorama = panorama;
+                _container = container;
                 _adsmogo = new AdsMogoView()
                                {
                                    AppID = AD_UNIT_ID,
@@ -39,7 +37,7 @@ namespace org.xepher.wuxibus.misc
             switch (e.Description)
             {
                 case DescriptionEventArgs.AdStatus.ADSUCCEED:
-                    _panorama.Margin = new Thickness(0, 0, 0, 72);
+                    _container.Margin = new Thickness(0, 0, 0, 72);
                     _adsmogo.Height = 72;
                     break;
             }
@@ -47,7 +45,7 @@ namespace org.xepher.wuxibus.misc
 
         private void _adsmogo_MogoCloseEvent(object sender, EventArgs e)
         {
-            _panorama.Margin = new Thickness(0, 0, 0, 0);
+            _container.Margin = new Thickness(0, 0, 0, 0);
             _adsmogo.StopAdService();
         }
     }

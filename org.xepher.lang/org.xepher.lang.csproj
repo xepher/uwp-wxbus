@@ -54,6 +54,7 @@
     <Compile Include="AppSettingHelper.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Constants.cs" />
     <Compile Include="LocalizedStrings.cs">
       <SubType>Code</SubType>
     </Compile>

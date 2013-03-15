@@ -190,8 +190,9 @@ namespace org.xepher.wuxibus
             (ApplicationBar.Buttons[1] as ApplicationBarIconButton).IsEnabled = false;
             (ApplicationBar.Buttons[2] as ApplicationBarIconButton).IsEnabled = false;
 
-            var t = new Thread(() =>
+            new Thread(() =>
                 {
+                    // 获取指定范围内所有站台
                     List<Station> allStations =
                         _app.DAHelperInstance.GetStationsByLocation(
                             _geoCoordinateWatcher.Position.Location.Longitude,
@@ -236,8 +237,7 @@ namespace org.xepher.wuxibus
                             ApplicationBar.IsVisible = true;
                             _popupLoading.IsOpen = false;
                         });
-                });
-            t.Start();
+                }).Start();
         }
 
         private void _stationPushPin_Tap(object sender, GestureEventArgs e)
@@ -247,7 +247,7 @@ namespace org.xepher.wuxibus
             _popupLoading.IsOpen = true;
             ApplicationBar.IsVisible = false;
 
-            var t = new Thread(() =>
+            new Thread(() =>
                 {
                     List<Station> stations = _app.DAHelperInstance.GetStationByLocation(location.Longitude,
                                                                                         location.Latitude);
@@ -258,8 +258,7 @@ namespace org.xepher.wuxibus
 
                             _popupLoading.IsOpen = false;
                         });
-                });
-            t.Start();
+                }).Start();
         }
 
         private void PopupLines(List<Station> stations)

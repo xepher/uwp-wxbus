@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Navigation;
@@ -7,6 +8,7 @@ using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.lang;
 using org.xepher.model;
+using org.xepher.wuxibus.Theme;
 using org.xepher.wuxibus.misc;
 
 namespace org.xepher.wuxibus
@@ -43,6 +45,9 @@ namespace org.xepher.wuxibus
             // Localization initialization
             InitializeLanguage();
 
+            // Theme initialization
+            InitializeTheme();
+
             // Global handler for uncaught exceptions. 
             UnhandledException += Application_UnhandledException;
 
@@ -74,12 +79,34 @@ namespace org.xepher.wuxibus
 
         }
 
+        private void InitializeTheme()
+        {
+            Themes _theme = AppSettingHelper.GetValueOrDefault(StringConstants.THEME, Themes.DarkBlue);
+            ResourceDictionary resourceDictionary = new ResourceDictionary();
+            if (_theme == Themes.DarkBlue)
+            {
+                Application.LoadComponent(resourceDictionary,
+                                          new Uri("/org.xepher.wuxibus;component/Theme/dark/CustomTheme.xaml",
+                                                  UriKind.Relative));
+            }
+            else
+            {
+                Application.LoadComponent(resourceDictionary,
+                                          new Uri("/org.xepher.wuxibus;component/Theme/light/CustomTheme.xaml",
+                                                  UriKind.Relative));
+            }
+            if (Application.Current.Resources.MergedDictionaries.Count == 0)
+                Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
+            else
+                Application.Current.Resources.MergedDictionaries[0] = resourceDictionary;
+        }
+
         private void InitializeLanguage()
         {
-            string _lang = AppSettingHelper.GetValueOrDefault("language", string.Empty);
+            string _lang = AppSettingHelper.GetValueOrDefault(StringConstants.LANGUAGE, string.Empty);
             if (string.IsNullOrEmpty(_lang))
             {
-                AppSettingHelper.AddOrUpdateValue("language","zh-cn");
+                AppSettingHelper.AddOrUpdateValue(StringConstants.LANGUAGE, StringConstants.LANGUAGE_ZHCN);
             }
             AppResource.Culture = new CultureInfo(_lang);
         }
@@ -114,6 +141,7 @@ namespace org.xepher.wuxibus
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            DAHelperInstance.DisposeConnection();
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 // A navigation has failed; break into the debugger
@@ -124,6 +152,7 @@ namespace org.xepher.wuxibus
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            DAHelperInstance.DisposeConnection();
             if (System.Diagnostics.Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger

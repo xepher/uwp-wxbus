@@ -1,18 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Net;
 using System.Text;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Xml.Serialization;
 using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.lang;
 using org.xepher.model;
+using org.xepher.wuxibus.Theme;
 
 namespace org.xepher.wuxibus
 {
@@ -28,7 +28,7 @@ namespace org.xepher.wuxibus
 
             _app = (Application.Current as App);
 
-            string lang = AppSettingHelper.GetValueOrDefault("language", "zh-CN");
+            string lang = AppSettingHelper.GetValueOrDefault(StringConstants.LANGUAGE, StringConstants.LANGUAGE_ZHCN);
             for (int index = 0; index < lstPickerLang.Items.Count; index++)
             {
                 if (lstPickerLang.Items[index].ToString().ToLower() == lang.ToLower())
@@ -37,6 +37,9 @@ namespace org.xepher.wuxibus
                     break;
                 }
             }
+
+            Themes _theme = AppSettingHelper.GetValueOrDefault(StringConstants.THEME, Themes.DarkBlue);
+            lstPickerTheme.SelectedItem = _theme;
 
             _isListPickerSelected = true;
         }
@@ -48,10 +51,10 @@ namespace org.xepher.wuxibus
                 switch (lstPickerLang.SelectedItem.ToString())
                 {
                     case "en-US":
-                        AppSettingHelper.AddOrUpdateValue("language", "en-US");
+                        AppSettingHelper.AddOrUpdateValue(StringConstants.LANGUAGE, StringConstants.LANGUAGE_ENUS);
                         break;
                     case "zh-CN":
-                        AppSettingHelper.AddOrUpdateValue("language", "zh-CN");
+                        AppSettingHelper.AddOrUpdateValue(StringConstants.LANGUAGE, StringConstants.LANGUAGE_ZHCN);
                         break;
                 }
             }
@@ -62,6 +65,7 @@ namespace org.xepher.wuxibus
             btnUpdate.IsEnabled = false;
             // 释放sqlite连接
             _app.DAHelperInstance.DisposeConnection();
+            SystemTray.IsVisible = true;
             GlobalLoading.Instance.IsLoading = true;
 
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://221.130.60.79:8080/Bus/update.xml");
@@ -93,7 +97,7 @@ namespace org.xepher.wuxibus
 
                 if (appUpdateInfo != null)
                 {
-                    if (appUpdateInfo.VersionCode > AppSettingHelper.GetValueOrDefault("VersionCode", 27))
+                    if (appUpdateInfo.VersionCode > AppSettingHelper.GetValueOrDefault(StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE))
                     {
                         Dispatcher.BeginInvoke(() =>
                             {
@@ -121,14 +125,14 @@ namespace org.xepher.wuxibus
 
                                             // 释放zip包中db,会替换掉原来的db
                                             IsolatedStorage.AppUpdateDB();
-                                            AppSettingHelper.AddOrUpdateValue("VersionCode", appUpdateInfo.VersionCode);
+                                            AppSettingHelper.AddOrUpdateValue(StringConstants.VERSION_CODE, appUpdateInfo.VersionCode);
 
                                             Dispatcher.BeginInvoke(() =>
                                                 {
                                                     // 更新完毕
                                                     btnUpdate.Content = string.Format(AppResource.SettingsBtnUpdate,
                                                                                       AppSettingHelper.GetValueOrDefault
-                                                                                          ("VersionCode", 27));
+                                                                                          (StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE));
 
                                                     ToastPrompt toast = new ToastPrompt();
                                                     toast.Message = AppResource.SettingsUpdateSuccessed;
@@ -157,6 +161,7 @@ namespace org.xepher.wuxibus
                                             Dispatcher.BeginInvoke(() =>
                                                 {
                                                     GlobalLoading.Instance.IsLoading = false;
+                                                    SystemTray.IsVisible = false;
                                                     // 打开sqlite连接
                                                     _app.DAHelperInstance.OpenConnection();
                                                     btnUpdate.IsEnabled = true;
@@ -170,6 +175,7 @@ namespace org.xepher.wuxibus
                                         {
                                             // 用户不更新
                                             GlobalLoading.Instance.IsLoading = false;
+                                            SystemTray.IsVisible = false;
                                             // 打开sqlite连接
                                             _app.DAHelperInstance.OpenConnection();
                                             btnUpdate.IsEnabled = true;
@@ -187,6 +193,7 @@ namespace org.xepher.wuxibus
 
                                 // 已经是最新版,不用更新
                                 GlobalLoading.Instance.IsLoading = false;
+                                SystemTray.IsVisible = false;
                                 // 打开sqlite连接
                                 _app.DAHelperInstance.OpenConnection();
                                 btnUpdate.IsEnabled = true;
@@ -203,6 +210,7 @@ namespace org.xepher.wuxibus
 
                             // 读取更新信息失败
                             GlobalLoading.Instance.IsLoading = false;
+                            SystemTray.IsVisible = false;
                             // 打开sqlite连接
                             _app.DAHelperInstance.OpenConnection();
                             btnUpdate.IsEnabled = true;
@@ -219,6 +227,7 @@ namespace org.xepher.wuxibus
 
                     // 读取更新信息失败
                     GlobalLoading.Instance.IsLoading = false;
+                    SystemTray.IsVisible = false;
                     // 打开sqlite连接
                     _app.DAHelperInstance.OpenConnection();
                     btnUpdate.IsEnabled = true;
@@ -249,7 +258,7 @@ namespace org.xepher.wuxibus
         //{
         //    if (_isListPickerSelected)
         //    {
-        //        string lang = AppSettingHelper.GetValueOrDefault("language", "zh-CN");
+        //        string lang = AppSettingHelper.GetValueOrDefault(StringConstants.LANGUAGE, StringConstants.LANGUAGE_ZHCN);
         //        CultureInfo ci = new CultureInfo(lang);
         //        AppResource.Culture = Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = ci;
         //        while (NavigationService.CanGoBack)
@@ -260,5 +269,21 @@ namespace org.xepher.wuxibus
         //    }
         //    base.OnBackKeyPress(e);
         //}
+
+        private void lstPickerTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (_isListPickerSelected)
+            {
+                switch (lstPickerTheme.SelectedItem as Themes?)
+                {
+                    case Themes.DarkBlue:
+                        AppSettingHelper.AddOrUpdateValue(StringConstants.THEME, Themes.DarkBlue);
+                        break;
+                    case Themes.LightBlue:
+                        AppSettingHelper.AddOrUpdateValue(StringConstants.THEME, Themes.LightBlue);
+                        break;
+                }
+            }
+        }
     }
 }

@@ -13,6 +13,6 @@
     <Grid x:Name="LayoutRoot">
         <Image Height="800" x:Name="imgSplashScreen" Stretch="Fill" Width="480" Source="SplashScreenImage.jpg" />
         <TextBlock x:Name="txtLoading" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,200"/>
-        <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250"/>
+        <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250" Foreground="{StaticResource CustomProcessBarBrush}"/>
     </Grid>
 </UserControl>

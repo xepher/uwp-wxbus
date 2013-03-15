@@ -6,21 +6,18 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit" 
-    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit" 
-    xmlns:org_xepher_model="clr-namespace:org.xepher.model;assembly=org.xepher.model"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib" x:Class="org.xepher.wuxibus.SettingPage"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:theme="clr-namespace:org.xepher.wuxibus.Theme"
+    x:Class="org.xepher.wuxibus.SettingPage"
     FontFamily="{StaticResource CustomFontFamilyNormal}"
     FontSize="{StaticResource CustomFontSizeNormal}"
     Foreground="{StaticResource CustomForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
-    shell:SystemTray.IsVisible="True" BackKeyPress="SettingPage_OnBackKeyPress">
+    shell:SystemTray.IsVisible="False" BackKeyPress="SettingPage_OnBackKeyPress">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot">
-    	<Grid.Background>
-    		<ImageBrush Stretch="None" ImageSource="/Assets/Images/pano_dark_theme.jpg"/>
-    	</Grid.Background>
+    <Grid x:Name="LayoutRoot" Background="{StaticResource CustomBackgroundImageBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
@@ -40,6 +37,11 @@
         			<sys:String>en-US</sys:String>
         			<sys:String>zh-CN</sys:String>
         		</toolkit:ListPicker>
+                <TextBlock x:Name="txtTheme" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.SettingsTxtTheme, Source={StaticResource LocalizedStrings}}" FontSize="26.667"/>
+                <toolkit:ListPicker x:Name="lstPickerTheme" Margin="4,0" SelectionChanged="lstPickerTheme_SelectionChanged" BorderThickness="3" FontSize="25.333">
+                	<theme:Themes>DarkBlue</theme:Themes>
+                	<theme:Themes>LightBlue</theme:Themes>
+                </toolkit:ListPicker>
                 <TextBlock x:Name="txtUpdate" Text="{Binding Path=LocalizedResources.SettingsTxtUpdate, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" FontSize="26.667"/>
                 <Button x:Name="btnUpdate" Content="{Binding Path=LocalizedResources.SettingsBtnUpdate, Source={StaticResource LocalizedStrings}}" Click="BtnUpdate_OnClick"/>
         	</StackPanel>

@@ -169,6 +169,24 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to http://weibo.cn/xepher.
+        /// </summary>
+        public static string AuthorWeiboContent {
+            get {
+                return ResourceManager.GetString("AuthorWeiboContent", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to weibo.
+        /// </summary>
+        public static string AuthorWeiboTitle {
+            get {
+                return ResourceManager.GetString("AuthorWeiboTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 点击加载最新公交信息.
         /// </summary>
         public static string BtnLoadTrafficInfo {
@@ -250,7 +268,7 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to 数据库损毁，尝试修复....
+        ///   Looks up a localized string similar to 数据库损毁，尝试修复... {0}/3.
         /// </summary>
         public static string LoadingTextDBDestroyed {
             get {
@@ -273,6 +291,15 @@ namespace org.xepher.lang {
         public static string LoadingTextReleaseDB {
             get {
                 return ResourceManager.GetString("LoadingTextReleaseDB", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 固定到“开始”屏幕.
+        /// </summary>
+        public static string MenuPinToStart {
+            get {
+                return ResourceManager.GetString("MenuPinToStart", resourceCulture);
             }
         }
         
@@ -309,6 +336,15 @@ namespace org.xepher.lang {
         public static string MsgNoLine {
             get {
                 return ResourceManager.GetString("MsgNoLine", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 将 {0} 固定到“开始”屏幕吗？.
+        /// </summary>
+        public static string MsgPinToStart {
+            get {
+                return ResourceManager.GetString("MsgPinToStart", resourceCulture);
             }
         }
         
@@ -367,6 +403,24 @@ namespace org.xepher.lang {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 线路查询.
+        /// </summary>
+        public static string PageSearchTitleLineSearch {
+            get {
+                return ResourceManager.GetString("PageSearchTitleLineSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 站台查询.
+        /// </summary>
+        public static string PageSearchTitleStationSearch {
+            get {
+                return ResourceManager.GetString("PageSearchTitleStationSearch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to 设置.
         /// </summary>
         public static string PageSettings {
@@ -417,6 +471,15 @@ namespace org.xepher.lang {
         public static string SettingsBtnUpdate {
             get {
                 return ResourceManager.GetString("SettingsBtnUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 主题：.
+        /// </summary>
+        public static string SettingsTxtTheme {
+            get {
+                return ResourceManager.GetString("SettingsTxtTheme", resourceCulture);
             }
         }
         
@@ -498,6 +561,15 @@ namespace org.xepher.lang {
         public static string TitleExitApplication {
             get {
                 return ResourceManager.GetString("TitleExitApplication", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to 固定到“开始”屏幕.
+        /// </summary>
+        public static string TitlePinToStart {
+            get {
+                return ResourceManager.GetString("TitlePinToStart", resourceCulture);
             }
         }
         

@@ -262,12 +262,36 @@
     <value>Tip: 更新信息来自无锡公交官网，若不包含数据库更新，请忽略。</value>
   </data>
   <data name="LoadingTextDBDestroyed" xml:space="preserve">
-    <value>数据库损毁，尝试修复...</value>
+    <value>数据库损毁，尝试修复... {0}/3</value>
   </data>
   <data name="MsgSendSMS" xml:space="preserve">
     <value>短信查询由运营商收取0.1元通讯费，接收免费。</value>
   </data>
   <data name="TitleSendSMS" xml:space="preserve">
     <value>发送短信</value>
+  </data>
+  <data name="MenuPinToStart" xml:space="preserve">
+    <value>固定到“开始”屏幕</value>
+  </data>
+  <data name="MsgPinToStart" xml:space="preserve">
+    <value>将 {0} 固定到“开始”屏幕吗？</value>
+  </data>
+  <data name="TitlePinToStart" xml:space="preserve">
+    <value>固定到“开始”屏幕</value>
+  </data>
+  <data name="SettingsTxtTheme" xml:space="preserve">
+    <value>主题：</value>
+  </data>
+  <data name="AuthorWeiboContent" xml:space="preserve">
+    <value>http://weibo.cn/xepher</value>
+  </data>
+  <data name="AuthorWeiboTitle" xml:space="preserve">
+    <value>weibo</value>
+  </data>
+  <data name="PageSearchTitleLineSearch" xml:space="preserve">
+    <value>线路查询</value>
+  </data>
+  <data name="PageSearchTitleStationSearch" xml:space="preserve">
+    <value>站台查询</value>
   </data>
 </root>

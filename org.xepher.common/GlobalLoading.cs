@@ -1,5 +1,4 @@
-﻿using System.Windows.Media;
-using Microsoft.Phone.Shell;
+﻿using Microsoft.Phone.Shell;
 using System.ComponentModel;
 using Microsoft.Phone.Controls;
 using System.Windows.Navigation;

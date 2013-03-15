@@ -11,17 +11,13 @@
     Foreground="{StaticResource CustomForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
 
-    <Grid x:Name="LayoutRoot" Background="#FF80B8DB" Margin="0,1,0,0">
-    	<Grid.RowDefinitions>
-    		<RowDefinition Height="0.015*"/>
-    		<RowDefinition Height="0.985*"/>
-    	</Grid.RowDefinitions>
-        <Grid x:Name="GridPanel" Grid.Row="1">
+    <Grid x:Name="LayoutRoot" Background="#FF80B8DB">
+        <Grid x:Name="GridPanel">
         	<Image x:Name="imgStation" Width="40" Height="40" HorizontalAlignment="Left" d:LayoutOverrides="Height"/>
         	<Border BorderBrush="#FF97CC33" Width="10" Background="#FF009BE3" HorizontalAlignment="Left" Margin="40,2.5,0,2.5"/>
-        	<TextBlock x:Name="txtStation" Margin="52,2.5,60,2.5" FontSize="32" Width="368" HorizontalAlignment="Left"/>
+        	<TextBlock x:Name="txtStation" Margin="52,5,60,5" FontSize="32" Width="370" HorizontalAlignment="Left"/>
         </Grid>
-        <c4f:ImageTile x:Name="imgSMS" HorizontalAlignment="Right" Grid.Row="1" VerticalAlignment="Stretch" Width="40" Click="ImgSMS_OnClick" Height="40" Margin="10,2.5">
+        <c4f:ImageTile x:Name="imgSMS" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Click="ImgSMS_OnClick" Height="40" Margin="10,2.5">
             <c4f:ImageTile.Background>
     			<ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.send.rest.png"/>
     		</c4f:ImageTile.Background>

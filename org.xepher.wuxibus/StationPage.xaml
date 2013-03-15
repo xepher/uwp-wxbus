@@ -12,16 +12,12 @@
     FontSize="{StaticResource CustomFontSizeNormal}"
     Foreground="{StaticResource CustomForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="True">
+    shell:SystemTray.IsVisible="False">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <Grid.Background>
-            <ImageBrush ImageSource="/Assets/Images/pano_dark_theme.jpg" Stretch="None"/>
-        </Grid.Background>
-        
         <!--Pivot Control-->
-        <controls:Pivot x:Name="pivotContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}">
+        <controls:Pivot x:Name="pivotContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Background="{StaticResource CustomBackgroundImageBrush}" SelectionChanged="PivotContainer_OnSelectionChanged">
             <!--Pivot item one-->
             <!--<controls:PivotItem Header="{Binding Path=LocalizedResources.PageStations, Source={StaticResource LocalizedStrings}}">
                 <Grid/>
