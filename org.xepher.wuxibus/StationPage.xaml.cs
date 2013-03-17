@@ -50,19 +50,29 @@ namespace org.xepher.wuxibus
                 }
                 else
                 {
-                    // 开始屏幕砖块进入(带segment参数),以及从查询站台页面进入(带segment参数)
+                    if (NavigationContext.QueryString.ContainsKey("id"))
+                    {
+                        // 开始屏幕砖块进入(带id参数)
+                        Line = _app.DAHelperInstance.GetLineById(int.Parse(NavigationContext.QueryString["id"]));
+                        Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
+                        _app.SelectedSegment = SelectedSegment = Segments.First();
+                    }
+                    else
+                    {
+                        // 从查询站台页面进入(带segment参数)
 
-                    // 如果存在QueryString指定Segment，就将特定segmentId的Segment移动到第一个位置上
-                    int segmentId = int.Parse(NavigationContext.QueryString["segment"]);
+                        // 如果存在QueryString指定Segment，就将特定segmentId的Segment移动到第一个位置上
+                        int segmentId = int.Parse(NavigationContext.QueryString["segment"]);
 
-                    Line = _app.SelectedLine = _app.DAHelperInstance.GetLineBySegmentId(segmentId);
-                    Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
+                        Line = _app.SelectedLine = _app.DAHelperInstance.GetLineBySegmentId(segmentId);
+                        Segments = _app.DAHelperInstance.GetSegment(Line.line_id);
 
-                    Segment s = Segments.FirstOrDefault(t => t.segment_id == segmentId);
-                    Segments.Remove(s);
-                    Segments.Insert(0, s);
+                        Segment s = Segments.FirstOrDefault(t => t.segment_id == segmentId);
+                        Segments.Remove(s);
+                        Segments.Insert(0, s);
 
-                    _app.SelectedSegment = SelectedSegment = s;
+                        _app.SelectedSegment = SelectedSegment = s;
+                    }
                 }
 
                 // 构造空Pivot框架

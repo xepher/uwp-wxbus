@@ -28,39 +28,6 @@ namespace org.xepher.control
         public UC_Line()
         {
             InitializeComponent();
-
-            //ContextMenu menu = new ContextMenu();
-            //MenuItem menuItem = new MenuItem { Header = AppResource.MenuPinToStart };
-            //menuItem.Click += new RoutedEventHandler(menuItem_Click);
-            //menu.Items.Add(menuItem);
-
-            //// throw ArgumentOutOfRangeException in childIndex
-            //ContextMenuService.SetContextMenu(imgPin, menu);
-        }
-
-        private void menuItem_Click(object sender, RoutedEventArgs e)
-        {
-            // Pin to start
-        }
-
-        private void ImgFav_OnClick(object sender, RoutedEventArgs e)
-        {
-            //ObservableCollection<Line> collection = AppSettingHelper.GetValueOrDefault(StringConstants.FAVOURITE_LINES,
-            //                                                                           new ObservableCollection<Line>());
-            //Line line = this.Grid.Tag as Line;
-            //// TODO:添加收藏逻辑
-            //if (!collection.Contains(line))
-            //{
-            //    collection.Insert(0, line);
-            //    ParentLineList.Add(this);
-            //}
-            //else
-            //{
-            //    collection.Remove(line);
-            //    ParentLineList.Remove(this);
-            //}
-
-            //AppSettingHelper.AddOrUpdateValue(StringConstants.FAVOURITE_LINES, collection);
         }
 
         private void ImgPin_OnClick(object sender, RoutedEventArgs e)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -24,7 +23,6 @@ namespace org.xepher.wuxibus
         private BackgroundWorker _backroungWorker;
         private Popup _splashScreenPopup;
         private List<Line> _lstLine;
-        private ObservableCollection<UC_Line> _collectionLines;
         private Popup _trafficInfoPopup;
         private About _about;
         private int _restoreTime;
@@ -91,12 +89,6 @@ namespace org.xepher.wuxibus
             _backroungWorker.RunWorkerAsync();
         }
 
-        private void _line_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            _app.SelectedLine = ((sender as Grid).Tag as Line);
-            NavigationService.Navigate(new Uri("/StationPage.xaml", UriKind.Relative));
-        }
-
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
             if (_trafficInfoPopup.IsOpen)
@@ -153,45 +145,21 @@ namespace org.xepher.wuxibus
 
         private void InitializeUIComponent()
         {
-            List<UC_Line> _lines = new List<UC_Line>();
-
-            // 添加收藏的线路
-            ObservableCollection<Line> collection = AppSettingHelper.GetValueOrDefault(StringConstants.FAVOURITE_LINES,
-                                                                                       new ObservableCollection<Line>());
-            foreach (Line favLine in collection)
-            {
-                UC_Line _line = new UC_Line();
-                _line.Text = favLine.line_name;
-                _line.Grid.Tag = favLine;
-
-                _line.Grid.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(_line_Tap);
-                _lines.Add(_line);
-            }
-
-            // 去除已经收藏的线路
-            foreach (Line favLine in from line in collection from favLine in _lstLine where line == favLine select favLine)
-            {
-                _lstLine.Remove(favLine);
-            }
-
-            // 添加没有加入收藏的线路
             foreach (Line line in _lstLine)
             {
                 UC_Line _line = new UC_Line();
                 _line.Text = line.line_name;
                 _line.Grid.Tag = line;
+                _line.Grid.Tap += _line_Tap;
 
-                _line.Grid.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(_line_Tap);
-                _lines.Add(_line);
+                linesList.Items.Add(_line);
             }
-            _collectionLines = new ObservableCollection<UC_Line>(_lines);
+        }
 
-            foreach (UC_Line ucLine in _lines)
-            {
-                ucLine.ParentLineList = _collectionLines;
-            }
-
-            linesList.ItemsSource = _collectionLines;
+        private void _line_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            _app.SelectedLine = ((sender as Grid).Tag as Line);
+            NavigationService.Navigate(new Uri("/StationPage.xaml", UriKind.Relative));
         }
 
         private void FetchTrafficInfo()

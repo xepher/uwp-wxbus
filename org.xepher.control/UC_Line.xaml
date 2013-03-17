@@ -17,11 +17,6 @@
 	        <Border BorderBrush="#FF97CC33" Width="10" Background="#FF009BE3" HorizontalAlignment="Left" Margin="40,2.5,0,2.5"/>
 	        <TextBlock x:Name="txtLine" Margin="52,5,0,5" FontSize="32" Width="370" HorizontalAlignment="Left"/>
 		</Grid>
-        <!--<c4f:ImageTile x:Name="imgFav" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Height="40" Grid.Row="1" Margin="10,2.5,50,2.5" Click="ImgFav_OnClick">
-        	<c4f:ImageTile.Background>
-        		<ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.favs.addto.rest.png"/>
-        	</c4f:ImageTile.Background>
-        </c4f:ImageTile>-->
         <c4f:ImageTile x:Name="imgPin" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Height="40" Margin="10,2.5" Grid.Row="1" Click="ImgPin_OnClick">
             <c4f:ImageTile.Background>
     			<ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.statusPost.Pin.png"/>
