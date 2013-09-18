@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using org.xepher.common;
 using org.xepher.control;
@@ -23,7 +23,6 @@ namespace org.xepher.wuxibus
         private BackgroundWorker _backroungWorker;
         private Popup _splashScreenPopup;
         private List<Line> _lstLine;
-        private Popup _trafficInfoPopup;
         private About _about;
         private int _restoreTime;
 
@@ -32,14 +31,9 @@ namespace org.xepher.wuxibus
             InitializeComponent();
 
             _app = (Application.Current as App);
-            _trafficInfoPopup = new Popup();
             _about = new About();
 
             InitializeResources();
-
-#if DEBUG
-            Application.Current.Host.Settings.EnableFrameRateCounter = true;
-#endif
         }
 
         protected override void OnNavigatedTo(System.Windows.Navigation.NavigationEventArgs e)
@@ -67,50 +61,57 @@ namespace org.xepher.wuxibus
             RunBackgroundWorker();
         }
 
+        #region 加载线路
         private void RunBackgroundWorker()
         {
             _backroungWorker.DoWork += ((s, args) =>
             {
                 Dispatcher.BeginInvoke(
                     () => { (_splashScreenPopup.Child as UC_SplashScreen).Text = AppResource.LoadingTextReleaseDB; });
+
+#if DEBUG
+                // 测试自动更新用
+                AppSettingHelper.AddOrUpdateValue(StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE_TEST);
+#endif
+
                 // 释放zip到IsolatedStorage
-                IsolatedStorage.Zip2IS(ReleaseResource.GetResource("/org.xepher.wuxibus;component/Data/wuxitraffic.zip"));
+                IsolatedStorage.Zip2IS(ReleaseResource.GetResource("/org.xepher.wuxibus;component/Data/wuxitraffic.zip"),
+                                       AppSettingHelper.GetValueOrDefault(StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE) < Int32Constants.VERSION_CODE);
 
                 FetchLines();
             });
 
             _backroungWorker.RunWorkerCompleted += ((s, args) => Dispatcher.BeginInvoke(() =>
                 {
-                    InitializeUIComponent();
+                    ImageSource source = new BitmapImage(new Uri("/Assets/Images/bus.png", UriKind.Relative));
+                    ImageBrush brush = new ImageBrush()
+                        {
+                            ImageSource =
+                                new BitmapImage(new Uri("/Assets/Icons/dark/appbar.statusPost.Pin.png", UriKind.Relative)),
+                            Stretch = Stretch.None
+                        };
+                    Brush borderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x9B, 0xE3));
+                    Brush backBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x33, 0x23, 0x34));
+                    foreach (Line line in _lstLine)
+                    {
+                        UC_Line _line = new UC_Line();
+                        _line.ImageSource = source;
+                        _line.Border.Background = borderBrush;
+                        _line.Text = line.line_name;
+                        _line.Grid.Tag = line;
+                        _line.Grid.Tap += _line_Tap;
+                        _line.Image.Tag = line;
+                        _line.Image.Tap += _imgPin_OnTap;
+                        _line.Image.Background = backBrush;
+                        (_line.Image.Children[0] as ImageTile).Background = brush;
+
+                        linesList.Items.Add(_line);
+                    }
 
                     _splashScreenPopup.IsOpen = false;
                 }));
 
             _backroungWorker.RunWorkerAsync();
-        }
-
-        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (_trafficInfoPopup.IsOpen)
-            {
-                _trafficInfoPopup.IsOpen = false;
-                e.Cancel = true;
-                return;
-            }
-            if (!_about.AboutPrompt.IsOpen)
-            {
-                MessageBoxResult result = MessageBox.Show(AppResource.MsgExitApplication,
-                                                          AppResource.TitleExitApplication,
-                                                          MessageBoxButton.OKCancel);
-                if (MessageBoxResult.Cancel == result)
-                {
-                    e.Cancel = true;
-                }
-                else if (MessageBoxResult.OK == result)
-                {
-                    // TODO: 退出
-                }
-            }
         }
 
         private void FetchLines()
@@ -120,7 +121,7 @@ namespace org.xepher.wuxibus
                 Dispatcher.BeginInvoke(
                     () => { (_splashScreenPopup.Child as UC_SplashScreen).Text = AppResource.LoadingTextPrepareLines; });
 
-                _lstLine = _app.Lines = _app.DAHelperInstance.GetAllLine();
+                _lstLine = _app.DAHelperInstance.GetAllLine();
             }
             catch (Exception ex)
             {
@@ -143,17 +144,12 @@ namespace org.xepher.wuxibus
             }
         }
 
-        private void InitializeUIComponent()
+        private void _imgPin_OnTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            foreach (Line line in _lstLine)
-            {
-                UC_Line _line = new UC_Line();
-                _line.Text = line.line_name;
-                _line.Grid.Tag = line;
-                _line.Grid.Tap += _line_Tap;
+            Line line = (Line)(sender as Grid).Tag;
+            string url = string.Format("/StationPage.xaml?id={0}", line.line_id);
 
-                linesList.Items.Add(_line);
-            }
+            PinHelper.PinToStart(url, line.line_name);
         }
 
         private void _line_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -161,89 +157,22 @@ namespace org.xepher.wuxibus
             _app.SelectedLine = ((sender as Grid).Tag as Line);
             NavigationService.Navigate(new Uri("/StationPage.xaml", UriKind.Relative));
         }
+        #endregion
 
-        private void FetchTrafficInfo()
+        #region 其他
+        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
         {
-            HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://221.130.60.79:8080/Bus/sendinfo.action");
-            request.Method = "POST";
-            request.ContentType = "application/x-www-form-urlencoded; charset=utf-8";
-
-            request.BeginGetRequestStream(RequestCallback, request);
-        }
-
-        private void RequestCallback(IAsyncResult ar)
-        {
-            HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-
-            StringBuilder sb = new StringBuilder();
-            sb.Append("index=");
-            sb.Append(HttpUtility.UrlEncode("0"));
-            sb.Append("&");
-            sb.Append("length=");
-            sb.Append(HttpUtility.UrlEncode("all"));
-
-            byte[] postData = Encoding.UTF8.GetBytes(sb.ToString());
-
-            using (Stream postStream = request.EndGetRequestStream(ar))
-            {
-                postStream.Write(postData, 0, postData.Length);
-            }
-            request.BeginGetResponse(ResponseCallback, request);
-        }
-
-        private void ResponseCallback(IAsyncResult ar)
-        {
-            try
-            {
-                HttpWebRequest request = (HttpWebRequest)ar.AsyncState;
-                HttpWebResponse response = (HttpWebResponse)request.EndGetResponse(ar);
-
-                List<TrafficInfo> trafficInfos;
-
-                using (StreamReader reader = new StreamReader(response.GetResponseStream(), Encoding.UTF8))
-                {
-                    trafficInfos = TrafficInfoHelper.ResolveReturnString(reader.ReadToEnd());
-                }
-
-                Dispatcher.BeginInvoke(() =>
-                    {
-                        foreach (TrafficInfo trafficInfo in trafficInfos)
-                        {
-                            UC_TrafficInfo _trafficInfo = new UC_TrafficInfo()
-                                {
-                                    Text = trafficInfo.Title,
-                                    TrafficInfo = trafficInfo
-                                };
-                            _trafficInfo.Tap += new EventHandler<System.Windows.Input.GestureEventArgs>(_trafficInfo_Tap);
-
-                            trafficInfoList.Items.Add(_trafficInfo);
-                        }
-                    });
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
-
-        private void _trafficInfo_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            TrafficInfo trafficInfo = (sender as UC_TrafficInfo).TrafficInfo;
-
-            _trafficInfoPopup.Child = new UC_TrafficDetailInfo()
-                {
-                    InfoTitle = trafficInfo.Title,
-                    InfoContent = trafficInfo.Content,
-                    InfoDate = trafficInfo.Date
-                };
-
-            _trafficInfoPopup.IsOpen = true;
+            NavigationService.Navigate(new Uri("/SearchPage.xaml", UriKind.Relative));
         }
 
         private void BtnLocate_OnClick(object sender, RoutedEventArgs e)
         {
             NavigationService.Navigate(new Uri("/LocatePage.xaml", UriKind.Relative));
+        }
+
+        private void BtnTrafficInfo_OnClick(object sender, RoutedEventArgs e)
+        {
+            NavigationService.Navigate(new Uri("/TrafficInfoPage.xaml", UriKind.Relative));
         }
 
         private void BtnSetting_OnClick(object sender, RoutedEventArgs e)
@@ -256,22 +185,24 @@ namespace org.xepher.wuxibus
             _about = new About();
             _about.Show();
         }
+        #endregion
 
-        private void BtnSearch_OnClick(object sender, RoutedEventArgs e)
+        private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            NavigationService.Navigate(new Uri("/SearchPage.xaml", UriKind.Relative));
-        }
-
-        private void BtnChange_OnClick(object sender, RoutedEventArgs e)
-        {
-        }
-
-        private void BtnLoadTrafficInfo_OnClick(object sender, RoutedEventArgs e)
-        {
-            //Dispatcher.BeginInvoke(
-            //    () => { (_splashScreenPopup.Child as UC_SplashScreen).Text = "Fetch Traffic Information..."; });
-            btnLoadTrafficInfo.Visibility = Visibility.Collapsed;
-            FetchTrafficInfo();
+            if (!_about.AboutPrompt.IsOpen)
+            {
+                MessageBoxResult result = MessageBox.Show(AppResource.MsgExitApplication,
+                                                          AppResource.TitleExitApplication,
+                                                          MessageBoxButton.OKCancel);
+                if (MessageBoxResult.Cancel == result)
+                {
+                    e.Cancel = true;
+                }
+                else if (MessageBoxResult.OK == result)
+                {
+                    // TODO: 退出
+                }
+            }
         }
     }
 }

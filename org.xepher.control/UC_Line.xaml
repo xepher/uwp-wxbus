@@ -6,21 +6,32 @@
     xmlns:c4f="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     x:Class="org.xepher.control.UC_Line"
     mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot" Background="#FF80B8DB">
-        <Grid x:Name="GridPanel">
-	        <Image Source="/Assets/Images/bus.png" Width="40" Height="40" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-	        <Border BorderBrush="#FF97CC33" Width="10" Background="#FF009BE3" HorizontalAlignment="Left" Margin="40,2.5,0,2.5"/>
-	        <TextBlock x:Name="txtLine" Margin="52,5,0,5" FontSize="32" Width="370" HorizontalAlignment="Left"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="52" />
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="GridPanel" Column="0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="40" />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+            <Image x:Name="imgLine" Width="40" Height="40" HorizontalAlignment="Left"/>
+	        <Border x:Name="border" Width="10" HorizontalAlignment="Left" Margin="0,2.5" Grid.Column="1"/>
+            <TextBlock x:Name="txtLine" Margin="5,5,0,5" Width="288" FontSize="32" HorizontalAlignment="Left" Grid.Column="2"/>
 		</Grid>
-        <c4f:ImageTile x:Name="imgPin" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Height="40" Margin="10,2.5" Grid.Row="1" Click="ImgPin_OnClick">
-            <c4f:ImageTile.Background>
-    			<ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.statusPost.Pin.png"/>
-    		</c4f:ImageTile.Background>
-    	</c4f:ImageTile>
+        <Grid x:Name="GridImage" Column="1">
+            <c4f:ImageTile x:Name="imgPin" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Height="40" Margin="6,2.5">
+                <!--<c4f:ImageTile.Background>
+    			    <ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.statusPost.Pin.png"/>
+    		    </c4f:ImageTile.Background>-->
+    	    </c4f:ImageTile>
+        </Grid>
     </Grid>
 </UserControl>

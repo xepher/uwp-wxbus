@@ -4,13 +4,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
-    
-    <Grid x:Name="LayoutRoot" Background="#FF80B8DB">
-        <Border Width="10" Background="#FF009BE3" HorizontalAlignment="Left" Margin="5,2.5,0,2.5"/>
-        <TextBlock x:Name="txtTrafficInfo" Margin="17,5,0,5" FontSize="32" Width="463" />
+
+    <Grid x:Name="LayoutRoot">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="15" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Border x:Name="border" Width="10" HorizontalAlignment="Left" Margin="5,2.5,0,2.5"/>
+        <TextBlock x:Name="txtTrafficInfo" Margin="5,5,0,5" FontSize="32" Grid.Column="1" HorizontalAlignment="Left"/>
     </Grid>
 </UserControl>

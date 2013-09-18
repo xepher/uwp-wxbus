@@ -5,19 +5,19 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
              mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="800" d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot" Width="480" Height="800" Opacity="0.9">
     	<StackPanel Background="Gray">
     		<TextBlock Name="txtLoading" Margin="5,400,5,5" HorizontalAlignment="Center">
     			<TextBlock.Foreground>
-    				<SolidColorBrush Color="Black"/>
+    				<SolidColorBrush Color="{StaticResource PhoneAccentColor}"/>
     			</TextBlock.Foreground>
     		</TextBlock>
-            <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250" Foreground="{StaticResource CustomProcessBarBrush}"/>
+            <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250" />
     	</StackPanel>
     </Grid>
 </UserControl>

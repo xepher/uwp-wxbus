@@ -91,7 +91,7 @@ namespace org.xepher.wuxibus
 
             mapLocate.Children.Add(nokiatileLayer);
 
-            _geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) {MovementThreshold = 2};
+            _geoCoordinateWatcher = new GeoCoordinateWatcher(GeoPositionAccuracy.Default) { MovementThreshold = 2 };
             _geoCoordinateWatcher.PositionChanged += _geoCoordinateWatcher_PositionChanged;
             _geoCoordinateWatcher.StatusChanged += _geoCoordinateWatcher_StatusChanged;
 
@@ -272,9 +272,11 @@ namespace org.xepher.wuxibus
 
             _popupLines.Child = _stackLines;
 
+            Brush borderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x9B, 0xE3));
             foreach (var station in stations)
             {
                 UC_LineInfo line = new UC_LineInfo(station);
+                line.Border.Background = borderBrush;
                 line.Tap += line_Tap;
                 _stackLines.Children.Add(line);
             }
@@ -372,7 +374,7 @@ namespace org.xepher.wuxibus
             if (e.Status == GeoPositionStatus.Ready)
             {
 
-            } 
+            }
         }
 
         private void PhoneApplicationPage_BackKeyPress(object sender, System.ComponentModel.CancelEventArgs e)
@@ -384,7 +386,7 @@ namespace org.xepher.wuxibus
                 e.Cancel = true;
             }
         }
-        
+
         private void LocatePage_OnLoaded(object sender, RoutedEventArgs e)
         {
             if (!_isGPSAvailable)

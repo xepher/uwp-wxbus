@@ -12,7 +12,6 @@ using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.lang;
 using org.xepher.model;
-using org.xepher.wuxibus.Theme;
 
 namespace org.xepher.wuxibus
 {
@@ -37,9 +36,6 @@ namespace org.xepher.wuxibus
                     break;
                 }
             }
-
-            Themes _theme = AppSettingHelper.GetValueOrDefault(StringConstants.THEME, Themes.DarkBlue);
-            lstPickerTheme.SelectedItem = _theme;
 
             _isListPickerSelected = true;
         }
@@ -252,38 +248,6 @@ namespace org.xepher.wuxibus
         private void SettingPage_OnBackKeyPress(object sender, CancelEventArgs e)
         {
             if (GlobalLoading.Instance.IsLoading) e.Cancel = true;
-        }
-
-        //protected override void OnBackKeyPress(CancelEventArgs e)
-        //{
-        //    if (_isListPickerSelected)
-        //    {
-        //        string lang = AppSettingHelper.GetValueOrDefault(StringConstants.LANGUAGE, StringConstants.LANGUAGE_ZHCN);
-        //        CultureInfo ci = new CultureInfo(lang);
-        //        AppResource.Culture = Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = ci;
-        //        while (NavigationService.CanGoBack)
-        //        {
-        //            NavigationService.RemoveBackEntry();
-        //        }
-        //        NavigationService.Navigate(new Uri("/MainPage.xaml", UriKind.Relative));
-        //    }
-        //    base.OnBackKeyPress(e);
-        //}
-
-        private void lstPickerTheme_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (_isListPickerSelected)
-            {
-                switch (lstPickerTheme.SelectedItem as Themes?)
-                {
-                    case Themes.DarkBlue:
-                        AppSettingHelper.AddOrUpdateValue(StringConstants.THEME, Themes.DarkBlue);
-                        break;
-                    case Themes.LightBlue:
-                        AppSettingHelper.AddOrUpdateValue(StringConstants.THEME, Themes.LightBlue);
-                        break;
-                }
-            }
         }
     }
 }

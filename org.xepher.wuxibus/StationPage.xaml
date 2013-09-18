@@ -8,16 +8,16 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="False">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
-    <Grid x:Name="LayoutRoot">
+    <Grid x:Name="LayoutRoot" Background="{StaticResource CustomBackgroundImageBrush}">
         <!--Pivot Control-->
-        <controls:Pivot x:Name="pivotContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Background="{StaticResource CustomBackgroundImageBrush}" SelectionChanged="PivotContainer_OnSelectionChanged">
+        <controls:Pivot x:Name="pivotContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" SelectionChanged="PivotContainer_OnSelectionChanged">
             <!--Pivot item one-->
             <!--<controls:PivotItem Header="{Binding Path=LocalizedResources.PageStations, Source={StaticResource LocalizedStrings}}">
                 <Grid/>

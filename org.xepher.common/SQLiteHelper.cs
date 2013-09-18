@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using SQLiteClient;
 using org.xepher.model;
@@ -9,6 +10,7 @@ namespace org.xepher.common
     public class SQLiteHelper
     {
         private const string SELECT_ALL_LINE = "SELECT line_id,line_name,line_info FROM bus_line";
+        private const string SELECT_STEP_LINE = "SELECT line_id,line_name,line_info FROM bus_line LIMIT @start, @step";
         private const string SELECT_LINE_BY_ID = "SELECT line_id,line_name,line_info FROM bus_line WHERE line_id = @line_id";
         private const string SELECT_LINE_BY_SEGMENT_ID = "SELECT a.line_id,a.line_name,a.line_info FROM bus_line a JOIN bus_segment b ON a.line_id = b.line_id WHERE CAST(b.segment_id AS INTEGER) = CAST(@segment_id AS INTEGER)";
         private const string SELECT_STATION_BY_STATION_NAME = "SELECT DISTINCT a.line_id,c.segment_name,c.segment_id FROM bus_station a JOIN bus_stationinfo b ON a.station_id = b.station_id JOIN bus_segment c ON c.segment_id = a.segment_id WHERE a.station_id IN (SELECT station_id FROM bus_stationinfo WHERE station_name LIKE @station_name) ORDER BY CAST(a.line_id AS INTEGER)";
@@ -53,6 +55,25 @@ namespace org.xepher.common
                 SQLiteCommand cmd = _sqLiteConnection.CreateCommand(SELECT_ALL_LINE);
 
                 var lst = cmd.ExecuteQuery<Line>().ToList();
+
+                return lst;
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+
+        public ObservableCollection<Line> GetStepLine(int start = 0, int step = 50)
+        {
+            try
+            {
+                SQLiteCommand cmd =
+                    _sqLiteConnection.CreateCommand(SELECT_STEP_LINE.Replace("@start", start.ToString())
+                                                                    .Replace("@step", step.ToString()));
+
+                var lst = new ObservableCollection<Line>(cmd.ExecuteQuery<Line>().ToList());
 
                 return lst;
             }

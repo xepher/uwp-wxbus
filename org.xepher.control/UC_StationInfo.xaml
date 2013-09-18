@@ -6,21 +6,27 @@
     xmlns:c4f="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     x:Class="org.xepher.control.UC_StationInfo"
     mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="480" d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot" Background="#FF80B8DB">
-        <Grid x:Name="GridPanel">
-        	<Image x:Name="imgStation" Width="40" Height="40" HorizontalAlignment="Left" d:LayoutOverrides="Height"/>
-        	<Border BorderBrush="#FF97CC33" Width="10" Background="#FF009BE3" HorizontalAlignment="Left" Margin="40,2.5,0,2.5"/>
-        	<TextBlock x:Name="txtStation" Margin="52,5,60,5" FontSize="32" Width="370" HorizontalAlignment="Left"/>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="52" />
+        </Grid.ColumnDefinitions>
+        <Grid x:Name="GridPanel" Column="0">
+        	<Image x:Name="imgStation" Width="40" Height="40" HorizontalAlignment="Left"/>
+        	<Border x:Name="border" Width="10" HorizontalAlignment="Left" Margin="40,2.5,0,2.5"/>
+        	<TextBlock x:Name="txtStation" Margin="52,5,0,5" FontSize="32" HorizontalAlignment="Left"/>
         </Grid>
-        <c4f:ImageTile x:Name="imgSMS" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Click="ImgSMS_OnClick" Height="40" Margin="10,2.5">
-            <c4f:ImageTile.Background>
-    			<ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.send.rest.png"/>
-    		</c4f:ImageTile.Background>
-    	</c4f:ImageTile>
+        <Grid x:Name="GridImage" Column="1">
+            <c4f:ImageTile x:Name="imgSMS" HorizontalAlignment="Right" VerticalAlignment="Stretch" Width="40" Click="ImgSMS_OnClick" Height="40" Margin="6,2.5">
+                <!--<c4f:ImageTile.Background>
+    			    <ImageBrush Stretch="None" ImageSource="/Assets/Icons/dark/appbar.send.rest.png"/>
+    		    </c4f:ImageTile.Background>-->
+    	    </c4f:ImageTile>
+        </Grid>
     </Grid>
 </UserControl>

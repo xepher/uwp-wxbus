@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Media;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.Phone.Shell;
@@ -61,9 +63,12 @@ namespace org.xepher.wuxibus
                                    stationnum = int.Parse(item.Element("stationnum").Value)
                                };
 
+                Brush borderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x9B, 0xE3));
                 foreach (BusALStationInfoCommon busAlStationInfoCommon in lstBusALStationInfoCommon)
                 {
-                    busList.Items.Add(new UC_BusInfo(busAlStationInfoCommon));
+                    UC_BusInfo businfo = new UC_BusInfo(busAlStationInfoCommon);
+                    businfo.Border.Background = borderBrush;
+                    busList.Items.Add(businfo);
                 }
 
                 string fdisMsg = e.Result.Nodes[1].Value;

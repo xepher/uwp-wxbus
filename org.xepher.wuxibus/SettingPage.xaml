@@ -7,13 +7,13 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkitPrimitives="clr-namespace:Microsoft.Phone.Controls.Primitives;assembly=Microsoft.Phone.Controls.Toolkit" 
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:sys="clr-namespace:System;assembly=mscorlib" xmlns:theme="clr-namespace:org.xepher.wuxibus.Theme"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
     x:Class="org.xepher.wuxibus.SettingPage"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
-    mc:Ignorable="d" d:DesignHeight="768" d:DesignWidth="480"
+    mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="480"
     shell:SystemTray.IsVisible="False" BackKeyPress="SettingPage_OnBackKeyPress">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
@@ -25,8 +25,8 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel x:Name="TitlePanel" Grid.Row="0" Margin="12,17,0,12">
-            <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource CustomTextNormalStyle}"/>
-            <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageSettings, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource CustomTextTitle1Style}"/>
+            <TextBlock x:Name="ApplicationTitle" Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Style="{StaticResource PhoneTextNormalStyle}"/>
+            <TextBlock x:Name="PageTitle" Text="{Binding Path=LocalizedResources.PageSettings, Source={StaticResource LocalizedStrings}}" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -37,11 +37,6 @@
         			<sys:String>en-US</sys:String>
         			<sys:String>zh-CN</sys:String>
         		</toolkit:ListPicker>
-                <TextBlock x:Name="txtTheme" TextWrapping="Wrap" Text="{Binding Path=LocalizedResources.SettingsTxtTheme, Source={StaticResource LocalizedStrings}}" FontSize="26.667"/>
-                <toolkit:ListPicker x:Name="lstPickerTheme" Margin="4,0" SelectionChanged="lstPickerTheme_SelectionChanged" BorderThickness="3" FontSize="25.333">
-                	<theme:Themes>DarkBlue</theme:Themes>
-                	<theme:Themes>LightBlue</theme:Themes>
-                </toolkit:ListPicker>
                 <TextBlock x:Name="txtUpdate" Text="{Binding Path=LocalizedResources.SettingsTxtUpdate, Source={StaticResource LocalizedStrings}}" TextWrapping="Wrap" FontSize="26.667"/>
                 <Button x:Name="btnUpdate" Content="{Binding Path=LocalizedResources.SettingsBtnUpdate, Source={StaticResource LocalizedStrings}}" Click="BtnUpdate_OnClick"/>
         	</StackPanel>

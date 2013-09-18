@@ -223,7 +223,7 @@
     <value>GPS Service not open!</value>
   </data>
   <data name="PageTrafficInfo" xml:space="preserve">
-    <value>Traffic Info</value>
+    <value>Notice</value>
   </data>
   <data name="PageOther" xml:space="preserve">
     <value>Other</value>
@@ -235,7 +235,7 @@
     <value>Release Database...</value>
   </data>
   <data name="BtnLoadTrafficInfo" xml:space="preserve">
-    <value>Press to load latest traffic information</value>
+    <value>Press to load latest notice</value>
   </data>
   <data name="SettingsBtnUpdate" xml:space="preserve">
     <value>Press to update</value>
@@ -265,7 +265,7 @@
     <value>Database is destroyed, try to repair it... {0}/3</value>
   </data>
   <data name="MsgSendSMS" xml:space="preserve">
-    <value>The SMS query carriers charged a communication fee of 0.1 yuan, and receive free of charge.</value>
+    <value>The SMS query carriers charged a communication fee, and receive free of charge.</value>
   </data>
   <data name="TitleSendSMS" xml:space="preserve">
     <value>Send SMS</value>
@@ -293,5 +293,20 @@
   </data>
   <data name="PageSearchTitleStationSearch" xml:space="preserve">
     <value>Station Search</value>
+  </data>
+  <data name="ExtendListBoxPullingDown" xml:space="preserve">
+    <value>Pull down to refresh</value>
+  </data>
+  <data name="ExtendListBoxPullingDownReadyToRelease" xml:space="preserve">
+    <value>Release to refresh</value>
+  </data>
+  <data name="ExtendListBoxPullingUp" xml:space="preserve">
+    <value>Pull up to load more</value>
+  </data>
+  <data name="ExtendListBoxPullingUpReadyToRelease" xml:space="preserve">
+    <value>Release to load more</value>
+  </data>
+  <data name="MsgNoMoreLines" xml:space="preserve">
+    <value>No more lines</value>
   </data>
 </root>

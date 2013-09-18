@@ -223,7 +223,7 @@
     <value>GPS服务未打开！</value>
   </data>
   <data name="PageTrafficInfo" xml:space="preserve">
-    <value>公交信息</value>
+    <value>公告</value>
   </data>
   <data name="PageOther" xml:space="preserve">
     <value>其他</value>
@@ -235,7 +235,7 @@
     <value>释放数据库...</value>
   </data>
   <data name="BtnLoadTrafficInfo" xml:space="preserve">
-    <value>点击加载最新公交信息</value>
+    <value>点击加载最新公告</value>
   </data>
   <data name="SettingsBtnUpdate" xml:space="preserve">
     <value>点击检查更新</value>
@@ -265,7 +265,7 @@
     <value>数据库损毁，尝试修复... {0}/3</value>
   </data>
   <data name="MsgSendSMS" xml:space="preserve">
-    <value>短信查询由运营商收取0.1元通讯费，接收免费。</value>
+    <value>短信查询由运营商收取通讯费，接收免费。</value>
   </data>
   <data name="TitleSendSMS" xml:space="preserve">
     <value>发送短信</value>
@@ -293,5 +293,20 @@
   </data>
   <data name="PageSearchTitleStationSearch" xml:space="preserve">
     <value>站台查询</value>
+  </data>
+  <data name="ExtendListBoxPullingDown" xml:space="preserve">
+    <value>下拉刷新</value>
+  </data>
+  <data name="ExtendListBoxPullingDownReadyToRelease" xml:space="preserve">
+    <value>松开刷新</value>
+  </data>
+  <data name="ExtendListBoxPullingUp" xml:space="preserve">
+    <value>上拉加载更多</value>
+  </data>
+  <data name="ExtendListBoxPullingUpReadyToRelease" xml:space="preserve">
+    <value>松开加载更多</value>
+  </data>
+  <data name="MsgNoMoreLines" xml:space="preserve">
+    <value>没有更多线路了</value>
   </data>
 </root>

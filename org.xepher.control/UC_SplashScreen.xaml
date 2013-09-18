@@ -5,14 +5,14 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
              mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="800" d:DesignWidth="480">
 
     <Grid x:Name="LayoutRoot">
         <Image Height="800" x:Name="imgSplashScreen" Stretch="Fill" Width="480" Source="SplashScreenImage.jpg" />
-        <TextBlock x:Name="txtLoading" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,200"/>
-        <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250" Foreground="{StaticResource CustomProcessBarBrush}"/>
+        <TextBlock x:Name="txtLoading" TextWrapping="Wrap" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,200" Foreground="{StaticResource CustomForegroundBrush}"/>
+        <toolkit:PerformanceProgressBar VerticalAlignment="Bottom" IsIndeterminate="True" Margin="0,0,0,250" d:IsHidden="True" Foreground="{StaticResource CustomAccentBrush}"/>
     </Grid>
 </UserControl>

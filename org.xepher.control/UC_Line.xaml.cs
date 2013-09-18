@@ -1,16 +1,19 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Windows;
-using System.Windows.Controls;
-using Microsoft.Phone.Shell;
-using org.xepher.lang;
-using org.xepher.model;
+﻿using System.Windows.Controls;
+using System.Windows.Media;
 
 namespace org.xepher.control
 {
     public partial class UC_Line : UserControl
     {
+        public ImageSource ImageSource
+        {
+            set { imgLine.Source = value; }
+        }
+
+        public Border Border {
+            get { return this.border; }
+        }
+
         public string Text
         {
             get { return txtLine.Text; }
@@ -23,40 +26,15 @@ namespace org.xepher.control
             set { GridPanel = value; }
         }
 
-        public ObservableCollection<UC_Line> ParentLineList { get; set; }
+        public Grid Image
+        {
+            get { return GridImage; }
+            set { GridImage = value; }
+        }
 
         public UC_Line()
         {
             InitializeComponent();
-        }
-
-        private void ImgPin_OnClick(object sender, RoutedEventArgs e)
-        {
-            Line line = (Line)Grid.Tag;
-            string url = string.Format("/StationPage.xaml?id={0}", line.line_id);
-
-            MessageBoxResult result = MessageBox.Show(string.Format(AppResource.MsgPinToStart, line.line_name), AppResource.TitlePinToStart, MessageBoxButton.OKCancel);
-            if (result == MessageBoxResult.Cancel) return;
-
-            //如果存在则删除，并在下面重新Pin到桌面
-            ShellTile oldTile = ShellTile.ActiveTiles.FirstOrDefault(t => t.NavigationUri.ToString().Contains(url));
-            if (oldTile != null)
-            {
-                oldTile.Delete();
-            }
-
-            //生成Tile
-            StandardTileData myTile = new StandardTileData
-            {
-                BackgroundImage = new Uri("Background.png", UriKind.Relative),
-                Title = line.line_name,
-                Count = 0,
-                BackTitle = AppResource.ApplicationTitle,
-                BackContent = line.line_name,
-                BackBackgroundImage = new Uri("Background.png", UriKind.Relative)
-            };
-            //固定到开始界面
-            ShellTile.Create(new Uri(url, UriKind.Relative), myTile);
         }
     }
 }

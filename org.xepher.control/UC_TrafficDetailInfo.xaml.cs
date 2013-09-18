@@ -5,6 +5,14 @@ namespace org.xepher.control
 {
     public partial class UC_TrafficDetailInfo : UserControl
     {
+        public Grid Root {
+            get { return this.LayoutRoot; }
+        }
+
+        public Border Border {
+            get { return this.border; }
+        }
+
         public string InfoTitle
         {
             get { return txtTitle.Text; }

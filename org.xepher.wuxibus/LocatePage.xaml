@@ -7,16 +7,16 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:map="clr-namespace:Microsoft.Phone.Controls.Maps;assembly=Microsoft.Phone.Controls.Maps"
     x:Class="org.xepher.wuxibus.LocatePage"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait" Orientation="Portrait"
     mc:Ignorable="d" d:DesignHeight="800" d:DesignWidth="480"
     shell:SystemTray.IsVisible="False" BackKeyPress="PhoneApplicationPage_BackKeyPress" Loaded="LocatePage_OnLoaded">
 
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot" Height="800" Background="{StaticResource CustomMapBackgroundImageBrush}">
-    	<map:Map Margin="0" x:Name="mapLocate"/>
+        <map:Map Margin="0" x:Name="mapLocate"/>
     	<Button x:Name="btnMyLocation" Content="" HorizontalAlignment="Left" VerticalAlignment="Bottom" BorderThickness="0" Padding="0" Width="72" Height="72" Margin="0,0,0,72">
     		<Button.Background>
     			<ImageBrush ImageSource="/Assets/Button/mypos_active.png" Stretch="Fill"/>

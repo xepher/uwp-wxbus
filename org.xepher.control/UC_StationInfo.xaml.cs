@@ -15,6 +15,11 @@ namespace org.xepher.control
             set { imgStation.Source = value; }
         }
 
+        public Border Border
+        {
+            get { return this.border; }
+        }
+
         public string Text
         {
             get { return txtStation.Text; }
@@ -25,6 +30,12 @@ namespace org.xepher.control
         {
             get { return GridPanel; }
             set { GridPanel = value; }
+        }
+
+        public Grid Image
+        {
+            get { return GridImage; }
+            set { GridImage = value; }
         }
 
         public UC_StationInfo()

@@ -13,11 +13,6 @@ namespace org.xepher.common
         // 判断原来数据库版本,低于程序版本就更新到新版本
         public static void Zip2IS(Stream zipStream, bool isForced = false)
         {
-#if DEBUG
-            // 测试自动更新用
-            AppSettingHelper.AddOrUpdateValue(StringConstants.VERSION_CODE, Int32Constants.VERSION_CODE_TEST);
-#endif
-
             byte[] data = new byte[2048];
             int size = 2048;
 

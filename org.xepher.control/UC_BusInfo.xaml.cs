@@ -6,6 +6,10 @@ namespace org.xepher.control
 {
     public partial class UC_BusInfo : UserControl
     {
+        public Border Border {
+            get { return this.border; }
+        }
+
         private BusALStationInfoCommon _bus;
 
         public UC_BusInfo(BusALStationInfoCommon _bus)

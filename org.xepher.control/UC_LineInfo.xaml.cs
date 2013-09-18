@@ -6,6 +6,10 @@ namespace org.xepher.control
 {
     public partial class UC_LineInfo : UserControl
     {
+        public Border Border {
+            get { return this.border; }
+        }
+
         public Line Line { get; set; }
 
         public UC_LineInfo(Station station)

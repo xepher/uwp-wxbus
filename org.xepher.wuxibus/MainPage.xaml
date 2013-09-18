@@ -10,9 +10,9 @@
     xmlns:c4f="clr-namespace:Coding4Fun.Toolkit.Controls;assembly=Coding4Fun.Toolkit.Controls"
     xmlns:lazyListBox="clr-namespace:LazyListBox;assembly=LazyListBox"
     mc:Ignorable="d" d:DesignWidth="480" d:DesignHeight="800"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="False"
     BackKeyPress="PhoneApplicationPage_BackKeyPress">
@@ -20,33 +20,24 @@
     <!--LayoutRoot contains the root grid where all other page content is placed-->
     <Grid x:Name="LayoutRoot">
         <controls:Panorama x:Name="panoramaContainer" Title="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" Background="{StaticResource CustomBackgroundImageBrush}">
-
             <!--Panorama item one-->
-            <controls:PanoramaItem Header="{Binding Path=LocalizedResources.PageTrafficInfo, Source={StaticResource LocalizedStrings}}">
-                <Grid x:Name="TrafficInfoContentPanel">
-                    <lazyListBox:LazyListBox x:Name="trafficInfoList"/>
-                    <c4f:ImageTile x:Name="btnLoadTrafficInfo" Content="{Binding LocalizedResources.BtnLoadTrafficInfo, Source={StaticResource LocalizedStrings}}" Width="Auto" Height="100" HorizontalAlignment="Stretch" Background="#FF1BA1E2" Click="BtnLoadTrafficInfo_OnClick"/>
-                </Grid>
-            </controls:PanoramaItem>
-
-            <!--Panorama item two-->
             <controls:PanoramaItem Header="{Binding Path=LocalizedResources.PageLine, Source={StaticResource LocalizedStrings}}">
                 <Grid x:Name="LineContentPanel">
                     <lazyListBox:LazyListBox x:Name="linesList"/>
                 </Grid>
             </controls:PanoramaItem>
 
-            <!--Panorama item three-->
+            <!--Panorama item two-->
             <controls:PanoramaItem Header="{Binding LocalizedResources.PageOther, Source={StaticResource LocalizedStrings}}">
                 <Grid x:Name="OtherContentPanel">
                     <ScrollViewer>
                         <Grid>
-                            <c4f:ImageTile x:Name="btnSetting" Content="{Binding LocalizedResources.ApplicationBarMenuItemSettings, Source={StaticResource LocalizedStrings}}" Margin="0,200,236,0" Click="BtnSetting_OnClick" Width="160" Height="160" FontSize="32" Background="#FF1BA1E2"/>
-                            <c4f:ImageTile x:Name="btnAbout" Content="{Binding LocalizedResources.ApplicationBarMenuItemAbout, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" Width="160" Margin="204,200,0,0" Height="160" VerticalAlignment="Top" Click="BtnAbout_OnClick" FontSize="32" Background="#FF1BA1E2" AnimationDuration="1500"/>
                             <c4f:ImageTile x:Name="btnSearch" Content="{Binding LocalizedResources.ApplicationBarIconButtonSearch, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" Margin="24,20,0,0" Width="160" Click="BtnSearch_OnClick" Height="160" VerticalAlignment="Top" FontSize="32" Background="#FF1BA1E2"/>
-                            <c4f:ImageTile x:Name="btnChange" Content="{Binding LocalizedResources.ApplicationBarIconButtonChange, Source={StaticResource LocalizedStrings}}" Margin="24,200,0,0" Click="BtnChange_OnClick" HorizontalAlignment="Left" Width="160" Height="160" FontSize="32" Background="#FF1BA1E2" Visibility="Collapsed"/>
-                            <c4f:ImageTile x:Name="btnLocate" Content="{Binding LocalizedResources.ApplicationBarIconButtonLocate, Source={StaticResource LocalizedStrings}}" Click="BtnLocate_OnClick" Height="160" Width="160" Margin="194,20,56,0" VerticalAlignment="Top" FontSize="32" Background="#FF1BA1E2"/>
-                        </Grid>
+                            <c4f:ImageTile x:Name="btnLocate" Content="{Binding LocalizedResources.ApplicationBarIconButtonLocate, Source={StaticResource LocalizedStrings}}" Click="BtnLocate_OnClick" Height="160" Width="160" Margin="204,20,56,0" VerticalAlignment="Top" FontSize="32" Background="#FF1BA1E2" HorizontalAlignment="Left"/>
+                            <c4f:ImageTile x:Name="btnTrafficInfo" Content="{Binding LocalizedResources.PageTrafficInfo, Source={StaticResource LocalizedStrings}}" Click="BtnTrafficInfo_OnClick" Height="160" Width="160" Margin="24,200,0,0" VerticalAlignment="Top" FontSize="32" Background="#FF1BA1E2" HorizontalAlignment="Left"/>
+                            <c4f:ImageTile x:Name="btnSetting" Content="{Binding LocalizedResources.ApplicationBarMenuItemSettings, Source={StaticResource LocalizedStrings}}" Margin="204,200,0,0" Click="BtnSetting_OnClick" Width="160" Height="160" FontSize="32" Background="#FF1BA1E2" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+                            <c4f:ImageTile x:Name="btnAbout" Content="{Binding LocalizedResources.ApplicationBarMenuItemAbout, Source={StaticResource LocalizedStrings}}" HorizontalAlignment="Left" Width="160" Margin="24,380,0,0" Height="160" VerticalAlignment="Top" Click="BtnAbout_OnClick" FontSize="32" Background="#FF1BA1E2" AnimationDuration="1500"/>
+                            </Grid>
                     </ScrollViewer>
                 </Grid>
             </controls:PanoramaItem>

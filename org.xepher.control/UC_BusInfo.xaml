@@ -4,13 +4,13 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="160" d:DesignWidth="480">
     
     <Grid x:Name="LayoutRoot" Background="#FF80B8DB" Width="468">
-        <Border BorderBrush="#FF97CC33" Width="10" Background="#FF009BE3" Margin="5,2.5,0,2.5" HorizontalAlignment="Left"/>
+        <Border x:Name="border" Width="10" Margin="5,2.5,0,2.5" HorizontalAlignment="Left"/>
         <TextBlock x:Name="txtBusID" Margin="17,10,0,0" HorizontalAlignment="Left" Text="BusID: " VerticalAlignment="Top" FontSize="26.667" />
         <TextBlock x:Name="txtStation" Margin="17,60,0,60" TextWrapping="Wrap" Text="Station: " FontSize="26.667" HorizontalAlignment="Left"/>
         <TextBlock x:Name="txtTime" HorizontalAlignment="Left" Margin="17,0,0,10" TextWrapping="Wrap" Text="Time: " VerticalAlignment="Bottom" FontSize="26.667"/>

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using org.xepher.control;
 using org.xepher.model;
@@ -105,28 +107,40 @@ namespace org.xepher.wuxibus
 
             stationList.Items.Clear();
 
+            BitmapImage image = new BitmapImage(new Uri("/Assets/Images/station.png", UriKind.Relative));
+            ImageBrush brush = new ImageBrush()
+            {
+                ImageSource =
+                    new BitmapImage(new Uri("/Assets/Icons/dark/appbar.send.rest.png", UriKind.Relative)),
+                Stretch = Stretch.None
+            };
+            Brush borderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x9B, 0xE3));
+            Brush backBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x33, 0x23, 0x34));
             for (int index = 0; index < lstStation.Count; index++)
             {
                 UC_StationInfo stationInfo = new UC_StationInfo();
+                stationInfo.Border.Background = borderBrush;
                 stationInfo.Text = lstStation[index].station_name;
                 stationInfo.Grid.Tag = lstStation[index];
 
                 if (index == 0)
                 {
                     // TODO: 起始站台图标更换
-                    stationInfo.ImageSource = new BitmapImage(new Uri("/Assets/Images/station.png", UriKind.Relative));
+                    stationInfo.ImageSource = image;
                 }
                 else if (index == lstStation.Count - 1)
                 {
-                    stationInfo.ImageSource = new BitmapImage(new Uri("/Assets/Images/station.png", UriKind.Relative));
+                    stationInfo.ImageSource = image;
                 }
                 else
                 {
                     // TODO: 终点站台图标更换
-                    stationInfo.ImageSource = new BitmapImage(new Uri("/Assets/Images/station.png", UriKind.Relative));
+                    stationInfo.ImageSource = image;
                 }
 
                 stationInfo.Grid.Tap += stationInfo_Tap;
+                stationInfo.Image.Background = backBrush;
+                (stationInfo.Image.Children[0] as ImageTile).Background = brush;
                 stationList.Items.Add(stationInfo);
             }
         }

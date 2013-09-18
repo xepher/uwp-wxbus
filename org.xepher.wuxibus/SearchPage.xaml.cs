@@ -5,6 +5,8 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using Coding4Fun.Toolkit.Controls;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
@@ -35,8 +37,7 @@ namespace org.xepher.wuxibus
         {
             _app = (Application.Current as App);
 
-            ACBLineSearch.DataContext = _app.Lines;
-            ACBLineSearch.ItemsSource = _app.Lines;
+            ACBLineSearch.DataContext = ACBLineSearch.ItemsSource = _app.DAHelperInstance.GetAllLine();
             ACBLineSearch.ValueMemberPath = "line_name";
             ACBLineSearch.ItemFilter += SearchLineFilter;
             ACBLineSearch.KeyUp += ACBLineSearch_KeyUp;
@@ -78,10 +79,21 @@ namespace org.xepher.wuxibus
                         prompt.Show();
 #endif
 
+                        ImageSource source = new BitmapImage(new Uri("/Assets/Images/bus.png", UriKind.Relative));
+                        ImageBrush brush = new ImageBrush()
+                        {
+                            ImageSource =
+                                new BitmapImage(new Uri("/Assets/Icons/dark/appbar.statusPost.Pin.png", UriKind.Relative)),
+                            Stretch = Stretch.None
+                        };
+                        Brush borderBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x00, 0x9B, 0xE3));
+                        Brush backBrush = new SolidColorBrush(Color.FromArgb(0xFF, 0x33, 0x23, 0x34));
                         List<UC_Segment> segments = new List<UC_Segment>();
                         foreach (Station station in stations)
                         {
                             UC_Segment segment = new UC_Segment();
+                            segment.ImageSource = source;
+                            segment.Border.Background = borderBrush;
                             segment.Text = station.segment_name;
                             segment.Grid.Tag = new Segment()
                                 {
@@ -89,6 +101,8 @@ namespace org.xepher.wuxibus
                                     segment_id = station.segment_id
                                 };
                             segment.Grid.Tap += Segment_OnClick;
+                            segment.Image.Background = backBrush;
+                            (segment.Image.Children[0] as ImageTile).Background = brush;
                             segments.Add(segment);
                         }
                         SegmentList.ItemsSource = segments;

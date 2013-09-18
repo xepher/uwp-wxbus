@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Windows;
 using System.Windows.Navigation;
@@ -8,7 +7,6 @@ using Microsoft.Phone.Shell;
 using org.xepher.common;
 using org.xepher.lang;
 using org.xepher.model;
-using org.xepher.wuxibus.Theme;
 using org.xepher.wuxibus.misc;
 
 namespace org.xepher.wuxibus
@@ -24,7 +22,6 @@ namespace org.xepher.wuxibus
         public Line SelectedLine { get; set; }
         public Station SelectedStation { get; set; }
         public Segment SelectedSegment { get; set; }
-        public List<Line> Lines { get; set; }
 
         private SQLiteHelper _dAHelperInstance;
         public SQLiteHelper DAHelperInstance
@@ -42,6 +39,9 @@ namespace org.xepher.wuxibus
         /// </summary>
         public App()
         {
+            // Debug Environment initialization
+            InitializeDebugEnvironment();
+
             // Localization initialization
             InitializeLanguage();
 
@@ -79,11 +79,21 @@ namespace org.xepher.wuxibus
 
         }
 
+        private void InitializeDebugEnvironment()
+        {
+#if DEBUG
+            dnp.Counter.EnableMemoryCounter = true;
+
+            Application.Current.Host.Settings.EnableFrameRateCounter = true;
+#endif
+        }
+
         private void InitializeTheme()
         {
-            Themes _theme = AppSettingHelper.GetValueOrDefault(StringConstants.THEME, Themes.DarkBlue);
+            //Theme _theme = AppSettingHelper.GetValueOrDefault(StringConstants.THEME, Theme.Dark);
+            Theme _theme = ThemeHelper.GetTheme();
             ResourceDictionary resourceDictionary = new ResourceDictionary();
-            if (_theme == Themes.DarkBlue)
+            if (_theme == Theme.Dark)
             {
                 Application.LoadComponent(resourceDictionary,
                                           new Uri("/org.xepher.wuxibus;component/Theme/dark/CustomTheme.xaml",
@@ -95,6 +105,7 @@ namespace org.xepher.wuxibus
                                           new Uri("/org.xepher.wuxibus;component/Theme/light/CustomTheme.xaml",
                                                   UriKind.Relative));
             }
+
             if (Application.Current.Resources.MergedDictionaries.Count == 0)
                 Application.Current.Resources.MergedDictionaries.Add(resourceDictionary);
             else

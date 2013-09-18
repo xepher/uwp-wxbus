@@ -4,19 +4,19 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d"
-    FontFamily="{StaticResource CustomFontFamilyNormal}"
-    FontSize="{StaticResource CustomFontSizeNormal}"
-    Foreground="{StaticResource CustomForegroundBrush}"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="800" d:DesignWidth="480">
 
-    <Grid x:Name="LayoutRoot" Background="Gray" Width="480" Height="800">
+    <Grid x:Name="LayoutRoot" Width="480" Height="800">
         <ScrollViewer>
-        	<StackPanel>
-		    	<TextBlock x:Name="txtTitle" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="48"/>
-		    	<Border BorderBrush="Black" Height="4" Background="#FF009BE3"/>
-		    	<TextBlock x:Name="txtContent" TextWrapping="Wrap" FontSize="32" d:LayoutOverrides="Width"/>
-		    	<TextBlock x:Name="txtDate" Height="30" TextWrapping="Wrap" HorizontalAlignment="Right" Margin="0,6,0,0"/>
-			</StackPanel>
-		</ScrollViewer>
+            <StackPanel>
+                <TextBlock x:Name="txtTitle" TextWrapping="Wrap" VerticalAlignment="Top" FontSize="48"/>
+                <Border x:Name="border" Height="4"/>
+                <TextBlock x:Name="txtContent" TextWrapping="Wrap" FontSize="32" d:LayoutOverrides="Width"/>
+                <TextBlock x:Name="txtDate" Height="30" TextWrapping="Wrap" HorizontalAlignment="Right" Margin="0,6,0,0"/>
+            </StackPanel>
+        </ScrollViewer>
     </Grid>
 </UserControl>
