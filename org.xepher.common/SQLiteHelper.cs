@@ -25,10 +25,10 @@ namespace org.xepher.common
         // 初始化数据库时对数据库中过期数据进行删除
         private const string DELETE_INVALID_BUS_STATIONINFO = "DELETE FROM bus_stationinfo WHERE CAST(station_id AS REAL) NOT IN (SELECT CAST(station_id AS REAL) FROM bus_station)";
 
-        public const string DATABASE_FOLDER_URI = "\\Data";
-        public const string DATABASE_URI = "\\Data\\wuxitraffic.db";
-        public const string DATABASE_BAK_URI = "\\Data\\wuxitraffic.db.bak";
-        public const string DATABASE_ZIP_URI = "\\Data\\wuxitraffic.zip";
+        public const string DATABASE_FOLDER_URI = "";
+        public const string DATABASE_URI = "\\wuxitraffic.db";
+        public const string DATABASE_BAK_URI = "\\wuxitraffic.db.bak";
+        public const string DATABASE_ZIP_URI = "\\wuxitraffic.zip";
         private object obj = new object();
         private SQLiteConnection _sqLiteConnection = null;
 

@@ -3,7 +3,7 @@
     public static class Int32Constants
     {
         public const int VERSION_CODE_TEST = 26;
-        public const int VERSION_CODE = 37;
+        public const int VERSION_CODE = 47;
     }
 
     public static class StringConstants
