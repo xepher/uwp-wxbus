@@ -1,4 +1,5 @@
-﻿using Interface;
+﻿using System;
+using Interface;
 
 namespace MainModule
 {
@@ -35,6 +36,14 @@ namespace MainModule
         public int Div(int lhs, int rhs)
         {
             return _div.Div(lhs, rhs);
+        }
+
+        public void Run()
+        {
+            Console.WriteLine(Add(10, 20));
+            Console.WriteLine(Sub(10, 20));
+            Console.WriteLine(Mul(10, 20));
+            Console.WriteLine(Div(10, 20));
         }
     }
 }
