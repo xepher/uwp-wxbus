@@ -1,0 +1,77 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.30110.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyDemoApplication", "MyDemoApplication\MyDemoApplication.csproj", "{D2CB545D-BB91-4224-8147-97D56C62D164}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "MyDemoApplication.Web", "http://localhost:44230", "{9772148B-83DB-44D1-BAF7-05E2383E9EFE}"
+	ProjectSection(WebsiteProperties) = preProject
+		UseIISExpress = "true"
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.5"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_44230"
+		Debug.AspNetCompiler.PhysicalPath = "MyDemoApplication.Web\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_44230\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_44230"
+		Release.AspNetCompiler.PhysicalPath = "MyDemoApplication.Web\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_44230\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		SlnRelativePath = "MyDemoApplication.Web\"
+		DefaultWebSiteLanguage = "Visual C#"
+		ProjOutputReferences = "{D2CB545D-BB91-4224-8147-97D56C62D164}|ClientBin|false;{236BEA73-9585-4A73-80CD-BC11498F6BF4}|ClientBin|false;{66ADD5E2-6855-475B-8DB7-72CD6F74E751}|ClientBin|false;"
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleAProject", "ModuleAProject\ModuleAProject.csproj", "{236BEA73-9585-4A73-80CD-BC11498F6BF4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ModuleBProject", "ModuleBProject\ModuleBProject.csproj", "{66ADD5E2-6855-475B-8DB7-72CD6F74E751}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{A26652BD-4F25-495C-B738-AE907E41C54C}"
+	ProjectSection(SolutionItems) = preProject
+		.nuget\NuGet.Config = .nuget\NuGet.Config
+		.nuget\NuGet.exe = .nuget\NuGet.exe
+		.nuget\NuGet.targets = .nuget\NuGet.targets
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InterfacesProject", "InterfacesProject\InterfacesProject.csproj", "{76943505-1D2C-4E83-8658-1205A6000FF8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D2CB545D-BB91-4224-8147-97D56C62D164}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2CB545D-BB91-4224-8147-97D56C62D164}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2CB545D-BB91-4224-8147-97D56C62D164}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2CB545D-BB91-4224-8147-97D56C62D164}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9772148B-83DB-44D1-BAF7-05E2383E9EFE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9772148B-83DB-44D1-BAF7-05E2383E9EFE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9772148B-83DB-44D1-BAF7-05E2383E9EFE}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{9772148B-83DB-44D1-BAF7-05E2383E9EFE}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{236BEA73-9585-4A73-80CD-BC11498F6BF4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{236BEA73-9585-4A73-80CD-BC11498F6BF4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{236BEA73-9585-4A73-80CD-BC11498F6BF4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{236BEA73-9585-4A73-80CD-BC11498F6BF4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66ADD5E2-6855-475B-8DB7-72CD6F74E751}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66ADD5E2-6855-475B-8DB7-72CD6F74E751}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66ADD5E2-6855-475B-8DB7-72CD6F74E751}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66ADD5E2-6855-475B-8DB7-72CD6F74E751}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76943505-1D2C-4E83-8658-1205A6000FF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76943505-1D2C-4E83-8658-1205A6000FF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76943505-1D2C-4E83-8658-1205A6000FF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76943505-1D2C-4E83-8658-1205A6000FF8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPath = packages\Unity.2.1.505.0\lib\NET35
+	EndGlobalSection
+EndGlobal

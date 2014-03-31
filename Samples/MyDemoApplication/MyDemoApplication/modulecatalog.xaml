@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<modularity:ModuleCatalog
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:modularity="clr-namespace:Microsoft.Practices.Prism.Modularity;assembly=Microsoft.Practices.Prism">
+    <modularity:ModuleInfo
+        Ref="ModuleAProject.xap"
+        ModuleName="ModuleA"
+        ModuleType="ModuleAProject.ModuleA, ModuleAProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <modularity:ModuleInfo
+        Ref="ModuleBProject.xap"
+        ModuleName="ModuleB"
+        ModuleType="ModuleBProject.ModuleB, ModuleBProject, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null" />
+    <modularity:ModuleInfo
+        Ref="MyDemoApplication.xap"
+        ModuleName="MainModule"
+        ModuleType="MyDemoApplication.MainModule, MyDemoApplication, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null">
+        <modularity:ModuleInfo.DependsOn>
+            <sys:String>ModuleB</sys:String>
+        </modularity:ModuleInfo.DependsOn>
+    </modularity:ModuleInfo>
+</modularity:ModuleCatalog>
