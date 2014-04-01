@@ -15,9 +15,7 @@ namespace MyDemoApplication
 
         public void Initialize()
         {
-            IUIService uiService = _unityContainer.Resolve<IUIService>();
-
-            App.Current.RootVisual = uiService.GetUI();
+            
         }
     }
 }

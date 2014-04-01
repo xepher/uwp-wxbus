@@ -6,9 +6,4 @@ namespace InterfacesProject
     {
         string GetText();
     }
-
-    public interface IUIService
-    {
-        UIElement GetUI();
-    }
 }

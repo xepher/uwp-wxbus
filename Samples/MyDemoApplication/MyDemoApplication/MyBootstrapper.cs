@@ -9,7 +9,9 @@ namespace MyDemoApplication
     {
         protected override DependencyObject CreateShell()
         {
-            return null;
+            Shell shell = new Shell();
+            Application.Current.RootVisual = shell;
+            return shell;
         }
 
         protected override IModuleCatalog CreateModuleCatalog()

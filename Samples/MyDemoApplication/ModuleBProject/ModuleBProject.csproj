@@ -94,9 +94,13 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ModuleB.cs" />
+    <Compile Include="ModuleDefinition\ModuleB.cs" />
+    <Compile Include="Services\TextService.cs" />
+    <Compile Include="ViewModels\ModuleBViewOneViewModel.cs" />
+    <Compile Include="Views\ModuleBViewOne.xaml.cs">
+      <DependentUpon>ModuleBViewOne.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UIService.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -108,6 +112,13 @@
       <Name>InterfacesProject</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Views\ModuleBViewOne.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\Silverlight\$(SilverlightVersion)\Microsoft.Silverlight.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
