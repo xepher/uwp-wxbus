@@ -29,28 +29,36 @@ namespace MokeWuxibusAPK.Utils
 
         public static String GenerateSeqId()
         {
-            Random localRandom = new Random();
-            String str = localRandom.Next(1000000).ToString();
+            Random localRandom = new Random((int)DateTime.Now.Ticks);
+            StringBuilder sb = new StringBuilder();
 
-            while (str.Length < 6)
+            for (int i = 1; i <= 2; i++)
             {
-                str = "0" + str;
+                sb.Append(localRandom.Next(1000000).ToString());
+                while (sb.Length < 6 * i)
+                    sb.Insert((i - 1) * 6, "0");
             }
-            return str;
+            return sb.ToString();
         }
 
         public static String SHA1(String paramString)
         {
+            return GetHashString(paramString).ToLower();
+        }
+
+        private static byte[] GetHash(string inputString)
+        {
             SHA1 sha = new SHA1CryptoServiceProvider();
-            byte[] arrayOfByte = Encoding.UTF8.GetBytes(paramString);
-            //sha.ComputeHash();
-            StringBuilder localStringBuilder = new StringBuilder(arrayOfByte.Length << 1);
-            for (int i = 0; i < arrayOfByte.Length; i++)
-            {
-                localStringBuilder.Append(string.Format("{0:X}", 0xF & arrayOfByte[i] >> 4));
-                localStringBuilder.Append(string.Format("{0:X}", 0xF & arrayOfByte[i]));
-            }
-            return localStringBuilder.ToString();
+            return sha.ComputeHash(Encoding.UTF8.GetBytes(inputString));
+        }
+
+        private static string GetHashString(string inputString)
+        {
+            StringBuilder sb = new StringBuilder();
+            foreach (byte b in GetHash(inputString))
+                sb.Append(b.ToString("X2"));
+
+            return sb.ToString();
         }
     }
 }
