@@ -12,6 +12,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D77F49
 		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,24 @@ Global
 		{E6A4293D-E0F4-4153-B624-C5A80D80C2E0}.Release|ARM.Build.0 = Release|ARM
 		{E6A4293D-E0F4-4153-B624-C5A80D80C2E0}.Release|x86.ActiveCfg = Release|x86
 		{E6A4293D-E0F4-4153-B624-C5A80D80C2E0}.Release|x86.Build.0 = Release|x86
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|ARM.Build.0 = Debug|ARM
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|ARM.Deploy.0 = Debug|ARM
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|x86.ActiveCfg = Debug|x86
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|x86.Build.0 = Debug|x86
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Debug|x86.Deploy.0 = Debug|x86
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|ARM.ActiveCfg = Release|ARM
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|ARM.Build.0 = Release|ARM
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|ARM.Deploy.0 = Release|ARM
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|x86.ActiveCfg = Release|x86
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|x86.Build.0 = Release|x86
+		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|x86.Deploy.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
