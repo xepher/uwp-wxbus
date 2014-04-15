@@ -5,12 +5,12 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E6A4293D-E0F4-4153-B624-C5A80D80C2E0}</ProjectGuid>
+    <ProjectGuid>{A385D27E-AFBF-400F-9A21-32579D736ECB}</ProjectGuid>
     <ProjectTypeGuids>{C089C8C0-30E0-4E22-80C0-CE093F111A43};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Framework</RootNamespace>
-    <AssemblyName>Framework</AssemblyName>
+    <RootNamespace>wuxibus</RootNamespace>
+    <AssemblyName>wuxibus</AssemblyName>
     <TargetFrameworkIdentifier>WindowsPhone</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
@@ -18,6 +18,7 @@
     <ValidateXaml>true</ValidateXaml>
     <MinimumVisualStudioVersion>12.0</MinimumVisualStudioVersion>
     <ThrowErrorsInValidation>true</ThrowErrorsInValidation>
+    <ExpressionBlendVersion>12.0.50320.0</ExpressionBlendVersion>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <RestorePackages>true</RestorePackages>
   </PropertyGroup>
@@ -85,52 +86,45 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ApplicationBar\BindableApplicationBar.cs" />
-    <Compile Include="ApplicationBar\BindableApplicationBarIconButton.cs" />
-    <Compile Include="ApplicationBar\BindableApplicationBarMenuItem.cs" />
-    <Compile Include="BaseClass\ViewModelBase.cs" />
-    <Compile Include="Container\IContainer.cs" />
-    <Compile Include="Container\Ioc.cs" />
-    <Compile Include="Container\SimpleContainer.cs" />
-    <Compile Include="Converters\BoolToVisibilityConverter.cs" />
-    <Compile Include="Converters\DateTimeToStringConverter.cs" />
-    <Compile Include="Converters\InverseBoolConverter.cs" />
-    <Compile Include="Converters\InverseBoolToVisibilityConverter.cs" />
-    <Compile Include="Helpers\AsyncHelper.cs" />
-    <Compile Include="Helpers\LongListSelectorHelper.cs" />
-    <Compile Include="Helpers\WebBrowserHelper.cs" />
-    <Compile Include="Messaging\ActionReference.cs" />
-    <Compile Include="Messaging\IMessageBus.cs" />
-    <Compile Include="Messaging\MessageBus.cs" />
-    <Compile Include="Navicator\INavigator.cs" />
-    <Compile Include="Navicator\Navigator.cs" />
-    <Compile Include="Notification\IPushNotificationProvider.cs" />
-    <Compile Include="Notification\PushNotificationProvider.cs" />
+    <Compile Include="ViewModel\LineListViewModel.cs" />
+    <Compile Include="View\LineDetail.xaml.cs">
+      <DependentUpon>LineDetail.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\LineList.xaml.cs">
+      <DependentUpon>LineList.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Repositories\IRepositoryProvider.cs" />
-    <Compile Include="Serializer\ISerializer.cs" />
-    <Compile Include="Serializer\JsonConvertSerializer.cs" />
-    <Compile Include="Settings\ISettings.cs" />
-    <Compile Include="Settings\Settings.cs" />
-    <Compile Include="Storage\IStorage.cs" />
-    <Compile Include="Storage\Storage.cs" />
-    <Compile Include="Tile\ISecondaryPinner.cs" />
-    <Compile Include="Tile\SecondaryPinner.cs" />
-    <Compile Include="Tile\TileInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Cache\" />
-    <Folder Include="Common\" />
-    <Folder Include="Log\" />
+    <Page Include="View\LineDetail.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\LineList.xaml">
+      <Generator>MSBuild:MarkupCompilePass1</Generator>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    <Content Include="README_FIRST.txt" />
+    <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Delete.png" />
+    <Content Include="Toolkit.Content\ApplicationBar.Select.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Coding4Fun.Toolkit.Controls">
+      <HintPath>..\packages\Coding4Fun.Toolkit.Controls.2.0.7\lib\windowsphone8\Coding4Fun.Toolkit.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Phone.Controls.Toolkit">
+      <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <ProjectExtensions />
