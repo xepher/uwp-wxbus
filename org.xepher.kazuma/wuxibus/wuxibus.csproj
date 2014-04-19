@@ -86,7 +86,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Model\LineModel.cs" />
+    <Compile Include="Model\NewsModel.cs" />
+    <Compile Include="Model\Station2Model.cs" />
+    <Compile Include="Model\StationLine2Model.cs" />
+    <Compile Include="Model\StationModel.cs" />
+    <Compile Include="ViewModel\DesignViewModel\DesignViewModel.cs" />
+    <Compile Include="ViewModel\LineDetailViewModel.cs" />
     <Compile Include="ViewModel\LineListViewModel.cs" />
+    <Compile Include="ViewModel\NewsViewModel.cs" />
+    <Compile Include="ViewModel\StationLine2ViewModel.cs" />
     <Compile Include="View\LineDetail.xaml.cs">
       <DependentUpon>LineDetail.xaml</DependentUpon>
     </Compile>
@@ -120,11 +129,29 @@
     <Reference Include="Microsoft.Phone.Controls.Toolkit">
       <HintPath>..\packages\WPtoolkit.4.2013.08.16\lib\wp8\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.2\lib\portable-net45+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="JsonData\1.line.json" />
+    <None Include="JsonData\2.station.json" />
+    <None Include="JsonData\3.station2.json" />
+    <None Include="JsonData\4.news.json" />
+    <None Include="JsonData\5.nearData.json" />
+    <None Include="JsonData\6.nearStation.json" />
+    <None Include="JsonData\7.stationSuggestions.json" />
+    <None Include="JsonData\8.transferSuggestions.json" />
+    <None Include="JsonData\9.stationLine2.json" />
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{e6a4293d-e0f4-4153-b624-c5a80d80c2e0}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <ProjectExtensions />

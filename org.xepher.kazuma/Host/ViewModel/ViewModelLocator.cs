@@ -13,6 +13,7 @@ using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using Host.Model;
+using wuxibus.ViewModel;
 
 namespace Host.ViewModel
 {
@@ -39,6 +40,7 @@ namespace Host.ViewModel
             }
 
             SimpleIoc.Default.Register<ShellViewModel>();
+            SimpleIoc.Default.Register<LineListViewModel>();
         }
 
         /// <summary>
@@ -52,6 +54,20 @@ namespace Host.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<ShellViewModel>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the LineList property.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+            "CA1822:MarkMembersAsStatic",
+            Justification = "This non-static member is needed for data binding purposes.")]
+        public LineListViewModel LineList
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<LineListViewModel>();
             }
         }
 

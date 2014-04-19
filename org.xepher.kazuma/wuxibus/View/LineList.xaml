@@ -4,32 +4,32 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone" x:Class="wuxibus.View.LineList"
-    xmlns:vm="clr-namespace:wuxibus.ViewModel"
+    xmlns:vm="clr-namespace:wuxibus.ViewModel.DesignViewModel"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
     d:DesignHeight="800" d:DesignWidth="480">
     <UserControl.Resources>
-        <vm:LineListViewModel x:Key="DesignViewModel" />
+        <vm:DesignViewModel x:Key="DesignViewModel" />
     </UserControl.Resources>
 
     <Grid x:Name="LayoutRoot" Background="{StaticResource PhoneChromeBrush}">
         <Grid.RowDefinitions>
-			<RowDefinition Height="80" />
-			<RowDefinition Height="30" />
-			<RowDefinition Height="Auto" />
-			<RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
 		</Grid.RowDefinitions>
 
-		<TextBlock x:Name="txtTitle" Grid.Row="0" Text="Title" FontSize="60"/>
-			
-		<TextBlock x:Name="txtAnnouncement" Grid.Row="1" Text="Announcement"/>
+        <StackPanel x:Name="TitlePanel" Margin="12,17,0,28">
+            <TextBlock Text="MY APPLICATION" Style="{StaticResource PhoneTextNormalStyle}" Margin="12,0"/>
+            <TextBlock Text="page name" Margin="9,-7,0,0" Style="{StaticResource PhoneTextTitle1Style}"/>
+            <TextBlock x:Name="txtAnnouncement" d:DataContext="{Binding NewsList, Source={StaticResource DesignViewModel}}" Text="{Binding News[0].Title}"/>
+        </StackPanel>
 
-        <ListBox x:Name="lstLines" Grid.Row="2" d:DataContext="{Binding Source={StaticResource DesignViewModel}}" ItemsSource="{Binding Lines}">
+        <ListBox x:Name="lstLines" Grid.Row="1" d:DataContext="{Binding LineList, Source={StaticResource DesignViewModel}}" ItemsSource="{Binding Lines}">
             <ListBox.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding}" FontSize="28" />
+                    <TextBlock Text="{Binding SegmentName}" FontSize="28" />
                 </DataTemplate>
             </ListBox.ItemTemplate>
         </ListBox>

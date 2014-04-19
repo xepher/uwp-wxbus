@@ -1,0 +1,15 @@
+[ { "px" : 12,
+    "routeid" : "7601",
+    "segmentid" : "76010",
+    "segmentname" : "760路上行",
+    "segmentname2" : "760路上行",
+    "starttime" : null
+  },
+  { "px" : 12,
+    "routeid" : "7601",
+    "segmentid" : "76011",
+    "segmentname" : "760路下行",
+    "segmentname2" : "760路下行",
+    "starttime" : null
+  }
+]
