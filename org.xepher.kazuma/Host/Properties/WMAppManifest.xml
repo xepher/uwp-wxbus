@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2014/deployment" AppPlatformVersion="8.1">
   <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{5b6846c1-d618-4e63-bfa7-3222bee5d6f6}" Title="Host" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Host author" Description="Sample description" SDOptOut="false" BackUpOptOut="false" Publisher="Host" PublisherID="{e2f4cb27-08d4-487d-84d6-e8eb79d53cd6}">
+  <App xmlns="" ProductID="{5b6846c1-d618-4e63-bfa7-3222bee5d6f6}" Title="org.xepher.kazuma" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Host author" Description="Sample description" SDOptOut="false" BackUpOptOut="false" Publisher="Host" PublisherID="{e2f4cb27-08d4-487d-84d6-e8eb79d53cd6}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />

@@ -3,7 +3,7 @@
   <Identity Name="7a5e23b0-edb6-42af-83d6-09aad91a2f09" Publisher="CN=shaojun" Version="1.0.0.0" />
   <mp:PhoneIdentity PhoneProductId="5b6846c1-d618-4e63-bfa7-3222bee5d6f6" PhonePublisherId="e2f4cb27-08d4-487d-84d6-e8eb79d53cd6" />
   <Properties>
-    <DisplayName>Host</DisplayName>
+    <DisplayName>org.xepher.kazuma.host</DisplayName>
     <PublisherDisplayName>shaojun</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -16,7 +16,7 @@
   </Resources>
   <Applications>
     <Application Id="App" Executable="AGHost.exe" EntryPoint="View/Shell.xaml">
-      <m3:VisualElements DisplayName="Host" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png" Description="Host" ForegroundText="light" BackgroundColor="#464646">
+      <m3:VisualElements DisplayName="org.xepher.kazuma" Square150x150Logo="Assets\SquareTile150x150.png" Square44x44Logo="Assets\Logo.png" Description="Kazuma Shell" ForegroundText="light" BackgroundColor="#464646">
         <m3:DefaultTile Square71x71Logo="Assets\SquareTile71x71.png">
         </m3:DefaultTile>
         <m3:SplashScreen Image="Assets\SplashScreen.png" />

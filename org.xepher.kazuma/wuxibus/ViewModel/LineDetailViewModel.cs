@@ -1,4 +1,5 @@
-﻿using Framework.Serializer;
+﻿using Framework.BaseClass;
+using Framework.Serializer;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

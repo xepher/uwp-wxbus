@@ -170,6 +170,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Framework\Framework.csproj">
+      <Project>{e6a4293d-e0f4-4153-b624-c5a80d80c2e0}</Project>
+      <Name>Framework</Name>
+    </ProjectReference>
     <ProjectReference Include="..\wuxibus\wuxibus.csproj">
       <Project>{a385d27e-afbf-400f-9a21-32579d736ecb}</Project>
       <Name>wuxibus</Name>

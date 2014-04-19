@@ -12,10 +12,11 @@ namespace wuxibus.ViewModel.DesignViewModel
 {
     public class DesignViewModel
     {
-        LineListViewModel _lineList = new LineListViewModel(true);
-        NewsViewModel _newsList = new NewsViewModel(true);
-        LineDetailViewModel _lineDetail = new LineDetailViewModel(true);
-        StationLine2ViewModel _stationLineInfo = new StationLine2ViewModel(true);
+        const bool isDesign = false;
+        LineListViewModel _lineList = new LineListViewModel(isDesign);
+        NewsViewModel _newsList = new NewsViewModel(isDesign);
+        LineDetailViewModel _lineDetail = new LineDetailViewModel(isDesign);
+        StationLine2ViewModel _stationLineInfo = new StationLine2ViewModel(isDesign);
 
         public LineListViewModel LineList
         {

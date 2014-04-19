@@ -14,6 +14,7 @@ using GalaSoft.MvvmLight.Ioc;
 using Microsoft.Practices.ServiceLocation;
 using Host.Model;
 using wuxibus.ViewModel;
+using wuxibus.ViewModel.DesignViewModel;
 
 namespace Host.ViewModel
 {
@@ -40,7 +41,11 @@ namespace Host.ViewModel
             }
 
             SimpleIoc.Default.Register<ShellViewModel>();
+            SimpleIoc.Default.Register<StationLine2ViewModel>();
+            SimpleIoc.Default.Register<LineDetailViewModel>();
+            SimpleIoc.Default.Register<NewsViewModel>();
             SimpleIoc.Default.Register<LineListViewModel>();
+            SimpleIoc.Default.Register<DesignViewModel>();
         }
 
         /// <summary>
