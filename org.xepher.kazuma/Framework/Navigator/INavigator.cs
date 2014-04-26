@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Framework.Navicator
+namespace Framework.Navigator
 {
     /// <summary>
     /// Interface for navigation in an application.

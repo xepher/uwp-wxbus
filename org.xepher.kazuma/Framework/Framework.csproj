@@ -102,8 +102,8 @@
     <Compile Include="Messaging\ActionReference.cs" />
     <Compile Include="Messaging\IMessageBus.cs" />
     <Compile Include="Messaging\MessageBus.cs" />
-    <Compile Include="Navicator\INavigator.cs" />
-    <Compile Include="Navicator\Navigator.cs" />
+    <Compile Include="Navigator\INavigator.cs" />
+    <Compile Include="Navigator\Navigator.cs" />
     <Compile Include="Notification\IPushNotificationProvider.cs" />
     <Compile Include="Notification\PushNotificationProvider.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

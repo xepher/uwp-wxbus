@@ -31,10 +31,10 @@ namespace SerializerDemo
             //}
 
             // 3.station2.json
-            //using (StreamReader sr = File.OpenText("../../SampleResults/3.station2.json"))
-            //{
-            //    List<Station2ResultEntity> stationEntities = serializer.Deserialize<List<Station2ResultEntity>>(sr.ReadToEnd());
-            //}
+            using (StreamReader sr = File.OpenText("../../SampleResults/3.station2.json"))
+            {
+                List<Station2ResultEntity> stationEntities = serializer.Deserialize<List<Station2ResultEntity>>(sr.ReadToEnd());
+            }
 
             // 4.news.json
             //using (StreamReader sr = File.OpenText("../../SampleResults/4.news.json"))
@@ -43,17 +43,17 @@ namespace SerializerDemo
             //}
 
             // 9.stationLine2.json
-            using (StreamReader sr = File.OpenText("../../SampleResults/9.stationLine2.json"))
-            {
-                JObject jsonObj = serializer.Deserialize<JObject>(sr.ReadToEnd());
-                IEnumerable<JProperty> properties = jsonObj.Properties();
-                foreach (JProperty item in properties)
-                {
-                    Console.WriteLine(item.Name);
+            //using (StreamReader sr = File.OpenText("../../SampleResults/9.stationLine2.json"))
+            //{
+            //    JObject jsonObj = serializer.Deserialize<JObject>(sr.ReadToEnd());
+            //    IEnumerable<JProperty> properties = jsonObj.Properties();
+            //    foreach (JProperty item in properties)
+            //    {
+            //        Console.WriteLine(item.Name);
 
-                    StationLine2Entity stationLine2Entity = serializer.Deserialize<StationLine2Entity>(item.Value.ToString());
-                }
-            }
+            //        StationLine2Entity stationLine2Entity = serializer.Deserialize<StationLine2Entity>(item.Value.ToString());
+            //    }
+            //}
 
             Console.ReadKey();
         }

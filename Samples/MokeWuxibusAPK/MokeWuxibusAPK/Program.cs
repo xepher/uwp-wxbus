@@ -23,8 +23,9 @@ namespace MokeWuxibusAPK
             string templateStation2 = "http://app.wifiwx.com/bus/api.php?a=segment_station2&id={0}&key=&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
             string localObject2 = string.Format(templateStation2, 76010, SignatureUtil.RandomString());
             // news, id=routeid
-            string templateNews = "http://app.wifiwx.com/bus/api.php?a=get_news&id={0}&key=&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-            string localObject3 = string.Format(templateNews, HttpUtility.UrlEncode("7601", Encoding.UTF8), SignatureUtil.RandomString());
+            //string templateNews = "http://app.wifiwx.com/bus/api.php?a=get_news&id={0}&key=&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
+            string templateNews = "http://app.wifiwx.com/bus/api.php?a=get_news&key=&nonce={0}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
+            string localObject3 = string.Format(templateNews, SignatureUtil.RandomString());
             // nearData
             string templateNearData = "http://app.wifiwx.com/bus/api.php?a=get_segment&key=&lat={0}&lng={1}&nonce={2}&rad=1000.000000&secret=640c7088ef7811e2a4e4005056991a1f&type=1&version=0.1";
             string localObject4 = string.Format(templateNearData, 31.496320646912, 120.317770491124, SignatureUtil.RandomString());
@@ -42,8 +43,8 @@ namespace MokeWuxibusAPK
             string localObject8 = string.Format(templateStationLine2, SignatureUtil.RandomString(), HttpUtility.UrlEncode("6707", Encoding.UTF8));
             // user guide http://app.wifiwx.com/bus/ios/2-2/help.html
 
-            String str1 = SignatureUtil.SHA1(SignatureUtil.FormatUrl(localObject));
-            String str2 = localObject.Replace("&secret=640c7088ef7811e2a4e4005056991a1f", "") + "&signature=" + str1;
+            String str1 = SignatureUtil.SHA1(SignatureUtil.FormatUrl(localObject2));
+            String str2 = localObject2.Replace("&secret=640c7088ef7811e2a4e4005056991a1f", "") + "&signature=" + str1;
             localObject = str2;
 
             // 2.save to local file

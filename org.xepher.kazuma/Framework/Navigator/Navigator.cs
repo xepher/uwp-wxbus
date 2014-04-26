@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Framework.Navicator
+namespace Framework.Navigator
 {
     public sealed class Navigator : INavigator
     {

@@ -8,6 +8,10 @@ using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Host.Resources;
 using Host.ViewModel;
+using Framework.Container;
+using Framework.Navigator;
+using Framework.Serializer;
+using GalaSoft.MvvmLight.Ioc;
 
 namespace Host
 {
@@ -35,6 +39,8 @@ namespace Host
 
             // Language display initialization
             InitializeLanguage();
+
+            //Ioc.Container.RegisterInstance<INavigator>(new Navigator(Ioc.Container.Resolve<ISerializer>(), Ioc.Container, RootFrame));
 
             // Show graphics profiling information while debugging.
             if (Debugger.IsAttached)
@@ -102,6 +108,7 @@ namespace Host
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            MessageBox.Show(e.ExceptionObject.Message + "\r\n" + e.ExceptionObject.StackTrace.ToString());
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger

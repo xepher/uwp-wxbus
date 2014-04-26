@@ -13,8 +13,7 @@
     <Application.Resources>
         <local:LocalizedStrings xmlns:local="clr-namespace:Host" x:Key="LocalizedStrings"/>
 
-        <vm:ViewModelLocator x:Key="Locator"
-                             d:IsDataSource="True" />
+        <vm:ViewModelLocator x:Key="Locator" d:IsDataSource="True" />
     </Application.Resources>
 
     <Application.ApplicationLifetimeObjects>
