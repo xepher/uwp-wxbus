@@ -1,6 +1,7 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,12 +20,18 @@ namespace wuxibus.Model
         public string StationSeq { get; set; }
         public string StationTypeId { get; set; }
         public string StationTypeName { get; set; }
+
+        public DateTime ActDateTime { get; set; }
+        public string BusselfId { get; set; }
+        public string BusState { get; set; }
+        public string CurStopNo { get; set; }
+        public string LastBus { get; set; }
     }
 
     public class Station2ResultEntity
     {
-        public List<Station2Entity> List { get; set; }
-        public DateTime? StartTime { get; set; }
+        public ObservableCollection<Station2Entity> List { get; set; }
+        public string StartTime { get; set; }
     }
 
     [JsonConverter(typeof(CoordinateSConverter))]
@@ -56,11 +63,11 @@ namespace wuxibus.Model
 
             if (longitude < latitude)
             {
-                double temp= longitude;
+                double temp = longitude;
                 longitude = latitude;
                 latitude = temp;
             }
-            
+
             Coordinate coord = new Coordinate()
             {
                 Longitude = longitude,

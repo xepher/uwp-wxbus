@@ -1,59 +1,9 @@
 { "message" : "",
-  "result" : [ { "actdatetime" : "21:03:17",
-        "busselfid" : "8239",
-        "busstate" : "1",
-        "curstopno" : 45,
-        "lastBus" : 0,
-        "stationname" : "中心街（南湖园路）",
-        "stationnum" : 6662
-      },
-      { "actdatetime" : "21:46:08",
-        "busselfid" : "8251",
-        "busstate" : "1",
-        "curstopno" : 36,
-        "lastBus" : 0,
-        "stationname" : "净慧东路（和风路）",
-        "stationnum" : 6671
-      },
-      { "actdatetime" : "21:46:03",
-        "busselfid" : "8224",
-        "busstate" : "1",
-        "curstopno" : 33,
-        "lastBus" : 0,
-        "stationname" : "袁塘桥",
-        "stationnum" : 6674
-      },
-      { "actdatetime" : "21:45:46",
-        "busselfid" : "8210",
-        "busstate" : "1",
-        "curstopno" : 23,
-        "lastBus" : 0,
-        "stationname" : "梁南桥（明丽雅公司）",
-        "stationnum" : 6684
-      },
-      { "actdatetime" : "21:46:07",
-        "busselfid" : "8243",
-        "busstate" : "1",
-        "curstopno" : 14,
-        "lastBus" : 0,
-        "stationname" : "公交三场",
-        "stationnum" : 6693
-      },
-      { "actdatetime" : "21:44:16",
-        "busselfid" : "8222",
-        "busstate" : "1",
-        "curstopno" : 7,
-        "lastBus" : 0,
-        "stationname" : "迎龙路（学前路）",
-        "stationnum" : 6700
-      },
-      { "actdatetime" : "21:45:43",
-        "busselfid" : "8250",
-        "busstate" : "1",
-        "curstopno" : 1,
-        "lastBus" : 0,
-        "stationname" : "火车站",
-        "stationnum" : 6706
-      }
-    ]
+  "result" : [ { "actdatetime" : "10:25:43",
+        "busselfid" : "21136",
+        "lastBus" : "0",
+        "productid" : "51021136",
+        "stationname" : "青山支路（惠河路）",
+        "stationnum" : "3"
+      } ]
 }

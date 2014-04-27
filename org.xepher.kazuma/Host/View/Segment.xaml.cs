@@ -11,6 +11,7 @@ using Host.Utils;
 using wuxibus.Model;
 using Framework.Navigator;
 using Host.ViewModel;
+using GalaSoft.MvvmLight.Messaging;
 
 namespace Host.View
 {
@@ -34,10 +35,6 @@ namespace Host.View
         }
 
         private void Switch_Click(object sender, EventArgs e)
-        {
-        }
-
-        private void grdSegmentItem_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
         }
     }

@@ -12,9 +12,12 @@ namespace wuxibus.Model
         public string BusselfId { get; set; }
         public string BusState { get; set; }
         public string CurStopNo { get; set; }
-        public bool LastBus { get; set; }
+        public string LastBus { get; set; }
         public string StationName { get; set; }
         public string StationNum { get; set; }
+
+        // for wuxi bus
+        public string ProductId { get; set; }
     }
 
     public class StationResultEntity

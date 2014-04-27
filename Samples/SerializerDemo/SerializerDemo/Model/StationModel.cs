@@ -1,5 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,15 +12,17 @@ namespace wuxibus.Model
         public string BusselfId { get; set; }
         public string BusState { get; set; }
         public string CurStopNo { get; set; }
-        public bool LastBus { get; set; }
+        public string LastBus { get; set; }
         public string StationName { get; set; }
-        public int StationNum { get; set; }
+        public string StationNum { get; set; }
+
+        // for wuxi bus
+        public string ProductId { get; set; }
     }
 
     public class StationResultEntity
     {
         public string Message { get; set; }
-        [JsonProperty("result")]
-        public List<StationEntity> Stations { get; set; }
+        public List<StationEntity> Result { get; set; }
     }
 }

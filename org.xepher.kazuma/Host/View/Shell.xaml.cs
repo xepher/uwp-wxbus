@@ -42,18 +42,13 @@ namespace Host.View
 
         private async void txtSearchLine_LostFocus(object sender, RoutedEventArgs e)
         {
+            if (txtSearchLine.Text.Trim() == string.Empty) return;
             string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
             string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(txtSearchLine.Text.Trim()), SignatureUtil.GenerateSeqId()));
 
             IList<LineEntity> lines = await SignatureUtil.BeginWebRequest<List<LineEntity>>(requestUrl);
 
             ((ShellViewModel)DataContext).Lines = lines;
-        }
-
-        private void grdLineItem_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            //LineEntity line = (LineEntity)(((Grid)sender).DataContext);
-            //this.NavigationService.Navigate(new Uri(string.Format("/View/Segment.xaml?routeId={0}&segmentId={1}&segmentName={2}", line.RouteId, line.SegmentId, line.SegmentName), UriKind.Relative));
         }
 
         protected override void OnNavigatedTo(NavigationEventArgs e)

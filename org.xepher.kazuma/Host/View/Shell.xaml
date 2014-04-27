@@ -146,6 +146,16 @@
                                 <cmd:EventToCommand Command="{Binding NavigateToSegmentCommand}" CommandParameter="{Binding SelectedItem,ElementName=lstLines}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
+                        <!--<ListBox.Template>
+                            <ControlTemplate>
+                                <ScrollViewer Height="{Binding Height,RelativeSource={RelativeSource Mode=TemplatedParent}}">
+                                    <StackPanel>
+                                        <ItemsPresenter />
+                                        <Canvas Height="72" />
+                                    </StackPanel>
+                                </ScrollViewer>
+                            </ControlTemplate>
+                        </ListBox.Template>-->
                     </ListBox>
                     <!--
                     Binding Command to ListBoxItem
@@ -170,7 +180,7 @@
     </Grid>
 
     <phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar Opacity="0.7" Mode="Minimized">
+        <shell:ApplicationBar Opacity="1" Mode="Minimized">
             <shell:ApplicationBar.MenuItems>
                 <shell:ApplicationBarMenuItem Text="设置…" Click="Settings_Click"/>
             </shell:ApplicationBar.MenuItems>

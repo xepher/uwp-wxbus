@@ -25,16 +25,16 @@ namespace SerializerDemo
             //}
 
             // 2.station.json
-            //using (StreamReader sr = File.OpenText("../../SampleResults/2.station.json"))
-            //{
-            //    StationResultEntity stationEntities = serializer.Deserialize<StationResultEntity>(sr.ReadToEnd());
-            //}
+            using (StreamReader sr = File.OpenText("../../SampleResults/2.station.json"))
+            {
+                StationResultEntity stationEntities = serializer.Deserialize<StationResultEntity>(sr.ReadToEnd());
+            }
 
             // 3.station2.json
-            using (StreamReader sr = File.OpenText("../../SampleResults/3.station2.json"))
-            {
-                List<Station2ResultEntity> stationEntities = serializer.Deserialize<List<Station2ResultEntity>>(sr.ReadToEnd());
-            }
+            //using (StreamReader sr = File.OpenText("../../SampleResults/3.station2.json"))
+            //{
+            //    List<Station2ResultEntity> stationEntities = serializer.Deserialize<List<Station2ResultEntity>>(sr.ReadToEnd());
+            //}
 
             // 4.news.json
             //using (StreamReader sr = File.OpenText("../../SampleResults/4.news.json"))

@@ -46,6 +46,7 @@ namespace Host.ViewModel
                 {
                     _navigateToSegmentCommand = new RelayCommand<LineEntity>(p =>
                     {
+                        if (null == p) return;
                         NavigatedToSegment(p);
                     });
                 }
