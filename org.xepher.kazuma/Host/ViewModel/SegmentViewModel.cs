@@ -172,7 +172,7 @@ namespace Host.ViewModel
                         }
                     }
                 }
-                MessageBox.Show("Finished.");
+                
             }
         }
 

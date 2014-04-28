@@ -16,6 +16,7 @@ using System.Threading.Tasks;
 using System.Collections.ObjectModel;
 using Framework.Navigator;
 using GalaSoft.MvvmLight.Messaging;
+using System.Windows.Input;
 
 namespace Host.View
 {
@@ -30,27 +31,16 @@ namespace Host.View
             //BuildLocalizedApplicationBar();
         }
 
-        private void Settings_Click(object sender, EventArgs e)
-        {
-            this.NavigationService.Navigate(new Uri("/View/Settings.xaml", UriKind.Relative));
-        }
+        //private void Settings_Click(object sender, EventArgs e)
+        //{
+        //    this.NavigationService.Navigate(new Uri("/View/Settings.xaml", UriKind.Relative));
+        //}
 
         //private async Task<IList<LineEntity>> SearchLine()
         //{
         //    return await SignatureUtil.BeginWebRequest<List<LineEntity>>(requestUrl);
         //}
-
-        private async void txtSearchLine_LostFocus(object sender, RoutedEventArgs e)
-        {
-            if (txtSearchLine.Text.Trim() == string.Empty) return;
-            string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-            string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(txtSearchLine.Text.Trim()), SignatureUtil.GenerateSeqId()));
-
-            IList<LineEntity> lines = await SignatureUtil.BeginWebRequest<List<LineEntity>>(requestUrl);
-
-            ((ShellViewModel)DataContext).Lines = lines;
-        }
-
+        
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
             Messenger.Default.Register<string>(this, "Navigate", uri =>
@@ -61,6 +51,25 @@ namespace Host.View
                 }
             });
             base.OnNavigatedTo(e);
+        }
+
+        private void txtSearchLine_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                SearchLine();
+            }
+        }
+
+        private async Task SearchLine()
+        {
+            if (txtSearchLine.Text.Trim() == string.Empty) return;
+            string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
+            string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(txtSearchLine.Text.Trim()), SignatureUtil.GenerateSeqId()));
+
+            IList<LineEntity> lines = await SignatureUtil.BeginWebRequest<List<LineEntity>>(requestUrl);
+
+            ((ShellViewModel)DataContext).Lines = lines;
         }
 
         // Sample code for building a localized ApplicationBar

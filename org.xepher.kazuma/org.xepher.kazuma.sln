@@ -14,8 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{D77F49
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Host", "Host\Host.csproj", "{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "wuxibus", "wuxibus\wuxibus.csproj", "{A385D27E-AFBF-400F-9A21-32579D736ECB}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,18 +54,6 @@ Global
 		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|x86.ActiveCfg = Release|x86
 		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|x86.Build.0 = Release|x86
 		{5B6846C1-D618-4E63-BFA7-3222BEE5D6F6}.Release|x86.Deploy.0 = Release|x86
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Debug|ARM.ActiveCfg = Debug|ARM
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Debug|ARM.Build.0 = Debug|ARM
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Debug|x86.ActiveCfg = Debug|x86
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Debug|x86.Build.0 = Debug|x86
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Release|ARM.ActiveCfg = Release|ARM
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Release|ARM.Build.0 = Release|ARM
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Release|x86.ActiveCfg = Release|x86
-		{A385D27E-AFBF-400F-9A21-32579D736ECB}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

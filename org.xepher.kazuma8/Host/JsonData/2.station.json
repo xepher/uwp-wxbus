@@ -1,0 +1,9 @@
+{ "message" : "",
+  "result" : [ { "actdatetime" : "10:25:43",
+        "busselfid" : "21136",
+        "lastBus" : "0",
+        "productid" : "51021136",
+        "stationname" : "青山支路（惠河路）",
+        "stationnum" : "3"
+      } ]
+}
