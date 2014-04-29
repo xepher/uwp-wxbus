@@ -89,6 +89,7 @@
     <Compile Include="ApplicationBar\BindableApplicationBarIconButton.cs" />
     <Compile Include="ApplicationBar\BindableApplicationBarMenuItem.cs" />
     <Compile Include="BaseClass\ViewModelBase.cs" />
+    <Compile Include="Common\GlobalLoading.cs" />
     <Compile Include="Container\IContainer.cs" />
     <Compile Include="Container\Ioc.cs" />
     <Compile Include="Container\SimpleContainer.cs" />
@@ -132,7 +133,6 @@
     <Folder Include="Bin\x86\Debug\" />
     <Folder Include="Bin\x86\Release\" />
     <Folder Include="Cache\" />
-    <Folder Include="Common\" />
     <Folder Include="Log\" />
     <Folder Include="obj\Debug\TempPE\" />
   </ItemGroup>

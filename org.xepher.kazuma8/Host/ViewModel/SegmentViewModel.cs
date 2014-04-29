@@ -1,4 +1,5 @@
-﻿using Framework.Container;
+﻿using Framework.Common;
+using Framework.Container;
 using Framework.Navigator;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
@@ -54,7 +55,15 @@ namespace Host.ViewModel
                     _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(p =>
                     {
                         if (null == p) return;
-                        GetRealTimeInfo(p);
+                        if (!GlobalLoading.Instance.ActualIsLoading)
+                        {
+                            GlobalLoading.Instance.IsLoading = true;
+
+                            GetRealTimeInfo(p).ContinueWith(t =>
+                            {
+                                GlobalLoading.Instance.IsLoading = false;
+                            });
+                        }
                     });
                 }
 
@@ -105,10 +114,14 @@ namespace Host.ViewModel
             }
             else
             {
+                GlobalLoading.Instance.IsLoading = true;
+
                 string templateSegments = "http://app.wifiwx.com/bus/api.php?a=segment_station2&id={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
                 string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateSegments, SegmentId, SignatureUtil.RandomString()));
 
-                Segments = await SignatureUtil.BeginWebRequest<ObservableCollection<Station2ResultEntity>>(requestUrl);
+                Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
+
+                GlobalLoading.Instance.IsLoading = false;
             }
         }
 
@@ -140,10 +153,20 @@ namespace Host.ViewModel
             }
             else
             {
+                if (GlobalLoading.Instance.ActualIsLoading) return;
+                GlobalLoading.Instance.IsLoading = true;
+
                 string templateRealTimeInfo = "http://app.wifiwx.com/bus/api.php?a=station_info_common&key=&nonce={0}&routeid={1}&secret=640c7088ef7811e2a4e4005056991a1f&segmentid={2}&stationseq={3}&version=0.1";
                 string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateRealTimeInfo, SignatureUtil.RandomString(), RouteId, SegmentId, station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
-                StationResultEntity realTimeInfo = await SignatureUtil.BeginWebRequest<StationResultEntity>(requestUrl);
+                StationResultEntity realTimeInfo = await SignatureUtil.WebRequestAsync<StationResultEntity>(requestUrl);
+
+                if (!string.IsNullOrEmpty(realTimeInfo.Message))
+                {
+                    MessageBox.Show(realTimeInfo.Message);
+                    GlobalLoading.Instance.IsLoading = false;
+                    return;
+                }
 
                 foreach (var stationItem in realTimeInfo.Result)
                 {
@@ -167,7 +190,8 @@ namespace Host.ViewModel
                         }
                     }
                 }
-                
+
+                GlobalLoading.Instance.IsLoading = false;
             }
         }
 

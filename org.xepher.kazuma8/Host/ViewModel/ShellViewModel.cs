@@ -1,4 +1,5 @@
-﻿using Framework.Container;
+﻿using Framework.Common;
+using Framework.Container;
 using Framework.Navigator;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
@@ -141,10 +142,15 @@ namespace Host.ViewModel
             }
             else
             {
+                if (GlobalLoading.Instance.ActualIsLoading) return;
+                GlobalLoading.Instance.IsLoading = true;
+
                 string templateNews = "http://app.wifiwx.com/bus/api.php?a=get_news&nonce={0}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
                 string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateNews, SignatureUtil.RandomString()));
 
-                News = await SignatureUtil.BeginWebRequest<List<NewsEntity>>(requestUrl);
+                News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
+
+                GlobalLoading.Instance.IsLoading = false;
             }
         }
 

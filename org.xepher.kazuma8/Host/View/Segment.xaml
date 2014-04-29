@@ -12,7 +12,7 @@
     x:Class="Host.View.Segment"
     mc:Ignorable="d"
     SupportedOrientations="Portrait"  Orientation="Portrait"
-    shell:SystemTray.IsVisible="False" shell:SystemTray.BackgroundColor="Transparent" shell:SystemTray.Opacity="0"
+    shell:SystemTray.IsVisible="True" shell:SystemTray.BackgroundColor="Transparent" shell:SystemTray.Opacity="0"
     >
 
     <phone:PhoneApplicationPage.Resources>
@@ -83,7 +83,7 @@
             </phone:Panorama.Background>
 
             <phone:Panorama.Title>
-                <TextBlock FontSize="24" Text="Segment" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
+                <TextBlock FontSize="24" Text="WuxiBus" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
             </phone:Panorama.Title>
 
             <phone:Panorama.HeaderTemplate>

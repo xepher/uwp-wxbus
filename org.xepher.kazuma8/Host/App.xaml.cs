@@ -9,6 +9,7 @@ using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using Host.Resources;
+using Framework.Common;
 
 namespace Host
 {
@@ -19,7 +20,7 @@ namespace Host
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
-
+        
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
@@ -128,6 +129,10 @@ namespace Host
 
             // Ensure we don't initialize again
             phoneApplicationInitialized = true;
+
+            // Initialize Global Loading
+            GlobalLoading.Instance.Initialize(RootFrame);
+            GlobalLoading.Instance.LoadingText = "Loading...";
         }
 
         // Do not add any additional code to this method

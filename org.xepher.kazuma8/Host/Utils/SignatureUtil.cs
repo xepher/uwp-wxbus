@@ -73,7 +73,7 @@ namespace Host.Utils
             return requestUrl.Replace("&secret=640c7088ef7811e2a4e4005056991a1f", "") + "&signature=" + hashedRequestUrl;
         }
 
-        public static async Task<T> BeginWebRequest<T>(string requestUrl)
+        public static async Task<T> WebRequestAsync<T>(string requestUrl)
         {
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(requestUrl);
             request.Headers["Host"] = "app.wifiwx.com";
@@ -81,12 +81,19 @@ namespace Host.Utils
             request.Headers["Accept-Encoding"] = "gzip";
             request.UserAgent = "org.xepher.kazuma.wuxibus;WP8.1;the api is shit";
 
-            HttpWebResponse response = (HttpWebResponse)await Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null);
-
-            using (StreamReader readStream = new StreamReader(response.GetResponseStream()))
+            try
             {
-                ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
-                return serializer.Deserialize<T>(readStream.ReadToEnd());
+                HttpWebResponse response = (HttpWebResponse)await Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null);
+
+                using (StreamReader readStream = new StreamReader(response.GetResponseStream()))
+                {
+                    ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    return serializer.Deserialize<T>(readStream.ReadToEnd());
+                }
+            }
+            catch (Exception ex)
+            {
+                throw ex;
             }
         }
     }

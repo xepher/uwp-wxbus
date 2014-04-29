@@ -12,6 +12,7 @@ using wuxibus.Model;
 using Framework.Navigator;
 using Host.ViewModel;
 using GalaSoft.MvvmLight.Messaging;
+using Framework.Common;
 
 namespace Host.View
 {
@@ -32,6 +33,12 @@ namespace Host.View
             base.OnNavigatedTo(e);
 
             segmentViewModel.InitSegments();
+        }
+
+        protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
+        {
+            GlobalLoading.Instance.IsLoading = false;
+            base.OnBackKeyPress(e);
         }
     }
 }
