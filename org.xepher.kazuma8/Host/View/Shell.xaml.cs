@@ -1,30 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Navigation;
-using Microsoft.Phone.Controls;
-using Microsoft.Phone.Shell;
-using Host.Resources;
-using System.Text;
-using Host.Utils;
-using Host.ViewModel;
-using wuxibus.Model;
-using System.Threading.Tasks;
-using System.Collections.ObjectModel;
-using Framework.Navigator;
+﻿using Framework.Common;
 using GalaSoft.MvvmLight.Messaging;
-using System.Windows.Input;
+using Microsoft.Phone.Controls;
 using Microsoft.Phone.Net.NetworkInformation;
-using Framework.Common;
+using System;
+using System.Windows;
+using System.Windows.Input;
+using System.Windows.Navigation;
+using wuxibus.Model;
 
 namespace Host.View
 {
     public partial class Shell : PhoneApplicationPage
     {
-        // Constructor
         public Shell()
         {
             InitializeComponent();
@@ -45,25 +32,16 @@ namespace Host.View
             base.OnBackKeyPress(e);
         }
 
-        //private void Settings_Click(object sender, EventArgs e)
-        //{
-        //    this.NavigationService.Navigate(new Uri("/View/Settings.xaml", UriKind.Relative));
-        //}
-
-        //private async Task<IList<LineEntity>> SearchLine()
-        //{
-        //    return await SignatureUtil.BeginWebRequest<List<LineEntity>>(requestUrl);
-        //}
-
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            Messenger.Default.Register<string>(this, "Navigate", uri =>
+            Messenger.Default.Register<LineEntity>(this, "Navigate", s =>
             {
-                if (uri != null)
+                if (null != s)
                 {
-                    NavigationService.Navigate(new Uri(uri, UriKind.Relative));
+                    NavigationService.Navigate(new Uri("/View/Segment.xaml", UriKind.Relative));
                 }
             });
+            Messenger.Default.Send<string>("", "LoadNews");
             base.OnNavigatedTo(e);
         }
 
@@ -71,29 +49,13 @@ namespace Host.View
         {
             if (e.Key == Key.Enter)
             {
-                SearchLine();
+                Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
             }
-        }
-
-        private async Task SearchLine()
-        {
-            if (GlobalLoading.Instance.ActualIsLoading) return;
-            if (txtSearchLine.Text.Trim() == string.Empty) return;
-            GlobalLoading.Instance.IsLoading = true;
-
-            string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-            string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(txtSearchLine.Text.Trim()), SignatureUtil.GenerateSeqId()));
-
-            IList<LineEntity> lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
-
-            ((ShellViewModel)DataContext).Lines = lines;
-
-            GlobalLoading.Instance.IsLoading = false;
         }
 
         private void txtSearchLine_LostFocus(object sender, RoutedEventArgs e)
         {
-            SearchLine();
+            Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
         }
 
         // Sample code for building a localized ApplicationBar

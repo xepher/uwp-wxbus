@@ -1,41 +1,31 @@
 ﻿using Framework.Common;
 using Framework.Container;
-using Framework.Navigator;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
-using Host.Commands;
-using Host.Model;
 using Host.Utils;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Navigation;
 using System.Windows.Resources;
 using wuxibus.Model;
 
 namespace Host.ViewModel
 {
-    /// <summary>
-    /// This class contains properties that the shell View can data bind to.
-    /// <para>
-    /// See http://www.galasoft.ch/mvvm
-    /// </para>
-    /// </summary>
     public class ShellViewModel : ViewModelBase
     {
-        //private readonly INavigator _navigator;
-
-        public const string LinesPropertyName = "Lines";
-        public const string NewsPropertyName = "News";
+        private const string LinesPropertyName = "Lines";
+        private const string NewsPropertyName = "News";
 
         private ICommand _navigateToSegmentCommand;
+        private ICommand _tapNewsCommand;
         private IList<LineEntity> _lines;
         private IList<NewsEntity> _news;
 
@@ -45,14 +35,32 @@ namespace Host.ViewModel
             {
                 if (null == _navigateToSegmentCommand)
                 {
-                    _navigateToSegmentCommand = new RelayCommand<LineEntity>(p =>
+                    _navigateToSegmentCommand = new RelayCommand<LineEntity>(s =>
                     {
-                        if (null == p) return;
-                        NavigatedToSegment(p);
+                        if (null != s)
+                        {
+                            Messenger.Default.Send<LineEntity>(s, "Navigate");
+                        }
                     });
                 }
 
                 return _navigateToSegmentCommand;
+            }
+        }
+        public ICommand TapNewsCommand
+        {
+            get
+            {
+                if (null == _tapNewsCommand)
+                {
+                    _tapNewsCommand = new RelayCommand<NewsEntity>(s =>
+                    {
+                        if (null == s) return;
+                        MessageBox.Show(s.Body, s.Title, MessageBoxButton.OK);
+                    });
+                }
+
+                return _tapNewsCommand;
             }
         }
         public IList<LineEntity> Lines
@@ -88,6 +96,15 @@ namespace Host.ViewModel
 
         public ShellViewModel()
         {
+            Messenger.Default.Register<string>(this, "SearchLine", s =>
+            {
+                SearchLine(s);
+            });
+            Messenger.Default.Register<string>(this, "LoadNews", s =>
+            {
+                InitNews();
+            });
+
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 _lines = new ObservableCollection<LineEntity>();
@@ -97,8 +114,6 @@ namespace Host.ViewModel
                     ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
                     foreach (var item in serializer.Deserialize<List<LineEntity>>(sr.ReadToEnd()))
                     {
-                        // retrieve line info via segmentid
-                        StationLine2Entity _lineInfo = new StationLine2Entity();
                         StreamResourceInfo lineInfoReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/9.stationLine2.json", UriKind.Relative));
                         using (StreamReader srLineInfo = new StreamReader(lineInfoReader.Stream))
                         {
@@ -116,13 +131,6 @@ namespace Host.ViewModel
                     }
                 };
             }
-
-            InitNews();
-        }
-
-        private void NavigatedToSegment(LineEntity line)
-        {
-            Messenger.Default.Send<string>(string.Format("/View/Segment.xaml?routeId={0}&segmentId={1}&segmentName={2}", line.RouteId, line.SegmentId, line.SegmentName), "Navigate");
         }
 
         private async Task InitNews()
@@ -142,16 +150,33 @@ namespace Host.ViewModel
             }
             else
             {
-                if (GlobalLoading.Instance.ActualIsLoading) return;
-                GlobalLoading.Instance.IsLoading = true;
+                if (null == News)
+                {
+                    GlobalLoading.Instance.IsLoading = true;
 
-                string templateNews = "http://app.wifiwx.com/bus/api.php?a=get_news&nonce={0}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateNews, SignatureUtil.RandomString()));
+                    string templateNews =
+                        "http://app.wifiwx.com/bus/api.php?a=get_news&nonce={0}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
+                    string requestUrl =
+                        SignatureUtil.GetRealRequestUrl(string.Format(templateNews, SignatureUtil.RandomString()));
 
-                News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
+                    News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
 
-                GlobalLoading.Instance.IsLoading = false;
+                    GlobalLoading.Instance.IsLoading = false;
+                }
             }
+        }
+
+        private async Task SearchLine(string criteria)
+        {
+            if (criteria == string.Empty) return;
+            GlobalLoading.Instance.IsLoading = true;
+
+            string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
+            string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(criteria), SignatureUtil.GenerateSeqId()));
+
+            Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+            
+            GlobalLoading.Instance.IsLoading = false;
         }
 
         ////public override void Cleanup()

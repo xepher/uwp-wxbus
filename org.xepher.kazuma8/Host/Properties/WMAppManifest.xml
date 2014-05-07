@@ -1,14 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
-  <DefaultLanguage xmlns="" code="en-US" />
-  <App xmlns="" ProductID="{bd0cac60-2afe-4145-bc33-6427f307eff2}" Title="无锡公交" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Host author" Description="Sample description" Publisher="Host" PublisherID="{c1768bc8-49ba-4d5c-b431-a17b96de85ed}">
+  <DefaultLanguage xmlns="" code="zh-CN" />
+  <App xmlns="" ProductID="{bd0cac60-2afe-4145-bc33-6427f307eff2}" Title="无锡公交测试版" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Host author" Description="Sample description" Publisher="Host" PublisherID="{c1768bc8-49ba-4d5c-b431-a17b96de85ed}">
     <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
-      <Capability Name="ID_CAP_MEDIALIB_AUDIO" />
-      <Capability Name="ID_CAP_MEDIALIB_PLAYBACK" />
-      <Capability Name="ID_CAP_SENSORS" />
-      <Capability Name="ID_CAP_WEBBROWSERCOMPONENT" />
     </Capabilities>
     <Tasks>
       <DefaultTask Name="_default" NavigationPage="/View/Shell.xaml" />

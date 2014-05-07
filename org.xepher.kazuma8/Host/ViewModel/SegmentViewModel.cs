@@ -1,6 +1,5 @@
 ﻿using Framework.Common;
 using Framework.Container;
-using Framework.Navigator;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -10,8 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -22,28 +19,19 @@ namespace Host.ViewModel
 {
     public class SegmentViewModel : ViewModelBase
     {
-        public const string SegmentsPropertyName = "Segments";
+        private const string SegmentsPropertyName = "Segments";
 
-        private string _routeId;
-        private string _segmentId;
-        private string _segmentName;
         private ICommand _tapRealTimeInfoCommand;
         private IList<Station2ResultEntity> _segments;
 
-        public string RouteId
+        private LineEntity _selectedLineEntity;
+
+        public LineEntity SelectedLineEntity
         {
-            get { return _routeId; }
-            set { _routeId = value; }
-        }
-        public string SegmentId
-        {
-            get { return _segmentId; }
-            set { _segmentId = value; }
-        }
-        public string SegmentName
-        {
-            get { return _segmentName; }
-            set { _segmentName = value; }
+            get
+            {
+                return _selectedLineEntity;
+            }
         }
 
         public ICommand TapRealTimeInfoCommand
@@ -52,18 +40,10 @@ namespace Host.ViewModel
             {
                 if (null == _tapRealTimeInfoCommand)
                 {
-                    _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(p =>
+                    _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(s =>
                     {
-                        if (null == p) return;
-                        if (!GlobalLoading.Instance.ActualIsLoading)
-                        {
-                            GlobalLoading.Instance.IsLoading = true;
-
-                            GetRealTimeInfo(p).ContinueWith(t =>
-                            {
-                                GlobalLoading.Instance.IsLoading = false;
-                            });
-                        }
+                        if (null == s) return;
+                        GetRealTimeInfo(s);
                     });
                 }
 
@@ -89,6 +69,12 @@ namespace Host.ViewModel
 
         public SegmentViewModel()
         {
+            Messenger.Default.Register<LineEntity>(this, "Navigate", s =>
+            {
+                _selectedLineEntity = s;
+                InitSegments();
+            });
+
             //http://msdn.microsoft.com/zh-cn/magazine/jj991977.aspx
             //http://www.cnblogs.com/valentineisme/archive/2013/05/20/3088114.html
             if (ViewModelBase.IsInDesignModeStatic)
@@ -97,13 +83,16 @@ namespace Host.ViewModel
             }
         }
 
-        public async Task InitSegments()
+        private async Task InitSegments()
         {
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                _routeId = "7601";
-                _segmentId = "76010";
-                _segmentName = "760上行";
+                _selectedLineEntity = new LineEntity
+                {
+                    RouteId = "7601",
+                    SegmentId = "76010",
+                    SegmentName = "760上行"
+                };
 
                 StreamResourceInfo linesReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/3.station2.json", UriKind.Relative));
                 using (StreamReader sr = new StreamReader(linesReader.Stream))
@@ -117,15 +106,24 @@ namespace Host.ViewModel
                 GlobalLoading.Instance.IsLoading = true;
 
                 string templateSegments = "http://app.wifiwx.com/bus/api.php?a=segment_station2&id={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateSegments, SegmentId, SignatureUtil.RandomString()));
+                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateSegments, _selectedLineEntity.SegmentId, SignatureUtil.RandomString()));
 
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
+
+                //foreach (Station2ResultEntity segment in Segments)
+                //{
+                //    ListBox lstSegment = new ListBox()
+                //    {
+                //        ItemsSource = segment.List,
+                //        ItemTemplate = (DataTemplate)Application.Current.Resources["dtSegmentItemStationInfo"]
+                //    };
+                //}
 
                 GlobalLoading.Instance.IsLoading = false;
             }
         }
 
-        public async Task GetRealTimeInfo(Station2Entity station)
+        private async Task GetRealTimeInfo(Station2Entity station)
         {
             if (ViewModelBase.IsInDesignModeStatic)
             {
@@ -135,42 +133,18 @@ namespace Host.ViewModel
                     ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
                     StationResultEntity realTimeInfo = serializer.Deserialize<StationResultEntity>(sr.ReadToEnd());
 
-                    foreach (var stationItem in realTimeInfo.Result)
+                    Segments[0].List.ForEach(station2Item =>
                     {
-                        foreach (var station2Item in Segments[0].List)
+                        if (!string.IsNullOrEmpty(station2Item.BusselfId))
                         {
-                            if (station2Item.StationSeq == stationItem.StationNum)
-                            {
-                                station2Item.ActDateTime = stationItem.ActDateTime;
-                                station2Item.BusselfId = stationItem.BusselfId;
-                                station2Item.BusState = stationItem.BusState;
-                                station2Item.CurStopNo = stationItem.CurStopNo;
-                                station2Item.LastBus = stationItem.LastBus;
-                            }
+                            station2Item.ActDateTime = new DateTime();
+                            station2Item.BusselfId = string.Empty;
+                            station2Item.BusState = string.Empty;
+                            station2Item.CurStopNo = string.Empty;
+                            station2Item.LastBus = string.Empty;
                         }
-                    }
-                };
-            }
-            else
-            {
-                if (GlobalLoading.Instance.ActualIsLoading) return;
-                GlobalLoading.Instance.IsLoading = true;
-
-                string templateRealTimeInfo = "http://app.wifiwx.com/bus/api.php?a=station_info_common&key=&nonce={0}&routeid={1}&secret=640c7088ef7811e2a4e4005056991a1f&segmentid={2}&stationseq={3}&version=0.1";
-                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateRealTimeInfo, SignatureUtil.RandomString(), RouteId, SegmentId, station.StationId.Length > 10 ? station.StationSeq : station.StationId));
-
-                StationResultEntity realTimeInfo = await SignatureUtil.WebRequestAsync<StationResultEntity>(requestUrl);
-
-                if (!string.IsNullOrEmpty(realTimeInfo.Message))
-                {
-                    MessageBox.Show(realTimeInfo.Message);
-                    GlobalLoading.Instance.IsLoading = false;
-                    return;
-                }
-
-                foreach (var stationItem in realTimeInfo.Result)
-                {
-                    foreach (var station2Item in Segments[0].List)
+                    });
+                    realTimeInfo.Result.ForEach(stationItem => Segments[0].List.ForEach(station2Item =>
                     {
                         if (station2Item.StationName == stationItem.StationName)
                         {
@@ -180,16 +154,62 @@ namespace Host.ViewModel
                             station2Item.CurStopNo = stationItem.CurStopNo;
                             station2Item.LastBus = stationItem.LastBus;
                         }
-                        else
-                        {
-                            station2Item.ActDateTime = new DateTime();
-                            station2Item.BusselfId = string.Empty;
-                            station2Item.BusState = string.Empty;
-                            station2Item.CurStopNo = string.Empty;
-                            station2Item.LastBus = string.Empty;
-                        }
-                    }
+                    }));
                 }
+            }
+            else
+            {
+                GlobalLoading.Instance.IsLoading = true;
+
+                string templateRealTimeInfo = "http://app.wifiwx.com/bus/api.php?a=station_info_common&key=&nonce={0}&routeid={1}&secret=640c7088ef7811e2a4e4005056991a1f&segmentid={2}&stationseq={3}&version=0.1";
+                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateRealTimeInfo, SignatureUtil.RandomString(), _selectedLineEntity.RouteId, _selectedLineEntity.SegmentId, station.StationId.Length > 10 ? station.StationSeq : station.StationId));
+
+                StationResultEntity realTimeInfo = await SignatureUtil.WebRequestAsync<StationResultEntity>(requestUrl);
+
+                if (!string.IsNullOrEmpty(realTimeInfo.Message))
+                {
+                    GlobalLoading.Instance.IsLoading = false;
+                    MessageBox.Show(realTimeInfo.Message);
+                    return;
+                }
+
+                //foreach (var stationItem in realTimeInfo.Result)
+                //{
+                //    foreach (var station2Item in Segments[0].List)
+                //    {
+                //        if (station2Item.StationName == stationItem.StationName)
+                //        {
+                //            station2Item.ActDateTime = stationItem.ActDateTime;
+                //            station2Item.BusselfId = stationItem.BusselfId;
+                //            station2Item.BusState = stationItem.BusState;
+                //            station2Item.CurStopNo = stationItem.CurStopNo;
+                //            station2Item.LastBus = stationItem.LastBus;
+                //        }
+                //    }
+                //}
+
+                Segments[0].List.ForEach(station2Item =>
+                {
+                    if (!string.IsNullOrEmpty(station2Item.BusselfId))
+                    {
+                        station2Item.ActDateTime = new DateTime();
+                        station2Item.BusselfId = string.Empty;
+                        station2Item.BusState = string.Empty;
+                        station2Item.CurStopNo = string.Empty;
+                        station2Item.LastBus = string.Empty;
+                    }
+                });
+                realTimeInfo.Result.ForEach(stationItem => Segments[0].List.ForEach(station2Item =>
+                {
+                    if (station2Item.StationName == stationItem.StationName)
+                    {
+                        station2Item.ActDateTime = stationItem.ActDateTime;
+                        station2Item.BusselfId = stationItem.BusselfId;
+                        station2Item.BusState = stationItem.BusState;
+                        station2Item.CurStopNo = stationItem.CurStopNo;
+                        station2Item.LastBus = stationItem.LastBus;
+                    }
+                }));
 
                 GlobalLoading.Instance.IsLoading = false;
             }

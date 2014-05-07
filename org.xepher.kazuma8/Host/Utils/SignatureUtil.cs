@@ -79,7 +79,7 @@ namespace Host.Utils
             request.Headers["Host"] = "app.wifiwx.com";
             request.Headers["KeepAlive"] = "true";
             request.Headers["Accept-Encoding"] = "gzip";
-            request.UserAgent = "org.xepher.kazuma.wuxibus;WP8.1;the api is shit";
+            request.UserAgent = "org.xepher.kazuma.wuxibus;Develop for WindowsPhone;";
 
             try
             {

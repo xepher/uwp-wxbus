@@ -6,9 +6,6 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:vm="clr-namespace:Host.ViewModel"
-    xmlns:bar="clr-namespace:Framework.ApplicationBar;assembly=Framework"
-    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:dockpanel="clr-namespace:WP7DockPanel;assembly=WP7DockPanel"
     xmlns:converter="clr-namespace:Host.Converter"
     xmlns:cmd="clr-namespace:GalaSoft.MvvmLight.Command;assembly=GalaSoft.MvvmLight.Extras.WP8"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
@@ -35,7 +32,7 @@
                     <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding Id}" />
                 </Grid>
                 <Border Grid.Column="1" Background="#8CBF26"  Margin="0 2 0 0">
-                    <TextBlock Grid.Column="1" FontSize="32" Text="{Binding Title}" />
+                    <TextBlock FontSize="32" Text="{Binding Title}" />
                 </Border>
             </Grid>
         </DataTemplate>
@@ -55,15 +52,12 @@
                 <Border Grid.RowSpan="2" Height="72" Background="#F09609" Margin="2 2 2 0">
                     <TextBlock Text="{Binding SegmentName}" Foreground="White" TextWrapping="Wrap"/>
                 </Border>
-                <Border Grid.Column="1" Height="36" Background="#339933">
+                <Border Grid.Row="0" Grid.Column="1" Height="36" Background="#339933">
                     <TextBlock Text="{Binding StartTime, Converter={StaticResource StartTimeConverter}, ConverterParameter=0}" Foreground="White"/>
                 </Border>
                 <Border Grid.Row="1" Grid.Column="1" Height="36" Background="Green" Margin="0 1 0 1">
                     <TextBlock Text="{Binding StartTime, Converter={StaticResource StartTimeConverter}, ConverterParameter=1}" Foreground="White"/>
                 </Border>
-                <!--<Border Grid.Column="2" Grid.RowSpan="2" Background="Azure" Margin="2 2 0 0">
-                    <TextBlock Text="Pin" Foreground="Black"/>
-                </Border>-->
 
             </Grid>
         </DataTemplate>
@@ -146,16 +140,6 @@
                                 <cmd:EventToCommand Command="{Binding NavigateToSegmentCommand}" CommandParameter="{Binding SelectedItem,ElementName=lstLines}"/>
                             </i:EventTrigger>
                         </i:Interaction.Triggers>
-                        <!--<ListBox.Template>
-                            <ControlTemplate>
-                                <ScrollViewer Height="{Binding Height,RelativeSource={RelativeSource Mode=TemplatedParent}}">
-                                    <StackPanel>
-                                        <ItemsPresenter />
-                                        <Canvas Height="72" />
-                                    </StackPanel>
-                                </ScrollViewer>
-                            </ControlTemplate>
-                        </ListBox.Template>-->
                     </ListBox>
                     <!--
                     Binding Command to ListBoxItem
@@ -173,18 +157,16 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
-                    <ListBox Grid.Row="1" ItemsSource="{Binding News}" ItemTemplate="{StaticResource dtListItemAnnouncement}" />
+                    <ListBox x:Name="lstNews" Grid.Row="1" ItemsSource="{Binding News}" ItemTemplate="{StaticResource dtListItemAnnouncement}">
+                        <i:Interaction.Triggers>
+                            <i:EventTrigger EventName="Tap">
+                                <cmd:EventToCommand Command="{Binding TapNewsCommand}" CommandParameter="{Binding SelectedItem,ElementName=lstNews}"/>
+                            </i:EventTrigger>
+                        </i:Interaction.Triggers>
+                    </ListBox>
                 </Grid>
             </phone:PanoramaItem>
         </phone:Panorama>
     </Grid>
-
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        <shell:ApplicationBar Opacity="1" Mode="Minimized">
-            <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="设置…" Click="Settings_Click"/>
-            </shell:ApplicationBar.MenuItems>
-        </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
-
+    
 </phone:PhoneApplicationPage>
