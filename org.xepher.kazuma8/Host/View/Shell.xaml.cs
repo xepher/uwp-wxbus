@@ -41,8 +41,15 @@ namespace Host.View
                     NavigationService.Navigate(new Uri("/View/Segment.xaml", UriKind.Relative));
                 }
             });
+            // TODO: fire by user operation, otherwise LoadNews message will be sent every time when Shell is loaded
             Messenger.Default.Send<string>("", "LoadNews");
             base.OnNavigatedTo(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            Messenger.Default.Unregister<LineEntity>(this);
+            base.OnNavigatedFrom(e);
         }
 
         private void txtSearchLine_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)

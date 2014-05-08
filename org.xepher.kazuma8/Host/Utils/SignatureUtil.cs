@@ -8,6 +8,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Host.Utils
 {
@@ -87,7 +88,8 @@ namespace Host.Utils
 
                 using (StreamReader readStream = new StreamReader(response.GetResponseStream()))
                 {
-                    ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
                     return serializer.Deserialize<T>(readStream.ReadToEnd());
                 }
             }

@@ -1,10 +1,10 @@
 ﻿using Framework.Common;
-using Framework.Container;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
 using Host.Utils;
+using Microsoft.Practices.ServiceLocation;
 using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
@@ -96,22 +96,14 @@ namespace Host.ViewModel
 
         public ShellViewModel()
         {
-            Messenger.Default.Register<string>(this, "SearchLine", s =>
-            {
-                SearchLine(s);
-            });
-            Messenger.Default.Register<string>(this, "LoadNews", s =>
-            {
-                InitNews();
-            });
-
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 _lines = new ObservableCollection<LineEntity>();
                 StreamResourceInfo linesReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/1.line.json", UriKind.Relative));
                 using (StreamReader sr = new StreamReader(linesReader.Stream))
                 {
-                    ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
                     foreach (var item in serializer.Deserialize<List<LineEntity>>(sr.ReadToEnd()))
                     {
                         StreamResourceInfo lineInfoReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/9.stationLine2.json", UriKind.Relative));
@@ -131,6 +123,18 @@ namespace Host.ViewModel
                     }
                 };
             }
+            else
+            {
+                // BUG: DesignViewModel will cause multi register, so remove DesignViewMode from xaml in PROD
+                Messenger.Default.Register<string>(this, "SearchLine", s =>
+                {
+                    SearchLine(s);
+                });
+                Messenger.Default.Register<string>(this, "LoadNews", s =>
+                {
+                    InitNews();
+                });
+            }
         }
 
         private async Task InitNews()
@@ -141,7 +145,8 @@ namespace Host.ViewModel
                 StreamResourceInfo newsReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/4.news.json", UriKind.Relative));
                 using (StreamReader sr = new StreamReader(newsReader.Stream))
                 {
-                    ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
                     foreach (var item in serializer.Deserialize<List<NewsEntity>>(sr.ReadToEnd()))
                     {
                         _news.Add(item);
@@ -175,15 +180,15 @@ namespace Host.ViewModel
             string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(criteria), SignatureUtil.GenerateSeqId()));
 
             Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
-            
+
             GlobalLoading.Instance.IsLoading = false;
         }
 
-        ////public override void Cleanup()
-        ////{
-        ////    // Clean up if needed
+        //public override void Cleanup()
+        //{
+        //    Messenger.Default.Unregister(this);
 
-        ////    base.Cleanup();
-        ////}
+        //    base.Cleanup();
+        //}
     }
 }

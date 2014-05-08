@@ -19,7 +19,7 @@
     DataContext="{Binding Shell, Source={StaticResource Locator}}">
 
     <phone:PhoneApplicationPage.Resources>
-        <vm:ShellViewModel x:Key="DesignViewModel" />
+        <!--<vm:ShellViewModel x:Key="DesignViewModel" />-->
         <converter:StartTimeConverter x:Key="StartTimeConverter" />
 
         <DataTemplate x:Key="dtListItemAnnouncement">

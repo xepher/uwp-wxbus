@@ -15,84 +15,86 @@
     shell:SystemTray.IsVisible="True" shell:SystemTray.BackgroundColor="Transparent" shell:SystemTray.Opacity="0">
 
     <phone:PhoneApplicationPage.Resources>
-        <vm:SegmentViewModel x:Key="DesignViewModel" />
+        <!--<vm:SegmentViewModel x:Key="DesignViewModel" />-->
         <converter:DateTimeConverter x:Key="DateTimeConverter" />
-        
+
         <DataTemplate x:Key="dtSegmentItemStationInfo">
-        	<Grid x:Name="grdSegmentItem">
-        		<Grid.RowDefinitions>
-        			<RowDefinition Height="Auto" />
-        			<RowDefinition Height="Auto" />
-        		</Grid.RowDefinitions>
-        		<Grid.ColumnDefinitions>
-        			<ColumnDefinition Width="Auto" />
-        			<ColumnDefinition Width="290" />
-        			<!--<ColumnDefinition Width="120" />-->
-        			<ColumnDefinition Width="100" />
-        		</Grid.ColumnDefinitions>
+            <ListBox x:Name="lstSegmentForward" ItemsSource="{Binding List}">
+                <i:Interaction.Triggers>
+                    <i:EventTrigger EventName="Tap">
+                        <cmd:EventToCommand Command="{Binding Segments.TapRealTimeInfoCommand, Source={StaticResource Locator}}" CommandParameter="{Binding SelectedItem, ElementName=lstSegmentForward}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+                
+                <ListBox.ItemTemplate>
+                    <DataTemplate>
+                        <Grid x:Name="grdSegmentItem">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="290" />
+                                <!--<ColumnDefinition Width="120" />-->
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
 
-        		<Border Grid.RowSpan="2" Width="48" Background="#F09609" Margin="2 2 0 0">
-        			<TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding StationSeq}" />
-        		</Border>
-        		<Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Height="72" Background="#339933" Margin="2 2 2 0">
-        			<TextBlock Text="{Binding StationName}" Foreground="White" TextWrapping="Wrap" FontSize="26"/>
-        		</Border>
-        		<Border Grid.Row="0" Grid.Column="2" Background="#8CBF26">
-        			<TextBlock Text="{Binding BusselfId}" Foreground="White"/>
-        		</Border>
-        		<Border Grid.Row="1" Grid.Column="2" Background="#339933">
-        			<TextBlock Text="{Binding ActDateTime, Converter={StaticResource DateTimeConverter}}" Foreground="White"/>
-        		</Border>
-
-        	</Grid>
+                            <Border Grid.RowSpan="2" Width="48" Background="#F09609" Margin="2 2 0 0">
+                                <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding StationSeq}" />
+                            </Border>
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Height="72" Background="#339933" Margin="2 2 2 0">
+                                <TextBlock Text="{Binding StationName}" Foreground="White" TextWrapping="Wrap" FontSize="26"/>
+                            </Border>
+                            <Border Grid.Row="0" Grid.Column="2" Background="#8CBF26">
+                                <TextBlock Text="{Binding BusselfId}" Foreground="White"/>
+                            </Border>
+                            <Border Grid.Row="1" Grid.Column="2" Background="#339933">
+                                <TextBlock Text="{Binding ActDateTime, Converter={StaticResource DateTimeConverter}}" Foreground="White"/>
+                            </Border>
+                            
+                        </Grid>
+                    </DataTemplate>
+                </ListBox.ItemTemplate>
+            </ListBox>
         </DataTemplate>
     </phone:PhoneApplicationPage.Resources>
-    
-	<phone:PhoneApplicationPage.FontFamily>
-		<StaticResource ResourceKey="PhoneFontFamilyNormal"/>
-	</phone:PhoneApplicationPage.FontFamily>
-	<phone:PhoneApplicationPage.FontSize>
-		<StaticResource ResourceKey="PhoneFontSizeNormal"/>
-	</phone:PhoneApplicationPage.FontSize>
-	<phone:PhoneApplicationPage.Foreground>
-		<StaticResource ResourceKey="PhoneForegroundBrush"/>
-	</phone:PhoneApplicationPage.Foreground>
-	<phone:PhoneApplicationPage.DataContext>
-		<Binding Path="Segments" Source="{StaticResource Locator}"/>
-	</phone:PhoneApplicationPage.DataContext>
+
+    <phone:PhoneApplicationPage.FontFamily>
+        <StaticResource ResourceKey="PhoneFontFamilyNormal"/>
+    </phone:PhoneApplicationPage.FontFamily>
+    <phone:PhoneApplicationPage.FontSize>
+        <StaticResource ResourceKey="PhoneFontSizeNormal"/>
+    </phone:PhoneApplicationPage.FontSize>
+    <phone:PhoneApplicationPage.Foreground>
+        <StaticResource ResourceKey="PhoneForegroundBrush"/>
+    </phone:PhoneApplicationPage.Foreground>
+    <phone:PhoneApplicationPage.DataContext>
+        <Binding Path="Segments" Source="{StaticResource Locator}"/>
+    </phone:PhoneApplicationPage.DataContext>
     <!--LayoutRoot contains the root grid where all other page content is placed-->
-	<Grid x:Name="LayoutRoot">
-        <phone:Pivot x:Name="segmentPivot" d:DataContext="{Binding Source={StaticResource DesignViewModel}}">
-            <phone:Pivot.Background>
+    <Grid x:Name="LayoutRoot">
+        <phone:Panorama x:Name="segmentPanorama" d:DataContext="{Binding Source={StaticResource DesignViewModel}}" ItemTemplate="{StaticResource dtSegmentItemStationInfo}" ItemsSource="{Binding Segments}">
+            <phone:Panorama.Background>
                 <ImageBrush ImageSource="/Assets/PanoramaBackground.png" Opacity="0.2"/>
-            </phone:Pivot.Background>
+            </phone:Panorama.Background>
 
-            <phone:Pivot.Title>
-                <TextBlock FontSize="24" Text="WuxiBus" Margin="-14 54 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
-            </phone:Pivot.Title>
+            <phone:Panorama.Title>
+                <TextBlock FontSize="24" Text="{Binding SelectedLineEntity.SegmentName}" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
+            </phone:Panorama.Title>
 
-            <phone:Pivot.HeaderTemplate>
+            <phone:Panorama.HeaderTemplate>
                 <DataTemplate>
-                    <TextBlock FontSize="48" Margin="0 0 0 -20" Text="{Binding}"/>
+                    <TextBlock FontSize="48" Margin="0 0 0 -20" Text="{Binding StartTime}"/>
                 </DataTemplate>
-            </phone:Pivot.HeaderTemplate>
-
-            <phone:PivotItem CacheMode="{x:Null}" Header="{Binding SelectedLineEntity.SegmentName}">
-                <Grid>
-                    <ListBox x:Name="lstSegmentForward" ItemsSource="{Binding Segments[0].List}" ItemTemplate="{StaticResource dtSegmentItemStationInfo}">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="Tap">
-                                <cmd:EventToCommand Command="{Binding TapRealTimeInfoCommand}" CommandParameter="{Binding SelectedItem, ElementName=lstSegmentForward}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </ListBox>
-                </Grid>
-            </phone:PivotItem>
-        </phone:Pivot>
+            </phone:Panorama.HeaderTemplate>
+        </phone:Panorama>
     </Grid>
-    
+
     <!--<phone:PhoneApplicationPage.ApplicationBar>
-        --><!-- Mode binding to segmentlist.Count--><!--
+        -->
+    <!-- Mode binding to segmentlist.Count-->
+    <!--
         <shell:ApplicationBar Mode="Default">
             <shell:ApplicationBarIconButton x:Name="appIconSwitch" Text="切换" IconUri="/Assets/AppBar/sync.png"/>
         </shell:ApplicationBar>

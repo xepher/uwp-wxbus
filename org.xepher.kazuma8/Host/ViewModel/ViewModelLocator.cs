@@ -9,13 +9,11 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
-using Framework.Container;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
+using GalaSoft.MvvmLight.Ioc;
 using Host.Model;
-//using wuxibus.ViewModel;
-//using wuxibus.ViewModel.DesignViewModel;
-using Host.View;
+using Microsoft.Practices.ServiceLocation;
 
 namespace Host.ViewModel
 {
@@ -33,26 +31,29 @@ namespace Host.ViewModel
 
         static ViewModelLocator()
         {
-            //ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
+            ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
-            Ioc.Container.Register<ISerializer, JsonConvertSerializer>();
+            SimpleIoc.Default.Register<ISerializer, JsonConvertSerializer>();
+            //Ioc.Container.Register<ISerializer, JsonConvertSerializer>();
 
             if (ViewModelBase.IsInDesignModeStatic)
             {
-                //SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
-                Ioc.Container.Register<IDataService, Design.DesignDataService>();
+                SimpleIoc.Default.Register<IDataService, Design.DesignDataService>();
+                //Ioc.Container.Register<IDataService, Design.DesignDataService>();
             }
             else
             {
-                //SimpleIoc.Default.Register<IDataService, DataService>();
-                Ioc.Container.Register<IDataService, DataService>();
+                SimpleIoc.Default.Register<IDataService, DataService>();
+                //Ioc.Container.Register<IDataService, DataService>();
             }
 
             _shellViewModel = new ShellViewModel();
             _segmentViewModel = new SegmentViewModel();
 
-            Ioc.Container.RegisterInstance(_shellViewModel);
-            Ioc.Container.RegisterInstance(_segmentViewModel);
+            SimpleIoc.Default.Register<ShellViewModel>(() => _shellViewModel);
+            SimpleIoc.Default.Register<SegmentViewModel>(() => _segmentViewModel);
+            //Ioc.Container.RegisterInstance<ShellViewModel>(_shellViewModel);
+            //Ioc.Container.RegisterInstance<SegmentViewModel>(_segmentViewModel);
         }
 
         /// <summary>
@@ -65,7 +66,8 @@ namespace Host.ViewModel
         {
             get
             {
-                return Ioc.Container.Resolve<ShellViewModel>();
+                //return Ioc.Container.Resolve<ShellViewModel>();
+                return ServiceLocator.Current.GetInstance<ShellViewModel>();
             }
         }
 
@@ -79,7 +81,8 @@ namespace Host.ViewModel
         {
             get
             {
-                return Ioc.Container.Resolve<SegmentViewModel>();
+                //return Ioc.Container.Resolve<SegmentViewModel>();
+                return ServiceLocator.Current.GetInstance<SegmentViewModel>();
             }
         }
 

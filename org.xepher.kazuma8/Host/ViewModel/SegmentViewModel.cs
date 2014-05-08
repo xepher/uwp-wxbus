@@ -1,5 +1,4 @@
 ﻿using Framework.Common;
-using Framework.Container;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -13,6 +12,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Resources;
+using Microsoft.Practices.ServiceLocation;
 using wuxibus.Model;
 
 namespace Host.ViewModel
@@ -38,6 +38,7 @@ namespace Host.ViewModel
         {
             get
             {
+                // BUG: will trigger multi times
                 if (null == _tapRealTimeInfoCommand)
                 {
                     _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(s =>
@@ -69,17 +70,19 @@ namespace Host.ViewModel
 
         public SegmentViewModel()
         {
-            Messenger.Default.Register<LineEntity>(this, "Navigate", s =>
-            {
-                _selectedLineEntity = s;
-                InitSegments();
-            });
-
             //http://msdn.microsoft.com/zh-cn/magazine/jj991977.aspx
             //http://www.cnblogs.com/valentineisme/archive/2013/05/20/3088114.html
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 InitSegments().ContinueWith(s => GetRealTimeInfo(null));
+            }
+            else
+            {
+                Messenger.Default.Register<LineEntity>(this, "Navigate", s =>
+                {
+                    _selectedLineEntity = s;
+                    InitSegments();
+                });
             }
         }
 
@@ -97,7 +100,8 @@ namespace Host.ViewModel
                 StreamResourceInfo linesReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/3.station2.json", UriKind.Relative));
                 using (StreamReader sr = new StreamReader(linesReader.Stream))
                 {
-                    ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
                     _segments = serializer.Deserialize<ObservableCollection<Station2ResultEntity>>(sr.ReadToEnd());
                 };
             }
@@ -110,15 +114,6 @@ namespace Host.ViewModel
 
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
 
-                //foreach (Station2ResultEntity segment in Segments)
-                //{
-                //    ListBox lstSegment = new ListBox()
-                //    {
-                //        ItemsSource = segment.List,
-                //        ItemTemplate = (DataTemplate)Application.Current.Resources["dtSegmentItemStationInfo"]
-                //    };
-                //}
-
                 GlobalLoading.Instance.IsLoading = false;
             }
         }
@@ -130,7 +125,8 @@ namespace Host.ViewModel
                 StreamResourceInfo linesReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/2.station.json", UriKind.Relative));
                 using (StreamReader sr = new StreamReader(linesReader.Stream))
                 {
-                    ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
+                    ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
                     StationResultEntity realTimeInfo = serializer.Deserialize<StationResultEntity>(sr.ReadToEnd());
 
                     Segments[0].List.ForEach(station2Item =>
@@ -173,53 +169,42 @@ namespace Host.ViewModel
                     return;
                 }
 
-                //foreach (var stationItem in realTimeInfo.Result)
-                //{
-                //    foreach (var station2Item in Segments[0].List)
-                //    {
-                //        if (station2Item.StationName == stationItem.StationName)
-                //        {
-                //            station2Item.ActDateTime = stationItem.ActDateTime;
-                //            station2Item.BusselfId = stationItem.BusselfId;
-                //            station2Item.BusState = stationItem.BusState;
-                //            station2Item.CurStopNo = stationItem.CurStopNo;
-                //            station2Item.LastBus = stationItem.LastBus;
-                //        }
-                //    }
-                //}
-
-                Segments[0].List.ForEach(station2Item =>
+                foreach (var segment in Segments)
                 {
-                    if (!string.IsNullOrEmpty(station2Item.BusselfId))
+                    segment.List.ForEach(station2Item =>
                     {
-                        station2Item.ActDateTime = new DateTime();
-                        station2Item.BusselfId = string.Empty;
-                        station2Item.BusState = string.Empty;
-                        station2Item.CurStopNo = string.Empty;
-                        station2Item.LastBus = string.Empty;
-                    }
-                });
-                realTimeInfo.Result.ForEach(stationItem => Segments[0].List.ForEach(station2Item =>
-                {
-                    if (station2Item.StationName == stationItem.StationName)
+                        if (!string.IsNullOrEmpty(station2Item.BusselfId))
+                        {
+                            station2Item.ActDateTime = new DateTime();
+                            station2Item.BusselfId = string.Empty;
+                            station2Item.BusState = string.Empty;
+                            station2Item.CurStopNo = string.Empty;
+                            station2Item.LastBus = string.Empty;
+                        }
+                    });
+                    realTimeInfo.Result.ForEach(stationItem => segment.List.ForEach(station2Item =>
                     {
-                        station2Item.ActDateTime = stationItem.ActDateTime;
-                        station2Item.BusselfId = stationItem.BusselfId;
-                        station2Item.BusState = stationItem.BusState;
-                        station2Item.CurStopNo = stationItem.CurStopNo;
-                        station2Item.LastBus = stationItem.LastBus;
-                    }
-                }));
+                        if (station2Item.StationName == stationItem.StationName)
+                        {
+                            station2Item.ActDateTime = stationItem.ActDateTime;
+                            station2Item.BusselfId = stationItem.BusselfId;
+                            station2Item.BusState = stationItem.BusState;
+                            station2Item.CurStopNo = stationItem.CurStopNo;
+                            station2Item.LastBus = stationItem.LastBus;
+                        }
+                    }));
+                }
 
                 GlobalLoading.Instance.IsLoading = false;
             }
         }
 
-        ////public override void Cleanup()
-        ////{
-        ////    // Clean up if needed
+        //public override void Cleanup()
+        //{
+        //    // Clean up if needed
+        //    Messenger.Default.Unregister(this);
 
-        ////    base.Cleanup();
-        ////}
+        //    base.Cleanup();
+        //}
     }
 }
