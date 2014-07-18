@@ -18,6 +18,10 @@ namespace wuxibus.Model
 
         // for wuxi bus
         public string ProductId { get; set; }
+
+        // 4G flag
+        public Uri Flag_Pic { get; set; }
+        public string Flag_Title { get; set; }
     }
 
     public class StationResultEntity

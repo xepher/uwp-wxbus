@@ -13,12 +13,16 @@ namespace wuxibus.Model
         private const string BusStatePropertyName = "BusState";
         private const string CurStopNoPropertyName = "CurStopNo";
         private const string LastBusPropertyName = "LastBus";
+        //private const string Flag_PicPropertyName = "Flag_Pic";
+        private const string Flag_TitlePropertyName = "Flag_Title";
 
         private DateTime _actDateTime;
         private string _busselfId;
         private string _busState;
         private string _curStopNo;
         private string _lastBus;
+        //private Uri _flag_Pic;
+        private string _flag_Title;
 
         public Coordinate BGPS { get; set; }
         public Coordinate GPS { get; set; }
@@ -103,6 +107,24 @@ namespace wuxibus.Model
                 {
                     _lastBus = value;
                     RaisePropertyChanged(LastBusPropertyName);
+                }
+            }
+        }
+
+        // 4G flag
+        public Uri Flag_Pic { get; set; }
+        public string Flag_Title
+        {
+            get
+            {
+                return _flag_Title;
+            }
+            set
+            {
+                if (value != _flag_Title)
+                {
+                    _flag_Title = value;
+                    RaisePropertyChanged(Flag_TitlePropertyName);
                 }
             }
         }

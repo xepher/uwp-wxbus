@@ -1,4 +1,5 @@
-﻿using Framework.Common;
+﻿using System.Linq;
+using Framework.Common;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -38,7 +39,6 @@ namespace Host.ViewModel
         {
             get
             {
-                // BUG: will trigger multi times
                 if (null == _tapRealTimeInfoCommand)
                 {
                     _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(s =>
@@ -169,31 +169,38 @@ namespace Host.ViewModel
                     return;
                 }
 
+                // confirm which direction
+                int indexList = 0;
+                if (int.Parse(station.StationSeq) > int.Parse(
+                    Segments[0].List.Find(s => int.Parse(s.StationSeq) == Segments[0].List.Count).StationSeq))
+                {
+                    indexList = 1;
+                }
+
                 foreach (var segment in Segments)
                 {
                     segment.List.ForEach(station2Item =>
                     {
-                        if (!string.IsNullOrEmpty(station2Item.BusselfId))
-                        {
-                            station2Item.ActDateTime = new DateTime();
-                            station2Item.BusselfId = string.Empty;
-                            station2Item.BusState = string.Empty;
-                            station2Item.CurStopNo = string.Empty;
-                            station2Item.LastBus = string.Empty;
-                        }
+                        station2Item.ActDateTime = new DateTime();
+                        station2Item.BusselfId = string.Empty;
+                        station2Item.BusState = string.Empty;
+                        station2Item.CurStopNo = string.Empty;
+                        station2Item.LastBus = string.Empty;
+                        station2Item.Flag_Title = string.Empty;
                     });
-                    realTimeInfo.Result.ForEach(stationItem => segment.List.ForEach(station2Item =>
-                    {
-                        if (station2Item.StationName == stationItem.StationName)
-                        {
-                            station2Item.ActDateTime = stationItem.ActDateTime;
-                            station2Item.BusselfId = stationItem.BusselfId;
-                            station2Item.BusState = stationItem.BusState;
-                            station2Item.CurStopNo = stationItem.CurStopNo;
-                            station2Item.LastBus = stationItem.LastBus;
-                        }
-                    }));
                 }
+                realTimeInfo.Result.ForEach(stationItem => Segments[indexList].List.ForEach(station2Item =>
+                {
+                    if (station2Item.StationName == stationItem.StationName)
+                    {
+                        station2Item.ActDateTime = stationItem.ActDateTime;
+                        station2Item.BusselfId = stationItem.BusselfId;
+                        station2Item.BusState = stationItem.BusState;
+                        station2Item.CurStopNo = stationItem.CurStopNo;
+                        station2Item.LastBus = stationItem.LastBus;
+                        station2Item.Flag_Title = stationItem.Flag_Title;
+                    }
+                }));
 
                 GlobalLoading.Instance.IsLoading = false;
             }
