@@ -84,7 +84,7 @@
             </phone:Panorama.Background>
 
             <phone:Panorama.Title>
-                <TextBlock FontSize="24" Text="{Binding SelectedLineEntity.SegmentName}" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
+                <TextBlock FontSize="24" Text="{Binding SelectedLineEntity.SegmentName}" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="White"/>
             </phone:Panorama.Title>
 
             <phone:Panorama.HeaderTemplate>

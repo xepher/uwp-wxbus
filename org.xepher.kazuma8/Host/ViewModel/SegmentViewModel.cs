@@ -114,6 +114,15 @@ namespace Host.ViewModel
 
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
 
+                // remove one-way line(opposite)
+                if (Segments.Count == 2)
+                {
+                    if (Segments[0].List[0].StationSeq == Segments[1].List[0].StationSeq)
+                    {
+                        Segments.RemoveAt(1);
+                    }
+                }
+
                 GlobalLoading.Instance.IsLoading = false;
             }
         }
@@ -156,7 +165,7 @@ namespace Host.ViewModel
             else
             {
                 GlobalLoading.Instance.IsLoading = true;
-
+                
                 string templateRealTimeInfo = "http://app.wifiwx.com/bus/api.php?a=station_info_common&key=&nonce={0}&routeid={1}&secret=640c7088ef7811e2a4e4005056991a1f&segmentid={2}&stationseq={3}&version=0.1";
                 string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateRealTimeInfo, SignatureUtil.RandomString(), _selectedLineEntity.RouteId, _selectedLineEntity.SegmentId, station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
@@ -191,7 +200,7 @@ namespace Host.ViewModel
                 }
                 realTimeInfo.Result.ForEach(stationItem => Segments[indexList].List.ForEach(station2Item =>
                 {
-                    if (station2Item.StationName == stationItem.StationName)
+                    if (int.Parse(station2Item.StationSeq) == (int.Parse(station.StationSeq) - int.Parse(stationItem.StationNum)))
                     {
                         station2Item.ActDateTime = stationItem.ActDateTime;
                         station2Item.BusselfId = stationItem.BusselfId;
