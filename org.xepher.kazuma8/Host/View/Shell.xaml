@@ -114,7 +114,7 @@
             </phone:Panorama.Background>
 
             <phone:Panorama.Title>
-                <TextBlock FontSize="24" Text="WuxiBus" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
+                <TextBlock FontSize="24" Text="WuxiBus" Margin="0 48 0 0" FontFamily="Arial Black" Foreground="White"/>
             </phone:Panorama.Title>
 
             <phone:Panorama.HeaderTemplate>
@@ -168,5 +168,12 @@
             </phone:PanoramaItem>
         </phone:Panorama>
     </Grid>
-    
+
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar Mode="Minimized" Opacity="0.6">
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem x:Name="appMenuSettings" Text="设置" Click="AppMenuSettings_OnClick"></shell:ApplicationBarMenuItem>
+            </shell:ApplicationBar.MenuItems>
+        </shell:ApplicationBar>
+    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

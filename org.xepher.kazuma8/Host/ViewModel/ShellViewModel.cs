@@ -1,4 +1,5 @@
 ﻿using Framework.Common;
+using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -21,6 +22,8 @@ namespace Host.ViewModel
 {
     public class ShellViewModel : ViewModelBase
     {
+        private INavigationService _navigationService;
+
         private const string LinesPropertyName = "Lines";
         private const string NewsPropertyName = "News";
 
@@ -69,13 +72,9 @@ namespace Host.ViewModel
             {
                 return _lines;
             }
-            set
+            private set
             {
-                if (_lines != value)
-                {
-                    _lines = value;
-                    RaisePropertyChanged(LinesPropertyName);
-                }
+                Set(LinesPropertyName, ref _lines, value);
             }
         }
         public IList<NewsEntity> News
@@ -84,18 +83,16 @@ namespace Host.ViewModel
             {
                 return _news;
             }
-            set
+            private set
             {
-                if (_news != value)
-                {
-                    _news = value;
-                    RaisePropertyChanged(NewsPropertyName);
-                }
+                Set(NewsPropertyName, ref _news, value);
             }
         }
 
-        public ShellViewModel()
+        public ShellViewModel(INavigationService navigationService)
         {
+            _navigationService = navigationService;
+
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 _lines = new ObservableCollection<LineEntity>();
@@ -125,7 +122,6 @@ namespace Host.ViewModel
             }
             else
             {
-                // BUG: DesignViewModel will cause multi register, so remove DesignViewMode from xaml in PROD
                 Messenger.Default.Register<string>(this, "SearchLine", s =>
                 {
                     SearchLine(s);
@@ -157,6 +153,7 @@ namespace Host.ViewModel
             {
                 if (null == News)
                 {
+                    if (GlobalLoading.Instance.IsLoading) return;
                     GlobalLoading.Instance.IsLoading = true;
 
                     string templateNews =
@@ -174,6 +171,7 @@ namespace Host.ViewModel
         private async Task SearchLine(string criteria)
         {
             if (criteria == string.Empty) return;
+            if (GlobalLoading.Instance.IsLoading) return;
             GlobalLoading.Instance.IsLoading = true;
 
             string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";

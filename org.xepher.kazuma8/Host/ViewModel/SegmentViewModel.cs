@@ -1,5 +1,5 @@
-﻿using System.Linq;
-using Framework.Common;
+﻿using Framework.Common;
+using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
@@ -20,6 +20,8 @@ namespace Host.ViewModel
 {
     public class SegmentViewModel : ViewModelBase
     {
+        private INavigationService _navigationService;
+
         private const string SegmentsPropertyName = "Segments";
 
         private ICommand _tapRealTimeInfoCommand;
@@ -58,18 +60,16 @@ namespace Host.ViewModel
             {
                 return _segments;
             }
-            set
+            private set 
             {
-                if (_segments != value)
-                {
-                    _segments = value;
-                    RaisePropertyChanged(SegmentsPropertyName);
-                }
+                Set(SegmentsPropertyName, ref _segments, value);
             }
         }
 
-        public SegmentViewModel()
+        public SegmentViewModel(INavigationService navigationService)
         {
+            _navigationService = navigationService;
+
             //http://msdn.microsoft.com/zh-cn/magazine/jj991977.aspx
             //http://www.cnblogs.com/valentineisme/archive/2013/05/20/3088114.html
             if (ViewModelBase.IsInDesignModeStatic)
@@ -82,6 +82,12 @@ namespace Host.ViewModel
                 {
                     _selectedLineEntity = s;
                     InitSegments();
+                });
+
+                Messenger.Default.Register<Station2Entity>(this, "AutoRetrieveRealTimeInformation", s =>
+                {
+                    if (null == s) return;
+                    GetRealTimeInfo(s);
                 });
             }
         }
@@ -107,6 +113,7 @@ namespace Host.ViewModel
             }
             else
             {
+                if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
                 string templateSegments = "http://app.wifiwx.com/bus/api.php?a=segment_station2&id={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
@@ -164,8 +171,10 @@ namespace Host.ViewModel
             }
             else
             {
+                // if search is in-process, stop search this time
+                if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
-                
+
                 string templateRealTimeInfo = "http://app.wifiwx.com/bus/api.php?a=station_info_common&key=&nonce={0}&routeid={1}&secret=640c7088ef7811e2a4e4005056991a1f&segmentid={2}&stationseq={3}&version=0.1";
                 string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateRealTimeInfo, SignatureUtil.RandomString(), _selectedLineEntity.RouteId, _selectedLineEntity.SegmentId, station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
@@ -200,14 +209,32 @@ namespace Host.ViewModel
                 }
                 realTimeInfo.Result.ForEach(stationItem => Segments[indexList].List.ForEach(station2Item =>
                 {
-                    if (int.Parse(station2Item.StationSeq) == (int.Parse(station.StationSeq) - int.Parse(stationItem.StationNum)))
+                    if (string.IsNullOrEmpty(stationItem.CurStopNo))
                     {
-                        station2Item.ActDateTime = stationItem.ActDateTime;
-                        station2Item.BusselfId = stationItem.BusselfId;
-                        station2Item.BusState = stationItem.BusState;
-                        station2Item.CurStopNo = stationItem.CurStopNo;
-                        station2Item.LastBus = stationItem.LastBus;
-                        station2Item.Flag_Title = stationItem.Flag_Title;
+                        // for wuxibus and xihuibus
+                        if ((int.Parse(station2Item.StationSeq) ==
+                             (int.Parse(station.StationSeq) - int.Parse(stationItem.StationNum))))
+                        {
+                            station2Item.ActDateTime = stationItem.ActDateTime;
+                            station2Item.BusselfId = stationItem.BusselfId;
+                            station2Item.BusState = stationItem.BusState;
+                            station2Item.CurStopNo = stationItem.CurStopNo;
+                            station2Item.LastBus = stationItem.LastBus;
+                            station2Item.Flag_Title = stationItem.Flag_Title;
+                        }
+                    }
+                    else
+                    {
+                        // for xinqubus
+                        if(int.Parse(station2Item.StationSeq) == int.Parse(stationItem.CurStopNo))
+                        {
+                            station2Item.ActDateTime = stationItem.ActDateTime;
+                            station2Item.BusselfId = stationItem.BusselfId;
+                            station2Item.BusState = stationItem.BusState;
+                            station2Item.CurStopNo = stationItem.CurStopNo;
+                            station2Item.LastBus = stationItem.LastBus;
+                            station2Item.Flag_Title = stationItem.Flag_Title;
+                        }
                     }
                 }));
 

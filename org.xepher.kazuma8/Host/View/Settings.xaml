@@ -17,7 +17,7 @@
     <Grid x:Name="LayoutRoot" Background="Transparent">
         <phone:Panorama x:Name="settingsPanorama">
             <phone:Panorama.Title>
-                <TextBlock FontSize="24" Text="Settings" Margin="0 105 0 0" FontFamily="Arial Black" Foreground="#FF1184B4"/>
+                <TextBlock FontSize="24" Text="Settings" Margin="0 48 0 0" FontFamily="Arial Black" Foreground="White"/>
             </phone:Panorama.Title>
 
             <phone:Panorama.HeaderTemplate>
@@ -27,22 +27,22 @@
             </phone:Panorama.HeaderTemplate>
             
             <!--Panorama item one-->
-            <phone:PanoramaItem Header="Local Resource">
+            <!--<phone:PanoramaItem Header="Local Resource">
                 <Grid>
-                    <!--
+                    --><!--
                     Settings for local resource
-                    -->
+                    --><!--
                 </Grid>
-            </phone:PanoramaItem>
+            </phone:PanoramaItem>-->
 
             <!--Panorama item two-->
-            <phone:PanoramaItem Header="Net Resource">
+            <!--<phone:PanoramaItem Header="Net Resource">
                 <Grid>
-                    <!--
+                    --><!--
                     Settings for net resource
-                    -->
+                    --><!--
                 </Grid>
-            </phone:PanoramaItem>
+            </phone:PanoramaItem>-->
 
             <!--Panorama item three-->
             <phone:PanoramaItem Header="App Settings">

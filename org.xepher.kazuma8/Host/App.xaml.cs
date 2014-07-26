@@ -7,6 +7,7 @@ using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
 using Microsoft.Phone.Controls;
+using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
 using Host.Resources;
 using Framework.Common;
@@ -15,6 +16,10 @@ namespace Host
 {
     public partial class App : Application
     {
+        private static LicenseInformation _licenseInfo = new LicenseInformation();
+
+        public static bool IsTrial { get; private set; }
+        
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>
@@ -64,12 +69,14 @@ namespace Host
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            CheckLicense();
         }
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
+            CheckLicense();
         }
 
         // Code to execute when the application is deactivated (sent to background)
@@ -226,6 +233,30 @@ namespace Host
 
                 throw;
             }
+        }
+
+        /// <summary>
+        /// Check the current license information for this application
+        /// </summary>
+        private void CheckLicense()
+        {
+            // When debugging, we want to simulate a trial mode experience. The following conditional allows us to set the _isTrial 
+            // property to simulate trial mode being on or off. 
+#if DEBUG
+            //string message = "This sample demonstrates the implementation of a trial mode in an application." +
+            //                   "Press 'OK' to simulate trial mode. Press 'Cancel' to run the application in normal mode.";
+            //if (MessageBox.Show(message, "Debug Trial",
+            //     MessageBoxButton.OKCancel) == MessageBoxResult.OK)
+            //{
+            //    _isTrial = true;
+            //}
+            //else
+            //{
+            IsTrial = false;
+            //}
+#else
+            IsTrial = _licenseInfo.IsTrial();
+#endif
         }
     }
 }

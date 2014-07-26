@@ -118,6 +118,7 @@
     </Compile>
     <Compile Include="Utils\SignatureUtil.cs" />
     <Compile Include="ViewModel\SegmentViewModel.cs" />
+    <Compile Include="ViewModel\SettingsViewModel.cs" />
     <Compile Include="ViewModel\ShellViewModel.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="View\Segment.xaml.cs">

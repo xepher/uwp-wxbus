@@ -41,6 +41,13 @@ namespace Host.View
                     NavigationService.Navigate(new Uri("/View/Segment.xaml", UriKind.Relative));
                 }
             });
+            Messenger.Default.Register<string>(this, "NavigateSettings", s =>
+            {
+                if (null != s)
+                {
+                    NavigationService.Navigate(new Uri("/View/Settings.xaml", UriKind.Relative));
+                }
+            });
             // TODO: fire by user operation, otherwise LoadNews message will be sent every time when Shell is loaded
             Messenger.Default.Send<string>("", "LoadNews");
             base.OnNavigatedTo(e);
@@ -49,6 +56,7 @@ namespace Host.View
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             Messenger.Default.Unregister<LineEntity>(this);
+            Messenger.Default.Unregister<string>(this);
             base.OnNavigatedFrom(e);
         }
 
@@ -80,5 +88,10 @@ namespace Host.View
         //    ApplicationBarMenuItem appBarMenuItem = new ApplicationBarMenuItem(AppResources.AppBarMenuItemText);
         //    ApplicationBar.MenuItems.Add(appBarMenuItem);
         //}
+
+        private void AppMenuSettings_OnClick(object sender, EventArgs e)
+        {
+            Messenger.Default.Send<string>("", "NavigateSettings");
+        }
     }
 }
