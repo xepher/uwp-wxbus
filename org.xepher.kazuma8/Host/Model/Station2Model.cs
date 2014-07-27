@@ -1,10 +1,10 @@
-﻿using GalaSoft.MvvmLight;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using GalaSoft.MvvmLight;
+using Newtonsoft.Json;
 
-namespace wuxibus.Model
+namespace Host.Model
 {
     public class Station2Entity : ObservableObject
     {

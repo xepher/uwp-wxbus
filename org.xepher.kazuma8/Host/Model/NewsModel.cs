@@ -1,9 +1,12 @@
-﻿namespace wuxibus.Model
+﻿using SQLite;
+
+namespace Host.Model
 {
     public class NewsEntity
     {
-        public string Body { get; set; }
-        public string Id { get; set; }
+        [PrimaryKey]
+        public int Id { get; set; }
         public string Title { get; set; }
+        public string Body { get; set; }
     }
 }

@@ -1,5 +1,7 @@
-﻿using Framework.NavigationService;
+﻿using System.Collections.Generic;
+using Framework.NavigationService;
 using GalaSoft.MvvmLight;
+using Host.Utils;
 
 namespace Host.ViewModel
 {
@@ -7,6 +9,8 @@ namespace Host.ViewModel
     {
         private INavigationService _navigationService;
 
+        //public readonly IList<AnnounceUpdateCircle> AnnouncementCircle = AppSettings.AnnouncementCircleList;
+        
         public SettingsViewModel(INavigationService navigationService)
         {
             _navigationService = navigationService;

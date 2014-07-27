@@ -15,6 +15,7 @@ using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Ioc;
 using Host.Model;
+using Host.Utils;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Host.ViewModel
@@ -35,6 +36,10 @@ namespace Host.ViewModel
 
         static ViewModelLocator()
         {
+            IsolatedStorageHelper.InitAllSettings();
+
+            SQLiteHelper.InitAllTable();
+
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
             SimpleIoc.Default.Register<ISerializer, JsonConvertSerializer>();

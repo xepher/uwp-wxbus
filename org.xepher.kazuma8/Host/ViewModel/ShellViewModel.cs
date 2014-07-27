@@ -1,9 +1,11 @@
-﻿using Framework.Common;
+﻿using System.Linq;
+using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using Host.Model;
 using Host.Utils;
 using Microsoft.Practices.ServiceLocation;
 using Newtonsoft.Json.Linq;
@@ -16,7 +18,6 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Resources;
-using wuxibus.Model;
 
 namespace Host.ViewModel
 {
@@ -128,9 +129,24 @@ namespace Host.ViewModel
                 });
                 Messenger.Default.Register<string>(this, "LoadNews", s =>
                 {
-                    InitNews();
+                    if (CheckAnnouncementCircle((DateTime)IsolatedStorageHelper.Settings["LastNewsUpdateTime"]))
+                    {
+                        // connect to wifiwuxi.com to retrieve all news, then save to local db
+                        InitNews();
+                    }
+                    else
+                    {
+                        // load cached data
+                        News = SQLiteHelper.LoadNews().Result;
+                    }
                 });
             }
+        }
+
+        private bool CheckAnnouncementCircle(DateTime lastUpdateTime)
+        {
+            DateTime nextUpdateTime = lastUpdateTime.AddHours(((AnnounceUpdateCircle)IsolatedStorageHelper.Settings["AnnouncementCircle"]).Hours);
+            return DateTime.Now > nextUpdateTime;
         }
 
         private async Task InitNews()
@@ -162,6 +178,11 @@ namespace Host.ViewModel
                         SignatureUtil.GetRealRequestUrl(string.Format(templateNews, SignatureUtil.RandomString()));
 
                     News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
+
+                    // save data to sqlite
+                    SQLiteHelper.SaveNews(News);
+
+                    IsolatedStorageHelper.AddOrUpdateSettings("LastNewsUpdateTime", DateTime.Now);
 
                     GlobalLoading.Instance.IsLoading = false;
                 }

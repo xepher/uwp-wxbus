@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace wuxibus.Model
+namespace Host.Model
 {
     public class StationLine2Entity
     {

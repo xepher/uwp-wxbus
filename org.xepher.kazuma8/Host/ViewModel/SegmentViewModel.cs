@@ -4,6 +4,7 @@ using Framework.Serializer;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
+using Host.Model;
 using Host.Utils;
 using System;
 using System.Collections.Generic;
@@ -14,7 +15,6 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Resources;
 using Microsoft.Practices.ServiceLocation;
-using wuxibus.Model;
 
 namespace Host.ViewModel
 {

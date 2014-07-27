@@ -1,4 +1,4 @@
-﻿namespace wuxibus.Model
+﻿namespace Host.Model
 {
     public class LineEntity
     {

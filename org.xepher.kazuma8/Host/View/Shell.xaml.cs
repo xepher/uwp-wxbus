@@ -1,17 +1,19 @@
 ﻿using Framework.Common;
 using GalaSoft.MvvmLight.Messaging;
+using Host.Model;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Net.NetworkInformation;
 using System;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Navigation;
-using wuxibus.Model;
 
 namespace Host.View
 {
     public partial class Shell : PhoneApplicationPage
     {
+        private bool _isLoadedNews;
+
         public Shell()
         {
             InitializeComponent();
@@ -48,15 +50,17 @@ namespace Host.View
                     NavigationService.Navigate(new Uri("/View/Settings.xaml", UriKind.Relative));
                 }
             });
-            // TODO: fire by user operation, otherwise LoadNews message will be sent every time when Shell is loaded
-            Messenger.Default.Send<string>("", "LoadNews");
+            if (!_isLoadedNews)
+            {
+                Messenger.Default.Send<string>("", "LoadNews");
+                _isLoadedNews = true;
+            }
             base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            Messenger.Default.Unregister<LineEntity>(this);
-            Messenger.Default.Unregister<string>(this);
+            Messenger.Default.Unregister<LineEntity>(this, "Navigate");
             base.OnNavigatedFrom(e);
         }
 
