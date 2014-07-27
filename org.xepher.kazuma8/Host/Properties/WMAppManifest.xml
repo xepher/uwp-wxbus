@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Deployment xmlns="http://schemas.microsoft.com/windowsphone/2012/deployment" AppPlatformVersion="8.0">
   <DefaultLanguage xmlns="" code="zh-CN" />
-  <App xmlns="" ProductID="{bd0cac60-2afe-4145-bc33-6427f307eff2}" Title="无锡公交测试版" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Host author" Description="Sample description" Publisher="Host" PublisherID="{c1768bc8-49ba-4d5c-b431-a17b96de85ed}">
-    <IconPath IsRelative="true" IsResource="false">Assets\ApplicationIcon.png</IconPath>
+  <App xmlns="" ProductID="{bd0cac60-2afe-4145-bc33-6427f307eff2}" Title="无锡公交" RuntimeType="Silverlight" Version="1.0.0.0" Genre="apps.normal" Author="Host author" Description="Sample description" Publisher="Host" PublisherID="{c1768bc8-49ba-4d5c-b431-a17b96de85ed}">
+    <IconPath IsRelative="true" IsResource="false">Assets\Images\Logo360-360.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />
     </Capabilities>
@@ -12,20 +12,23 @@
     <Tokens>
       <PrimaryToken TokenID="HostToken" TaskName="_default">
         <TemplateFlip>
-          <SmallImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileSmall.png</SmallImageURI>
+          <SmallImageURI IsRelative="true" IsResource="false">Assets\Images\Logo120-120.png</SmallImageURI>
           <Count>0</Count>
-          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Tiles\FlipCycleTileMedium.png</BackgroundImageURI>
-          <Title>Host</Title>
+          <BackgroundImageURI IsRelative="true" IsResource="false">Assets\Images\Logo210-210.png</BackgroundImageURI>
+          <Title>无锡公交</Title>
           <BackContent>
           </BackContent>
           <BackBackgroundImageURI>
           </BackBackgroundImageURI>
           <BackTitle>
           </BackTitle>
+          <LargeBackgroundImageURI IsRelative="true" IsResource="false">Assets\Images\WideLogo310-150.png</LargeBackgroundImageURI>
+          <LargeBackContent />
+          <LargeBackBackgroundImageURI IsRelative="true" IsResource="false">
+          </LargeBackBackgroundImageURI>
           <DeviceLockImageURI>
           </DeviceLockImageURI>
-          <HasLarge>
-          </HasLarge>
+          <HasLarge>True</HasLarge>
         </TemplateFlip>
       </PrimaryToken>
     </Tokens>

@@ -167,7 +167,6 @@
     <Resource Include="JsonData\8.transferSuggestions.json" />
     <Resource Include="JsonData\9.stationLine2.json" />
     <Resource Include="Assets\database.db" />
-    <None Include="Host_2014_07_27_16_47_53.sap" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">
@@ -176,12 +175,38 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Assets\AppBar\sync.png" />
-    <Content Include="Assets\Background.png" />
+    <Content Include="Assets\Images\Logo106-106.png" />
+    <Content Include="Assets\Images\Logo120-120.png" />
+    <Content Include="Assets\Images\Logo150-150.png" />
+    <Content Include="Assets\Images\Logo170-170.png" />
+    <Content Include="Assets\Images\Logo210-210.png" />
+    <Content Include="Assets\Images\Logo24-24.png" />
+    <Content Include="Assets\Images\Logo300-300.png" />
+    <Content Include="Assets\Images\Logo33-33.png" />
+    <Content Include="Assets\Images\Logo358-358.png" />
+    <Content Include="Assets\Images\Logo360-360.png" />
+    <Content Include="Assets\Images\Logo44-44.png" />
+    <Content Include="Assets\Images\Logo50-50.png" />
+    <Content Include="Assets\Images\Logo58-58.png" />
+    <Content Include="Assets\Images\Logo62-62.png" />
+    <Content Include="Assets\Images\Logo70-70.png" />
+    <Content Include="Assets\Images\Logo71-71.png" />
+    <Content Include="Assets\Images\Logo99-99.png" />
+    <Content Include="Assets\Images\SplashScreen1152-1920.png" />
+    <Content Include="Assets\Images\SplashScreen480-800.png" />
+    <Content Include="Assets\Images\SplashScreen672-1120.png" />
+    <Content Include="Assets\Images\SplashScreen720-1280.png" />
+    <Content Include="Assets\Images\SplashScreen768-1280.png" />
+    <Content Include="Assets\Images\SplashScreenImage.Screen-720p.png" />
+    <Content Include="Assets\Images\SplashScreenImage.Screen-WVGA.png" />
+    <Content Include="Assets\Images\SplashScreenImage.Screen-WXGA.png" />
+    <Content Include="Assets\Images\SplashScreenTransprant.png" />
+    <Content Include="Assets\Images\WideLogo310-150.png" />
+    <Content Include="Assets\Images\WideLogo358-173.png" />
+    <Content Include="Assets\Images\WideLogo434-210.png" />
+    <Content Include="Assets\Images\WideLogo744-360.png" />
     <Content Include="Assets\PanoramaBackground.png" />
     <Content Include="Assets\AlignmentGrid.png" />
-    <Content Include="Assets\ApplicationIcon.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Assets\squaretile-sdk.png" />
     <Content Include="SplashScreenImage.jpg" />
     <Content Include="Assets\Tiles\FlipCycleTileLarge.png">
@@ -199,6 +224,9 @@
     <Content Include="Assets\Tiles\IconicTileSmall.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="SplashScreenImage.Screen-720p.jpg" />
+    <Content Include="SplashScreenImage.Screen-WVGA.jpg" />
+    <Content Include="SplashScreenImage.Screen-WXGA.jpg" />
     <Content Include="Toolkit.Content\ApplicationBar.Add.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Cancel.png" />
     <Content Include="Toolkit.Content\ApplicationBar.Check.png" />
