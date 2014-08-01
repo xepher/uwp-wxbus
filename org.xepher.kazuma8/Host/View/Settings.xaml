@@ -91,7 +91,7 @@
 						<Image Source="../Assets/Images/Logo360-360.png" Stretch="Fill" Width="150" Height="150"/>
 					</StackPanel>
 					<StackPanel Grid.Row="1" >
-                        <TextBlock HorizontalAlignment="Center" Text="WuxiBus Beta" />
+                        <TextBlock HorizontalAlignment="Center" Text="WuxiBus" />
                         <TextBlock HorizontalAlignment="Center" Text="Data from wifiwx.com" />
                         <TextBlock HorizontalAlignment="Center" Text="Developing for windowsphone platform" />
                         <TextBlock HorizontalAlignment="Center" Text="Icons designed by BUT" />
