@@ -1,1 +1,43 @@
-{"message":"","result":[{"stationname":"\u706b\u8f66\u7ad9","actdatetime":"22:37:56","stationnum":"3","busselfid":"31252","productid":"51031252","lastBus":"0","businfo":"","flag_title":"4G\u4e13\u8f66","flag_pic":"http:\/\/app.wifiwx.com\/bus\/img\/stop-board_bus_4g@2x.png"},{"stationname":"\u6881\u6eaa\u5927\u6865\uff08\u5efa\u8bbe\u94f6\u884c\uff09","actdatetime":"22:39:16","stationnum":"8","busselfid":"31238","productid":"51031238","lastBus":"0","businfo":"","flag_title":"4G\u4e13\u8f66","flag_pic":"http:\/\/app.wifiwx.com\/bus\/img\/stop-board_bus_4g@2x.png"},{"stationname":"\u5317\u6865","actdatetime":"22:39:29","stationnum":"12","busselfid":"31406","productid":"51031406","lastBus":"0","businfo":"","flag_title":"4G\u4e13\u8f66","flag_pic":"http:\/\/app.wifiwx.com\/bus\/img\/stop-board_bus_4g@2x.png"},{"stationname":"\u4e2d\u5357\u5206\u516c\u53f8\uff08\u626c\u540d\u516c\u4ea4\u603b\u7ad9\uff09","actdatetime":"22:40:11","stationnum":"22","busselfid":"31426","productid":"51031426","lastBus":"0"}]}
+{ "message" : "",
+  "result" : [ { "actdatetime" : "21:09:03",
+        "businfo" : "",
+        "busselfid" : "31414",
+        "flag_pic" : "http://app.wifiwx.com/bus/img/stop-board_bus_4g@2x.png",
+        "flag_title" : "4G专车",
+        "lastBus" : "0",
+        "productid" : "51031414",
+        "stationname" : "火车站",
+        "stationnum" : "5"
+      },
+      { "actdatetime" : "21:10:10",
+        "businfo" : "",
+        "busselfid" : "31423",
+        "flag_pic" : "http://app.wifiwx.com/bus/img/stop-board_bus_4g@2x.png",
+        "flag_title" : "4G专车",
+        "lastBus" : "0",
+        "productid" : "51031423",
+        "stationname" : "火车站",
+        "stationnum" : "9"
+      },
+      { "actdatetime" : "21:10:27",
+        "businfo" : "",
+        "busselfid" : "31252",
+        "flag_pic" : "http://app.wifiwx.com/bus/img/stop-board_bus_4g@2x.png",
+        "flag_title" : "4G专车",
+        "lastBus" : "0",
+        "productid" : "51031252",
+        "stationname" : "梁溪大桥（建设银行）",
+        "stationnum" : "14"
+      },
+      { "actdatetime" : "21:10:06",
+        "businfo" : "",
+        "busselfid" : "31428",
+        "flag_pic" : "http://app.wifiwx.com/bus/img/stop-board_bus_4g@2x.png",
+        "flag_title" : "4G专车",
+        "lastBus" : "0",
+        "productid" : "51031428",
+        "stationname" : "中桥",
+        "stationnum" : "20"
+      }
+    ]
+}

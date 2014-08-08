@@ -17,11 +17,16 @@ namespace Host.View
         {
             InitializeComponent();
 
+            SettingsAllLinesCircle.ItemsSource = AppSettings.AllLinesCircleList;
             SettingsAnnouncementCircle.ItemsSource = AppSettings.AnnouncementCircleList;
 
-            AnnounceUpdateCircle _circleSettings = IsolatedStorageHelper.Settings["AnnouncementCircle"] as AnnounceUpdateCircle;
+            UpdateCircle _allLinesCircleSettings = IsolatedStorageHelper.Settings["AllLinesCircle"] as UpdateCircle;
+            UpdateCircle _announcementCircleSettings = IsolatedStorageHelper.Settings["AnnouncementCircle"] as UpdateCircle;
+
+            SettingsAllLinesCircle.SelectedItem =
+                AppSettings.AllLinesCircleList.FirstOrDefault(s => s.Circle == _allLinesCircleSettings.Circle);
             SettingsAnnouncementCircle.SelectedItem =
-                AppSettings.AnnouncementCircleList.FirstOrDefault(s => s.Circle == _circleSettings.Circle);
+                AppSettings.AnnouncementCircleList.FirstOrDefault(s => s.Circle == _announcementCircleSettings.Circle);
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -30,16 +35,14 @@ namespace Host.View
             base.OnBackKeyPress(e);
         }
 
+        private void SettingsAllLinesCircle_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            IsolatedStorageHelper.AddOrUpdateSettings("AllLinesCircle", e.AddedItems[0]);
+        }
+
         private void SettingsAnnouncementCircle_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            //if (_isLoaded)
-            //{
-            //if (IsolatedStorageHelper.Settings["AnnouncementCircle"].ToString() != e.AddedItems[0].ToString())
-            //{
             IsolatedStorageHelper.AddOrUpdateSettings("AnnouncementCircle", e.AddedItems[0]);
-            //}
-            //}
-            //_isLoaded = true;
         }
     }
 }

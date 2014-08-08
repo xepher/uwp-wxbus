@@ -1,1 +1,29 @@
-[{"routeid":"11","segmentid":"33450414","segmentname":"11\u73af\u884c","segmentname2":"11\u73af\u884c","starttime":"\u4e2d\u5357\u5206\u516c\u53f8(\u626c\u540d\u516c\u4ea4\u603b\u7ad9) 5:00-0:00|\u65e0\u9521\u4e2d\u592e\u8f66\u7ad9 5:35-0:35","px":8},{"routeid":"111","segmentid":"33480566","segmentname":"111\u8def\u73af\u884c","segmentname2":"111\u8def\u73af\u884c","starttime":"\u65e0\u9521\u76ae\u9769\u57ce6:30-17:30|\u4eba\u6c11\u533b\u9662(\u75be\u63a7\u4e2d\u5fc3*\u513f\u7ae5\u533b\u9662)7:18-18:18","px":12},{"routeid":"112","segmentid":"33455035","segmentname":"112\u73af\u884c","segmentname2":"112\u73af\u884c","starttime":"\u6885\u56ed\u516c\u4ea4\u603b\u7ad95:30-19:30|\u5e7f\u76ca\u4f73\u82d1(\u5e7f\u6cfd\u8def)6:18-20:18","px":9},{"routeid":"113","segmentid":"22484306","segmentname":"113\u73af\u884c","segmentname2":"113\u73af\u884c","starttime":"\u534e\u5e84\u8857\u90535:40-19:30|\u62db\u5546\u57ce\u6c7d\u8f66\u5357\u7ad96:20-20:10","px":9},{"routeid":"115","segmentid":"30181418","segmentname":"115\u8def","segmentname2":"115\u8def","starttime":"\u6c5f\u5357\u5f71\u89c6\u5b66\u96625:30-21:00|\u65e0\u9521\u4e2d\u592e\u8f66\u7ad96:20-21:45","px":6},{"routeid":"116","segmentid":"34436775","segmentname":"116\u8def","segmentname2":"116\u8def","starttime":"\u516c\u4ea4\u4e09\u573a6:00-18:00|\u65e0\u9521\u4e1c\u7ad97:00-19:00","px":6},{"routeid":"118","segmentid":"33490805","segmentname":"118\u8def\u73af\u884c","segmentname2":"118\u8def\u73af\u884c","starttime":"\u4e09\u623f\u68655:15-21:00|\u706b\u8f66\u7ad96:05-21:50","px":12}]
+[ { "flag" : "0",
+    "routeid" : "11",
+    "routename" : "11·"
+  },
+  { "flag" : "0",
+    "routeid" : "111",
+    "routename" : "111·"
+  },
+  { "flag" : "0",
+    "routeid" : "112",
+    "routename" : "112·"
+  },
+  { "flag" : "0",
+    "routeid" : "113",
+    "routename" : "113·"
+  },
+  { "flag" : "0",
+    "routeid" : "115",
+    "routename" : "115·"
+  },
+  { "flag" : "0",
+    "routeid" : "116",
+    "routename" : "116·"
+  },
+  { "flag" : "0",
+    "routeid" : "118",
+    "routename" : "118·"
+  }
+]

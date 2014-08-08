@@ -1,9 +1,6 @@
-﻿using Framework.Container;
-using Framework.Serializer;
+﻿using Framework.Serializer;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Security.Cryptography;
 using System.Text;
@@ -29,7 +26,38 @@ namespace Host.Utils
 
         public static string FormatUrl(String paramString)
         {
-            return paramString.Substring(1 + paramString.IndexOf("?")).Replace("&", "").Replace("=", "").ToUpper();
+            string[] resultArray = paramString.Split('?');
+
+            resultArray[0] = resultArray[0].Replace("http://", "");
+            resultArray[0] = resultArray[0].Replace(".", "");
+            resultArray[0] = resultArray[0].Replace("?", "");
+            resultArray[0] = resultArray[0].Replace("_", "");
+            resultArray[0] = resultArray[0].Replace("-", "");
+            resultArray[0] = resultArray[0].Replace("/", "");
+            resultArray[0] = resultArray[0].Replace("\\", "");
+
+            resultArray[1] = resultArray[1].Replace("&", "");
+            resultArray[1] = resultArray[1].Replace("=", "");
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(resultArray[0]);
+            sb.Append(resultArray[1]);
+            string result = sb.ToString().ToUpper();
+
+            string s4 = "";
+            string s5 = "";
+            int i = 0;
+            int j = result.Length;
+            do
+            {
+                if (i >= j)
+                    return s4 + s5;
+                if (i % 2 == 0)
+                    s4 = s4 + result.Substring(i, 1);
+                else
+                    s5 = s5 + result.Substring(i, 1);
+                i++;
+            } while (true);
         }
 
         public static string GenerateSeqId()
@@ -70,8 +98,8 @@ namespace Host.Utils
 
         public static string GetRealRequestUrl(string requestUrl)
         {
-            String hashedRequestUrl = SHA1(FormatUrl(requestUrl));
-            return requestUrl.Replace("&secret=640c7088ef7811e2a4e4005056991a1f", "") + "&signature=" + hashedRequestUrl;
+            String hashedRequestUrl = SHA1(SHA1(FormatUrl(requestUrl)));
+            return requestUrl.Replace(string.Format("&secret={0}", Constants.BUS_API_SECRET), "") + "&signature=" + hashedRequestUrl;
         }
 
         public static async Task<T> WebRequestAsync<T>(string requestUrl)

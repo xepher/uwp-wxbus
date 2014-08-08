@@ -1,4 +1,5 @@
-﻿using Framework.Common;
+﻿using System.Net;
+using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
@@ -20,6 +21,8 @@ namespace Host.ViewModel
 {
     public class SegmentViewModel : ViewModelBase
     {
+        private const string SelectedLineEntityPropertyName = "SelectedLineEntity";
+
         private INavigationService _navigationService;
 
         private const string SegmentsPropertyName = "Segments";
@@ -34,6 +37,10 @@ namespace Host.ViewModel
             get
             {
                 return _selectedLineEntity;
+            }
+            set
+            {
+                Set(SelectedLineEntityPropertyName, ref _selectedLineEntity, value);
             }
         }
 
@@ -60,16 +67,20 @@ namespace Host.ViewModel
             {
                 return _segments;
             }
-            private set 
+            private set
             {
                 Set(SegmentsPropertyName, ref _segments, value);
             }
         }
 
         public SegmentViewModel(INavigationService navigationService)
+            : this()
         {
             _navigationService = navigationService;
+        }
 
+        public SegmentViewModel()
+        {
             //http://msdn.microsoft.com/zh-cn/magazine/jj991977.aspx
             //http://www.cnblogs.com/valentineisme/archive/2013/05/20/3088114.html
             if (ViewModelBase.IsInDesignModeStatic)
@@ -80,7 +91,8 @@ namespace Host.ViewModel
             {
                 Messenger.Default.Register<LineEntity>(this, "Navigate", s =>
                 {
-                    _selectedLineEntity = s;
+                    SelectedLineEntity = s;
+                    Segments = null;
                     InitSegments();
                 });
 
@@ -99,8 +111,7 @@ namespace Host.ViewModel
                 _selectedLineEntity = new LineEntity
                 {
                     RouteId = "7601",
-                    SegmentId = "76010",
-                    SegmentName = "760上行"
+                    RouteName = "760上行"
                 };
 
                 StreamResourceInfo linesReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/3.station2.json", UriKind.Relative));
@@ -116,19 +127,13 @@ namespace Host.ViewModel
                 if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
-                string templateSegments = "http://app.wifiwx.com/bus/api.php?a=segment_station2&id={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateSegments, _selectedLineEntity.SegmentId, SignatureUtil.RandomString()));
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS, Constants.SETTING_USER_ID,
+                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), HttpUtility.UrlEncode(SelectedLineEntity.RouteId),
+                        Constants.BUS_API_SECRET));
 
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
-
-                // remove one-way line(opposite)
-                if (Segments.Count == 2)
-                {
-                    if (Segments[0].List[0].StationSeq == Segments[1].List[0].StationSeq)
-                    {
-                        Segments.RemoveAt(1);
-                    }
-                }
 
                 GlobalLoading.Instance.IsLoading = false;
             }
@@ -143,7 +148,7 @@ namespace Host.ViewModel
                 {
                     //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
                     ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
-                    StationResultEntity realTimeInfo = serializer.Deserialize<StationResultEntity>(sr.ReadToEnd());
+                    RealTimeResultEntity realTimeInfo = serializer.Deserialize<RealTimeResultEntity>(sr.ReadToEnd());
 
                     Segments[0].List.ForEach(station2Item =>
                     {
@@ -151,9 +156,6 @@ namespace Host.ViewModel
                         {
                             station2Item.ActDateTime = new DateTime();
                             station2Item.BusselfId = string.Empty;
-                            station2Item.BusState = string.Empty;
-                            station2Item.CurStopNo = string.Empty;
-                            station2Item.LastBus = string.Empty;
                         }
                     });
                     realTimeInfo.Result.ForEach(stationItem => Segments[0].List.ForEach(station2Item =>
@@ -162,9 +164,6 @@ namespace Host.ViewModel
                         {
                             station2Item.ActDateTime = stationItem.ActDateTime;
                             station2Item.BusselfId = stationItem.BusselfId;
-                            station2Item.BusState = stationItem.BusState;
-                            station2Item.CurStopNo = stationItem.CurStopNo;
-                            station2Item.LastBus = stationItem.LastBus;
                         }
                     }));
                 }
@@ -175,10 +174,14 @@ namespace Host.ViewModel
                 if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
-                string templateRealTimeInfo = "http://app.wifiwx.com/bus/api.php?a=station_info_common&key=&nonce={0}&routeid={1}&secret=640c7088ef7811e2a4e4005056991a1f&segmentid={2}&stationseq={3}&version=0.1";
-                string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateRealTimeInfo, SignatureUtil.RandomString(), _selectedLineEntity.RouteId, _selectedLineEntity.SegmentId, station.StationId.Length > 10 ? station.StationSeq : station.StationId));
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
+                        Constants.SETTING_USER_ID, Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN,
+                        Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
+                        HttpUtility.UrlEncode(SelectedLineEntity.RouteId), Constants.BUS_API_SECRET, station.SegmentId,
+                        station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
-                StationResultEntity realTimeInfo = await SignatureUtil.WebRequestAsync<StationResultEntity>(requestUrl);
+                RealTimeResultEntity realTimeInfo = await SignatureUtil.WebRequestAsync<RealTimeResultEntity>(requestUrl);
 
                 if (!string.IsNullOrEmpty(realTimeInfo.Message))
                 {
@@ -189,51 +192,57 @@ namespace Host.ViewModel
 
                 // confirm which direction
                 int indexList = 0;
-                if (int.Parse(station.StationSeq) > int.Parse(
-                    Segments[0].List.Find(s => int.Parse(s.StationSeq) == Segments[0].List.Count).StationSeq))
+                if (string.IsNullOrEmpty(realTimeInfo.Result[0].CurStopNo))
                 {
-                    indexList = 1;
+                    // for wuxibus and xihuibus
+                    if (int.Parse(station.StationSeq) > int.Parse(
+                        Segments[0].List.Find(s => int.Parse(s.StationSeq) == Segments[0].List.Count).StationSeq))
+                    {
+                        indexList = 1;
+                    }
+                }
+                else
+                {
+                    // for xinqubus
+                    if (Segments.Count == 2)
+                    {
+                        if (station.SegmentId == Segments[1].List[0].SegmentId)
+                        {
+                            indexList = 1;
+                        }
+                    }
                 }
 
-                foreach (var segment in Segments)
+                // clear old data
+                Segments[indexList].List.ForEach(station2Item =>
                 {
-                    segment.List.ForEach(station2Item =>
-                    {
-                        station2Item.ActDateTime = new DateTime();
-                        station2Item.BusselfId = string.Empty;
-                        station2Item.BusState = string.Empty;
-                        station2Item.CurStopNo = string.Empty;
-                        station2Item.LastBus = string.Empty;
-                        station2Item.Flag_Title = string.Empty;
-                    });
-                }
-                realTimeInfo.Result.ForEach(stationItem => Segments[indexList].List.ForEach(station2Item =>
+                    station2Item.ActDateTime = new DateTime();
+                    station2Item.BusselfId = null;
+                    station2Item.Flag_Title = null;
+                });
+
+                // write realtime info
+                realTimeInfo.Result.ForEach(realTimeInfoItem => Segments[indexList].List.ForEach(station2Item =>
                 {
-                    if (string.IsNullOrEmpty(stationItem.CurStopNo))
+                    if (string.IsNullOrEmpty(realTimeInfoItem.CurStopNo))
                     {
                         // for wuxibus and xihuibus
                         if ((int.Parse(station2Item.StationSeq) ==
-                             (int.Parse(station.StationSeq) - int.Parse(stationItem.StationNum))))
+                             (int.Parse(station.StationSeq) - int.Parse(realTimeInfoItem.StationNum))))
                         {
-                            station2Item.ActDateTime = stationItem.ActDateTime;
-                            station2Item.BusselfId = stationItem.BusselfId;
-                            station2Item.BusState = stationItem.BusState;
-                            station2Item.CurStopNo = stationItem.CurStopNo;
-                            station2Item.LastBus = stationItem.LastBus;
-                            station2Item.Flag_Title = stationItem.Flag_Title;
+                            station2Item.ActDateTime = realTimeInfoItem.ActDateTime;
+                            station2Item.BusselfId = realTimeInfoItem.BusselfId;
+                            station2Item.Flag_Title = realTimeInfoItem.Flag_Title;
                         }
                     }
                     else
                     {
                         // for xinqubus
-                        if(int.Parse(station2Item.StationSeq) == int.Parse(stationItem.CurStopNo))
+                        if (int.Parse(station2Item.StationSeq) == int.Parse(realTimeInfoItem.CurStopNo))
                         {
-                            station2Item.ActDateTime = stationItem.ActDateTime;
-                            station2Item.BusselfId = stationItem.BusselfId;
-                            station2Item.BusState = stationItem.BusState;
-                            station2Item.CurStopNo = stationItem.CurStopNo;
-                            station2Item.LastBus = stationItem.LastBus;
-                            station2Item.Flag_Title = stationItem.Flag_Title;
+                            station2Item.ActDateTime = realTimeInfoItem.ActDateTime;
+                            station2Item.BusselfId = realTimeInfoItem.BusselfId;
+                            station2Item.Flag_Title = realTimeInfoItem.Flag_Title;
                         }
                     }
                 }));

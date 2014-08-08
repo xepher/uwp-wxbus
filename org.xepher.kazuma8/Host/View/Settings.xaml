@@ -66,7 +66,17 @@
 					<StackPanel>
 						<TextBlock Text="本地存储设置" FontSize="14"/>
 						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="公告更新周期" FontSize="30" VerticalAlignment="Center"/>
+							<TextBlock Text="线路更新周期" FontSize="30" VerticalAlignment="Center"/>
+                            <toolkit:ListPicker x:Name="SettingsAllLinesCircle" VerticalAlignment="Center" Width="200" SelectionChanged="SettingsAllLinesCircle_OnSelectionChanged">
+                                <toolkit:ListPicker.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Circle}" />
+                                    </DataTemplate>
+                                </toolkit:ListPicker.ItemTemplate>
+                            </toolkit:ListPicker>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="公告更新周期" FontSize="30" VerticalAlignment="Center"/>
                             <toolkit:ListPicker x:Name="SettingsAnnouncementCircle" VerticalAlignment="Center" Width="200" SelectionChanged="SettingsAnnouncementCircle_OnSelectionChanged">
                                 <toolkit:ListPicker.ItemTemplate>
                                     <DataTemplate>
@@ -75,7 +85,7 @@
                                 </toolkit:ListPicker.ItemTemplate>
                             </toolkit:ListPicker>
                         </StackPanel>
-					</StackPanel>
+                    </StackPanel>
 				</Grid>
 			</phone:PanoramaItem>
 
@@ -91,10 +101,12 @@
 						<Image Source="../Assets/Images/Logo360-360.png" Stretch="Fill" Width="150" Height="150"/>
 					</StackPanel>
 					<StackPanel Grid.Row="1" >
-                        <TextBlock HorizontalAlignment="Center" Text="WuxiBus" />
+                        <TextBlock HorizontalAlignment="Center" Text="无锡公交" />
                         <TextBlock HorizontalAlignment="Center" Text="Data from wifiwx.com" />
+                        <TextBlock HorizontalAlignment="Center" Text="API Ver: 3" />
                         <TextBlock HorizontalAlignment="Center" Text="Developing for windowsphone platform" />
                         <TextBlock HorizontalAlignment="Center" Text="Icons designed by BUT" />
+                        <TextBlock HorizontalAlignment="Center" Text="Beta通道申请: http://wpbeta.me/wuxibus" />
 					</StackPanel>
 				</Grid>
 			</phone:PanoramaItem>

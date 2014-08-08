@@ -24,7 +24,38 @@ namespace MokeWuxibusAPK.Utils
 
         public static String FormatUrl(String paramString)
         {
-            return paramString.Substring(1 + paramString.IndexOf("?")).Replace("&", "").Replace("=", "").ToUpper();
+            string[] resultArray = paramString.Split('?');
+
+            resultArray[0] = resultArray[0].Replace("http://", "");
+            resultArray[0] = resultArray[0].Replace(".", "");
+            resultArray[0] = resultArray[0].Replace("?", "");
+            resultArray[0] = resultArray[0].Replace("_", "");
+            resultArray[0] = resultArray[0].Replace("-", "");
+            resultArray[0] = resultArray[0].Replace("/", "");
+            resultArray[0] = resultArray[0].Replace("\\", "");
+
+            resultArray[1] = resultArray[1].Replace("&", "");
+            resultArray[1] = resultArray[1].Replace("=", "");
+
+            StringBuilder sb = new StringBuilder();
+            sb.Append(resultArray[0]);
+            sb.Append(resultArray[1]);
+            string result = sb.ToString().ToUpper();
+
+            string s4 = "";
+            string s5 = "";
+            int i = 0;
+            int j = result.Length;
+            do
+            {
+                if (i >= j)
+                    return s4 + s5;
+                if (i % 2 == 0)
+                    s4 = s4 + result.Substring(i, 1);
+                else
+                    s5 = s5 + result.Substring(i, 1);
+                i++;
+            } while (true);
         }
 
         public static String GenerateSeqId()

@@ -12,7 +12,7 @@ namespace Host.View
 {
     public partial class Shell : PhoneApplicationPage
     {
-        private bool _isLoadedNews;
+        private bool _isLoadedAllLinesAndNews;
 
         public Shell()
         {
@@ -50,10 +50,11 @@ namespace Host.View
                     NavigationService.Navigate(new Uri("/View/Settings.xaml", UriKind.Relative));
                 }
             });
-            if (!_isLoadedNews)
+
+            if (!_isLoadedAllLinesAndNews)
             {
-                Messenger.Default.Send<string>("", "LoadNews");
-                _isLoadedNews = true;
+                Messenger.Default.Send<string>("", "LoadAllLinesAndNews");
+                _isLoadedAllLinesAndNews = true;
             }
             base.OnNavigatedTo(e);
         }
@@ -68,13 +69,13 @@ namespace Host.View
         {
             if (e.Key == Key.Enter)
             {
-                Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
+                //Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
             }
         }
 
         private void txtSearchLine_LostFocus(object sender, RoutedEventArgs e)
         {
-            Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
+            //Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
         }
 
         // Sample code for building a localized ApplicationBar

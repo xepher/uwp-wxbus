@@ -25,9 +25,18 @@ namespace Host.Utils
 
         public static void InitAllSettings()
         {
+            if (!Settings.Contains("AllLinesCircle"))
+            {
+                Settings["AllLinesCircle"] = new UpdateCircle { Circle = "7天", Hours = 168 };
+            }
+            if (!Settings.Contains("LastAllLinesUpdateTime"))
+            {
+                Settings["LastAllLinesUpdateTime"] = DateTime.MinValue;
+            }
+
             if (!Settings.Contains("AnnouncementCircle"))
             {
-                Settings["AnnouncementCircle"] = new AnnounceUpdateCircle {Circle = "1天", Hours = 24};
+                Settings["AnnouncementCircle"] = new UpdateCircle {Circle = "1天", Hours = 24};
             }
             if (!Settings.Contains("LastNewsUpdateTime"))
             {

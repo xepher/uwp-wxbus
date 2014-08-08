@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using Framework.Common;
+﻿using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
@@ -13,7 +12,6 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Net;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -91,9 +89,13 @@ namespace Host.ViewModel
         }
 
         public ShellViewModel(INavigationService navigationService)
+            : this()
         {
             _navigationService = navigationService;
+        }
 
+        public ShellViewModel()
+        {
             if (ViewModelBase.IsInDesignModeStatic)
             {
                 _lines = new ObservableCollection<LineEntity>();
@@ -111,9 +113,9 @@ namespace Host.ViewModel
                             IEnumerable<JProperty> properties = jsonObj.Properties();
                             foreach (JProperty property in properties)
                             {
-                                if (property.Name == item.SegmentId)
+                                if (property.Name == item.RouteName)
                                 {
-                                    item.LineInfo = serializer.Deserialize<StationLine2Entity>(property.Value.ToString());
+                                    //item.LineInfo = serializer.Deserialize<StationLine2Entity>(property.Value.ToString());
                                 }
                             }
                         };
@@ -123,59 +125,39 @@ namespace Host.ViewModel
             }
             else
             {
-                Messenger.Default.Register<string>(this, "SearchLine", s =>
+                Messenger.Default.Register<string>(this, "LoadAllLinesAndNews", async s =>
                 {
-                    SearchLine(s);
-                });
-                Messenger.Default.Register<string>(this, "LoadNews", s =>
-                {
-                    if (CheckAnnouncementCircle((DateTime)IsolatedStorageHelper.Settings["LastNewsUpdateTime"]))
-                    {
-                        // connect to wifiwuxi.com to retrieve all news, then save to local db
-                        InitNews();
-                    }
-                    else
-                    {
-                        // load cached data
-                        News = SQLiteHelper.LoadNews().Result;
-                    }
+                    await LoadAllLines();
+                    await InitNews();
                 });
             }
         }
 
         private bool CheckAnnouncementCircle(DateTime lastUpdateTime)
         {
-            DateTime nextUpdateTime = lastUpdateTime.AddHours(((AnnounceUpdateCircle)IsolatedStorageHelper.Settings["AnnouncementCircle"]).Hours);
+            DateTime nextUpdateTime = lastUpdateTime.AddHours(((UpdateCircle)IsolatedStorageHelper.Settings["AnnouncementCircle"]).Hours);
+            return DateTime.Now > nextUpdateTime;
+        }
+
+        private bool CheckAllLinesCircle(DateTime lastUpdateTime)
+        {
+            DateTime nextUpdateTime = lastUpdateTime.AddHours(((UpdateCircle)IsolatedStorageHelper.Settings["AllLinesCircle"]).Hours);
             return DateTime.Now > nextUpdateTime;
         }
 
         private async Task InitNews()
         {
-            if (ViewModelBase.IsInDesignModeStatic)
+            GlobalLoading.Instance.IsLoading = true;
+
+            if (CheckAnnouncementCircle((DateTime)IsolatedStorageHelper.Settings["LastNewsUpdateTime"]))
             {
-                _news = new ObservableCollection<NewsEntity>();
-                StreamResourceInfo newsReader = Application.GetResourceStream(new Uri("/Host;component/JsonData/4.news.json", UriKind.Relative));
-                using (StreamReader sr = new StreamReader(newsReader.Stream))
-                {
-                    //ISerializer serializer = Ioc.Container.Resolve<ISerializer>();
-                    ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
-                    foreach (var item in serializer.Deserialize<List<NewsEntity>>(sr.ReadToEnd()))
-                    {
-                        _news.Add(item);
-                    }
-                };
-            }
-            else
-            {
+                // connect to wifiwuxi.com to retrieve all news, then save to local db
                 if (null == News)
                 {
-                    if (GlobalLoading.Instance.IsLoading) return;
-                    GlobalLoading.Instance.IsLoading = true;
-
-                    string templateNews =
-                        "http://app.wifiwx.com/bus/api.php?a=get_news&nonce={0}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
                     string requestUrl =
-                        SignatureUtil.GetRealRequestUrl(string.Format(templateNews, SignatureUtil.RandomString()));
+                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_NEWS, Constants.SETTING_USER_ID,
+                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                            SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
                     News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
 
@@ -183,22 +165,45 @@ namespace Host.ViewModel
                     SQLiteHelper.SaveNews(News);
 
                     IsolatedStorageHelper.AddOrUpdateSettings("LastNewsUpdateTime", DateTime.Now);
-
-                    GlobalLoading.Instance.IsLoading = false;
                 }
             }
+            else
+            {
+                // load cached data
+                News = SQLiteHelper.LoadNews().Result;
+            }
+
+            GlobalLoading.Instance.IsLoading = false;
         }
 
-        private async Task SearchLine(string criteria)
+        private async Task LoadAllLines()
         {
-            if (criteria == string.Empty) return;
-            if (GlobalLoading.Instance.IsLoading) return;
             GlobalLoading.Instance.IsLoading = true;
 
-            string templateLine = "http://app.wifiwx.com/bus/api.php?a=query_line&k={0}&nonce={1}&secret=640c7088ef7811e2a4e4005056991a1f&version=0.1";
-            string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(templateLine, HttpUtility.UrlEncode(criteria), SignatureUtil.GenerateSeqId()));
+            if (CheckAllLinesCircle((DateTime)IsolatedStorageHelper.Settings["LastAllLinesUpdateTime"]))
+            {
+                // connect to wifiwuxi.com to retrieve all lines, then save to local db
+                if (null == Lines)
+                {
+                    string requestUrl =
+                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
+                            Constants.SETTING_USER_ID,
+                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                            SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-            Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+                    Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+
+                    // save data to sqlite
+                    SQLiteHelper.SaveAllLines(Lines);
+
+                    IsolatedStorageHelper.AddOrUpdateSettings("LastAllLinesUpdateTime", DateTime.Now);
+                }
+            }
+            else
+            {
+                // load cached data
+                Lines = SQLiteHelper.LoadAllLines().Result;
+            }
 
             GlobalLoading.Instance.IsLoading = false;
         }

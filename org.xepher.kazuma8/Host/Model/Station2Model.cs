@@ -8,32 +8,25 @@ namespace Host.Model
 {
     public class Station2Entity : ObservableObject
     {
-        private const string ActDateTimePropertyName = "ActDateTime";
-        private const string BusselfIdPropertyName = "BusselfId";
-        private const string BusStatePropertyName = "BusState";
-        private const string CurStopNoPropertyName = "CurStopNo";
-        private const string LastBusPropertyName = "LastBus";
-        //private const string Flag_PicPropertyName = "Flag_Pic";
-        private const string Flag_TitlePropertyName = "Flag_Title";
-
-        private DateTime _actDateTime;
-        private string _busselfId;
-        private string _busState;
-        private string _curStopNo;
-        private string _lastBus;
-        //private Uri _flag_Pic;
-        private string _flag_Title;
-
         public Coordinate BGPS { get; set; }
         public Coordinate GPS { get; set; }
         public string RouteId { get; set; }
-        public string SegementId { get; set; }
+        public string SegmentId { get; set; }
         public string StationId { get; set; }
         public string StationName { get; set; }
         public string StationNo { get; set; }
         public string StationSeq { get; set; }
         public string StationTypeId { get; set; }
         public string StationTypeName { get; set; }
+
+        #region RealTimeInfo
+        private const string ActDateTimePropertyName = "ActDateTime";
+        private const string BusselfIdPropertyName = "BusselfId";
+        private const string FlagTitlePropertyName = "FlagTitle";
+
+        private DateTime _actDateTime;
+        private string _busselfId;
+        private string _flagTitle;
 
         public DateTime ActDateTime
         {
@@ -43,11 +36,7 @@ namespace Host.Model
             }
             set
             {
-                if (value != _actDateTime)
-                {
-                    _actDateTime = value;
-                    RaisePropertyChanged(ActDateTimePropertyName);
-                }
+                Set(ActDateTimePropertyName, ref _actDateTime, value);
             }
         }
         public string BusselfId
@@ -58,82 +47,28 @@ namespace Host.Model
             }
             set
             {
-                if (value != _busselfId)
-                {
-                    _busselfId = value;
-                    RaisePropertyChanged(BusselfIdPropertyName);
-                }
+                Set(BusselfIdPropertyName, ref _busselfId, value);
             }
         }
-        public string BusState
-        {
-            get
-            {
-                return _busState;
-            }
-            set
-            {
-                if (value != _busState)
-                {
-                    _busState = value;
-                    RaisePropertyChanged(BusStatePropertyName);
-                }
-            }
-        }
-        public string CurStopNo
-        {
-            get
-            {
-                return _curStopNo;
-            }
-            set
-            {
-                if (value != _curStopNo)
-                {
-                    _curStopNo = value;
-                    RaisePropertyChanged(CurStopNoPropertyName);
-                }
-            }
-        }
-        public string LastBus
-        {
-            get
-            {
-                return _lastBus;
-            }
-            set 
-            {
-                if (value != _lastBus)
-                {
-                    _lastBus = value;
-                    RaisePropertyChanged(LastBusPropertyName);
-                }
-            }
-        }
-
-        // 4G flag
-        public Uri Flag_Pic { get; set; }
         public string Flag_Title
         {
             get
             {
-                return _flag_Title;
+                return _flagTitle;
             }
             set
             {
-                if (value != _flag_Title)
-                {
-                    _flag_Title = value;
-                    RaisePropertyChanged(Flag_TitlePropertyName);
-                }
+                Set(FlagTitlePropertyName, ref _flagTitle, value);
             }
         }
+        #endregion
     }
 
     public class Station2ResultEntity
     {
         public List<Station2Entity> List { get; set; }
         public string StartTime { get; set; }
+        public string Title { get; set; }
     }
 
     [JsonConverter(typeof(CoordinateSConverter))]

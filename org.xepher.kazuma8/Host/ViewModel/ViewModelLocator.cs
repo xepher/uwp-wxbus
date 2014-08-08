@@ -38,7 +38,7 @@ namespace Host.ViewModel
         {
             IsolatedStorageHelper.InitAllSettings();
 
-            SQLiteHelper.InitAllTable();
+            SQLiteHelper.RleaseDatabaseFile();
 
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
