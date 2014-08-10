@@ -101,7 +101,7 @@
 						<Image Source="../Assets/Images/Logo360-360.png" Stretch="Fill" Width="150" Height="150"/>
 					</StackPanel>
 					<StackPanel Grid.Row="1" >
-                        <TextBlock HorizontalAlignment="Center" Text="无锡公交" />
+                        <TextBlock HorizontalAlignment="Center" Text="无锡公交 Beta" />
                         <TextBlock HorizontalAlignment="Center" Text="Data from wifiwx.com" />
                         <TextBlock HorizontalAlignment="Center" Text="API Ver: 3" />
                         <TextBlock HorizontalAlignment="Center" Text="Developing for windowsphone platform" />

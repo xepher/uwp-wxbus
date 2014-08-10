@@ -12,7 +12,7 @@ namespace Host.View
 {
     public partial class Shell : PhoneApplicationPage
     {
-        private bool _isLoadedAllLinesAndNews;
+        private bool _isLoadedLinesAndNews;
 
         public Shell()
         {
@@ -23,9 +23,6 @@ namespace Host.View
                 MessageBox.Show("Network unavailable");
                 Application.Current.Terminate();
             }
-
-            // Sample code to localize the ApplicationBar
-            //BuildLocalizedApplicationBar();
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
@@ -51,10 +48,25 @@ namespace Host.View
                 }
             });
 
-            if (!_isLoadedAllLinesAndNews)
+            string routeId = string.Empty;
+            string routeName = string.Empty;
+            bool routeIdResult = NavigationContext.QueryString.TryGetValue("routeId", out routeId);
+            bool routeNameResult = NavigationContext.QueryString.TryGetValue("routeName", out routeName);
+            if (routeIdResult && routeNameResult)
             {
-                Messenger.Default.Send<string>("", "LoadAllLinesAndNews");
-                _isLoadedAllLinesAndNews = true;
+                if (!string.IsNullOrEmpty(routeId) && !string.IsNullOrEmpty(routeName))
+                {
+                    NavigationContext.QueryString.Clear();
+                    Messenger.Default.Send<LineEntity>(new LineEntity { RouteId = routeId, RouteName = routeName }, "Navigate");
+                }
+            }
+            else
+            {
+                if (!_isLoadedLinesAndNews)
+                {
+                    Messenger.Default.Send<string>("", "LoadLinesAndNews");
+                    _isLoadedLinesAndNews = true;
+                }
             }
             base.OnNavigatedTo(e);
         }

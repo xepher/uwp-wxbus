@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Windows;
 using System.Windows.Markup;
 using System.Windows.Navigation;
+using Host.Utils;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Marketplace;
 using Microsoft.Phone.Shell;
@@ -66,6 +67,7 @@ namespace Host
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
+            SystemInfoHelper.GetSystemInfo();
             CheckLicense();
         }
 

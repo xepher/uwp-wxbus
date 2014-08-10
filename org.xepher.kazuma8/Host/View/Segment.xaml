@@ -95,12 +95,11 @@
         </phone:Panorama>
     </Grid>
 
-    <!--<phone:PhoneApplicationPage.ApplicationBar>
-        -->
-    <!-- Mode binding to segmentlist.Count-->
-    <!--
-        <shell:ApplicationBar Mode="Default">
-            <shell:ApplicationBarIconButton x:Name="appIconSwitch" Text="切换" IconUri="/Assets/AppBar/sync.png"/>
+    <phone:PhoneApplicationPage.ApplicationBar>
+        <shell:ApplicationBar Mode="Minimized" Opacity="0.6">
+            <shell:ApplicationBar.Buttons>
+                <shell:ApplicationBarIconButton Text="Pin" Click="AppButtonPin_OnClick" IconUri="/Assets/AppBar/favs.addto.png"/>
+            </shell:ApplicationBar.Buttons>
         </shell:ApplicationBar>
-    </phone:PhoneApplicationPage.ApplicationBar>-->
+    </phone:PhoneApplicationPage.ApplicationBar>
 </phone:PhoneApplicationPage>

@@ -16,14 +16,14 @@ namespace Host.Utils
             return new SQLiteAsyncConnection(dbFile);
         }
 
-        private static async Task<bool> JudgeSQLiteTableExist(string tableName)
+        private static Task<bool> JudgeSQLiteTableExist(string tableName)
         {
             SQLiteAsyncConnection conn = GetConn();
             return conn.ExecuteScalarAsync<bool>(
-                string.Format("SELECT COUNT(*) FROM sqlite_master where type='table' and name='{0}'", tableName)).Result;
+                string.Format("SELECT COUNT(*) FROM sqlite_master where type='table' and name='{0}'", tableName));
         }
 
-        public static void RleaseDatabaseFile()
+        public static void ReleaseDatabaseFile()
         {
             if (!IsolatedStorageFile.GetUserStoreForApplication().FileExists(dbFile))
             {
@@ -34,14 +34,17 @@ namespace Host.Utils
         public static async void SaveNews(IList<NewsEntity> data)
         {
             SQLiteAsyncConnection conn = GetConn();
-            bool isTableCreated = JudgeSQLiteTableExist("NewsEntity").Result;
+            bool isTableCreated = await JudgeSQLiteTableExist("NewsEntity");
             if (!isTableCreated)
             {
                 await conn.CreateTableAsync<NewsEntity>();
             }
             else
             {
-                await conn.DeleteAsync(conn.Table<NewsEntity>().ToListAsync().Result);
+                foreach (var item in await conn.Table<NewsEntity>().ToListAsync())
+                {
+                    await conn.DeleteAsync(item);
+                }
             }
             await conn.InsertAllAsync(data);
         }
@@ -50,33 +53,32 @@ namespace Host.Utils
         {
             SQLiteAsyncConnection conn = GetConn();
 
-            var query = conn.Table<NewsEntity>().OrderByDescending(s => s.Id).ToListAsync();
-
-            return query.Result;
+            return await conn.Table<NewsEntity>().OrderByDescending(s => s.Id).ToListAsync();
         }
 
-        public static async void SaveAllLines(IList<LineEntity> data)
+        public static async void SaveLines(IList<LineEntity> data)
         {
             SQLiteAsyncConnection conn = GetConn();
-            bool isTableCreated = JudgeSQLiteTableExist("LineEntity").Result;
+            bool isTableCreated = await JudgeSQLiteTableExist("LineEntity");
             if (!isTableCreated)
             {
                 await conn.CreateTableAsync<LineEntity>();
             }
             else
             {
-                await conn.DeleteAsync(conn.Table<LineEntity>().ToListAsync().Result);
+                foreach (var item in await conn.Table<LineEntity>().ToListAsync())
+                {
+                    await conn.DeleteAsync(item);
+                }
             }
             await conn.InsertAllAsync(data);
         }
 
-        public static async Task<IList<LineEntity>> LoadAllLines()
+        public static async Task<IList<LineEntity>> LoadLines()
         {
             SQLiteAsyncConnection conn = GetConn();
 
-            var query = conn.Table<LineEntity>().ToListAsync();
-
-            return query.Result;
+            return await conn.Table<LineEntity>().ToListAsync();
         }
     }
 }

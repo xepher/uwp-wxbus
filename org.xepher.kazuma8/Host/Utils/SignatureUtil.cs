@@ -5,6 +5,7 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using Host.Utils.Cryptography;
 using Microsoft.Practices.ServiceLocation;
 
 namespace Host.Utils
@@ -24,7 +25,7 @@ namespace Host.Utils
             return localStringBuffer.ToString();
         }
 
-        public static string FormatUrl(String paramString)
+        public static string FormatUrl(string paramString)
         {
             string[] resultArray = paramString.Split('?');
 
@@ -74,26 +75,26 @@ namespace Host.Utils
             return sb.ToString();
         }
 
-        public static string SHA1(String paramString)
-        {
-            return GetHashString(paramString).ToLower();
-        }
-
-        private static string GetHashString(string inputString)
+        public static string SHA1(string paramString)
         {
             StringBuilder sb = new StringBuilder();
-            foreach (byte b in GetHash(inputString))
+            foreach (byte b in GetSHA1Hash(paramString))
                 sb.Append(b.ToString("X2"));
 
-            return sb.ToString();
+            return sb.ToString().ToLower();
         }
 
-        private static byte[] GetHash(string inputString)
+        private static byte[] GetSHA1Hash(string inputString)
         {
             using (SHA1 sha1 = new SHA1Managed())
             {
                 return sha1.ComputeHash(Encoding.UTF8.GetBytes(inputString));
             }
+        }
+
+        public static string GetMD5HashString(string inputString)
+        {
+            return MD5.GetMd5String(inputString);
         }
 
         public static string GetRealRequestUrl(string requestUrl)

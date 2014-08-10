@@ -2,6 +2,7 @@
 using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
+using Framework.Tile;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.Command;
 using GalaSoft.MvvmLight.Messaging;
@@ -28,6 +29,7 @@ namespace Host.ViewModel
         private const string SegmentsPropertyName = "Segments";
 
         private ICommand _tapRealTimeInfoCommand;
+        private ICommand _tapPinLineCommand;
         private IList<Station2ResultEntity> _segments;
 
         private LineEntity _selectedLineEntity;
@@ -58,6 +60,25 @@ namespace Host.ViewModel
                 }
 
                 return _tapRealTimeInfoCommand;
+            }
+        }
+        public ICommand TapPinLineCommand
+        {
+            get
+            {
+                if (null == _tapPinLineCommand)
+                {
+                    _tapPinLineCommand = new RelayCommand(() =>
+                    {
+                        if (null != _segments)
+                        {
+                            // pin to start
+                            MessageBox.Show("Pin Segments!");
+                        }
+                    });
+                }
+
+                return _tapPinLineCommand;
             }
         }
 
@@ -96,10 +117,31 @@ namespace Host.ViewModel
                     InitSegments();
                 });
 
-                Messenger.Default.Register<Station2Entity>(this, "AutoRetrieveRealTimeInformation", s =>
+                //Messenger.Default.Register<Station2Entity>(this, "AutoRetrieveRealTimeInformation", s =>
+                //{
+                //    if (null == s) return;
+                //    GetRealTimeInfo(s);
+                //});
+
+                Messenger.Default.Register<string>(this, "PinLine", async s =>
                 {
-                    if (null == s) return;
-                    GetRealTimeInfo(s);
+                    if (null != _segments)
+                    {
+                        // pin to start
+                        ISecondaryPinner pinner = new SecondaryPinner();
+
+                        TileInfo tile = new TileInfo();
+                        tile.AppName = "无锡公交";
+                        tile.Count = 0;
+                        tile.Arguments = _selectedLineEntity.RouteId;
+                        tile.DisplayName = _selectedLineEntity.RouteName;
+                        tile.ShortName = _selectedLineEntity.RouteName;
+                        tile.TileId = _selectedLineEntity.RouteId;
+                        tile.LogoUri = new Uri("/Assets/Images/Logo210-210.png", UriKind.Relative);
+                        tile.WideLogoUri = new Uri("/Assets/Images/WideLogo434-210.png", UriKind.Relative);
+
+                        await pinner.Pin(tile);
+                    }
                 });
             }
         }

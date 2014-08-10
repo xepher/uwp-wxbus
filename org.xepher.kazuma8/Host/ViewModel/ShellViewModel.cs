@@ -125,9 +125,9 @@ namespace Host.ViewModel
             }
             else
             {
-                Messenger.Default.Register<string>(this, "LoadAllLinesAndNews", async s =>
+                Messenger.Default.Register<string>(this, "LoadLinesAndNews", async s =>
                 {
-                    await LoadAllLines();
+                    await InitLines();
                     await InitNews();
                 });
             }
@@ -147,63 +147,83 @@ namespace Host.ViewModel
 
         private async Task InitNews()
         {
-            GlobalLoading.Instance.IsLoading = true;
-
             if (CheckAnnouncementCircle((DateTime)IsolatedStorageHelper.Settings["LastNewsUpdateTime"]))
             {
                 // connect to wifiwuxi.com to retrieve all news, then save to local db
-                if (null == News)
-                {
-                    string requestUrl =
-                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_NEWS, Constants.SETTING_USER_ID,
-                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                            SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
-
-                    News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
-
-                    // save data to sqlite
-                    SQLiteHelper.SaveNews(News);
-
-                    IsolatedStorageHelper.AddOrUpdateSettings("LastNewsUpdateTime", DateTime.Now);
-                }
+                DownloadNews();
             }
             else
             {
-                // load cached data
-                News = SQLiteHelper.LoadNews().Result;
+                try
+                {
+                    // load cached data
+                    News = await SQLiteHelper.LoadNews();
+                }
+                catch (Exception)
+                {
+                    // download all news
+                    DownloadNews();
+                }
             }
+        }
+
+        private async Task InitLines()
+        {
+            if (CheckAllLinesCircle((DateTime)IsolatedStorageHelper.Settings["LastAllLinesUpdateTime"]))
+            {
+                // connect to wifiwuxi.com to retrieve all lines, then save to local db
+                DownloadLines();
+            }
+            else
+            {
+                try
+                {
+                    // load cached data
+                    Lines = await SQLiteHelper.LoadLines();
+                }
+                catch (Exception)
+                {
+                    // download all lines
+                    DownloadLines();
+                }
+            }
+        }
+
+        private async void DownloadLines()
+        {
+            GlobalLoading.Instance.IsLoading = true;
+
+            string requestUrl =
+                SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
+                    Constants.SETTING_USER_ID,
+                    Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                    SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+
+            Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+
+            // save data to sqlite
+            SQLiteHelper.SaveLines(Lines);
+
+            IsolatedStorageHelper.AddOrUpdateSettings("LastAllLinesUpdateTime", DateTime.Now);
 
             GlobalLoading.Instance.IsLoading = false;
         }
 
-        private async Task LoadAllLines()
+        private async void DownloadNews()
         {
             GlobalLoading.Instance.IsLoading = true;
 
-            if (CheckAllLinesCircle((DateTime)IsolatedStorageHelper.Settings["LastAllLinesUpdateTime"]))
-            {
-                // connect to wifiwuxi.com to retrieve all lines, then save to local db
-                if (null == Lines)
-                {
-                    string requestUrl =
-                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
-                            Constants.SETTING_USER_ID,
-                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                            SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+            string requestUrl =
+                SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_NEWS, Constants.SETTING_USER_ID,
+                    Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                    SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-                    Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+            News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
 
-                    // save data to sqlite
-                    SQLiteHelper.SaveAllLines(Lines);
+            // save data to sqlite
+            SQLiteHelper.SaveNews(News);
 
-                    IsolatedStorageHelper.AddOrUpdateSettings("LastAllLinesUpdateTime", DateTime.Now);
-                }
-            }
-            else
-            {
-                // load cached data
-                Lines = SQLiteHelper.LoadAllLines().Result;
-            }
+            IsolatedStorageHelper.AddOrUpdateSettings("LastNewsUpdateTime", DateTime.Now);
 
             GlobalLoading.Instance.IsLoading = false;
         }

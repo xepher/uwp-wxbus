@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace Framework.Tile
 {
@@ -12,6 +8,6 @@ namespace Framework.Tile
 
         Task<bool> Unpin(TileInfo tileInfo);
 
-        bool IsPinned(string tileId);
+        bool IsPinned(TileInfo tiltileInfoeId);
     }
 }

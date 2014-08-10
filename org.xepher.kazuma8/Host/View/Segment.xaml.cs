@@ -1,4 +1,6 @@
-﻿using Framework.Common;
+﻿using System;
+using Framework.Common;
+using GalaSoft.MvvmLight.Messaging;
 using Microsoft.Phone.Controls;
 
 namespace Host.View
@@ -14,6 +16,11 @@ namespace Host.View
         {
             GlobalLoading.Instance.IsLoading = false;
             base.OnBackKeyPress(e);
+        }
+
+        private void AppButtonPin_OnClick(object sender, EventArgs e)
+        {
+            Messenger.Default.Send<string>("", "PinLine");
         }
     }
 }

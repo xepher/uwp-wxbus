@@ -1,8 +1,6 @@
 ﻿using Microsoft.Phone.Shell;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Framework.Tile
@@ -12,20 +10,29 @@ namespace Framework.Tile
         public Task<bool> Pin(TileInfo tileInfo)
         {
             var result = false;
-            if (!this.IsPinned(tileInfo.TileId))
+            if (IsPinned(tileInfo))
             {
-                var tileData = new StandardTileData
-                {
-                    Title = tileInfo.DisplayName,
-                    BackgroundImage = tileInfo.LogoUri,
-                    Count = tileInfo.Count,
-                    BackTitle = tileInfo.AppName,
-                    BackBackgroundImage = new Uri("", UriKind.Relative),
-                    BackContent = tileInfo.DisplayName
-                };
+                Unpin(tileInfo).Wait();
+            }
 
-                ShellTile.Create(new Uri(tileInfo.TileId, UriKind.Relative), tileData);
+            var tileData = new StandardTileData
+            {
+                Title = tileInfo.DisplayName,
+                BackgroundImage = tileInfo.LogoUri,
+                Count = tileInfo.Count,
+                BackTitle = tileInfo.AppName,
+                BackBackgroundImage = new Uri("", UriKind.Relative),
+                BackContent = tileInfo.DisplayName
+            };
+
+            try
+            {
+                ShellTile.Create(new Uri(string.Format("/View/Shell.xaml?routeId={0}&routeName={1}", tileInfo.TileId, tileInfo.DisplayName), UriKind.Relative), tileData);
                 result = true;
+            }
+            catch (Exception)
+            {
+                result = false;
             }
 
             return Task.FromResult<bool>(result);
@@ -33,7 +40,7 @@ namespace Framework.Tile
 
         public Task<bool> Unpin(TileInfo tileInfo)
         {
-            ShellTile tile = this.FindTile(tileInfo.TileId);
+            ShellTile tile = FindTile(tileInfo);
             if (tile != null)
             {
                 tile.Delete();
@@ -42,14 +49,14 @@ namespace Framework.Tile
             return Task.FromResult<bool>(true);
         }
 
-        public bool IsPinned(string tileId)
+        public bool IsPinned(TileInfo tileInfo)
         {
-            return FindTile(tileId) != null;
+            return FindTile(tileInfo) != null;
         }
 
-        private ShellTile FindTile(string uri)
+        private ShellTile FindTile(TileInfo tileInfo)
         {
-            return ShellTile.ActiveTiles.FirstOrDefault(tile => tile.NavigationUri.ToString() == uri);
+            return ShellTile.ActiveTiles.FirstOrDefault(tile => tile.NavigationUri.ToString() == string.Format("/View/Shell.xaml?routeId={0}&routeName={1}", tileInfo.TileId, tileInfo.DisplayName));
         }
     }
 }

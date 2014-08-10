@@ -9,7 +9,6 @@
   DataContext="{Binding Source={StaticResource Locator}, Path=ViewModelName}"
 */
 
-using System.Windows;
 using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
@@ -38,7 +37,7 @@ namespace Host.ViewModel
         {
             IsolatedStorageHelper.InitAllSettings();
 
-            SQLiteHelper.RleaseDatabaseFile();
+            SQLiteHelper.ReleaseDatabaseFile();
 
             ServiceLocator.SetLocatorProvider(() => SimpleIoc.Default);
 
