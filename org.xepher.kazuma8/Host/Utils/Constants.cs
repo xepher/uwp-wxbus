@@ -1,6 +1,6 @@
 ﻿namespace Host.Utils
 {
-    class Constants
+    public class Constants
     {
         public static string SETTING_USER_ID = "null";
         public const string BUS_LAT = "";
@@ -15,5 +15,11 @@
             "http://app.wifiwx.com/bus/api.php?_member_id={0}&_trace_lat_lng={1}_{2}_1&a=segment_station2&client_id={3}&key={4}&nonce={5}&routeid={6}&secret={7}&v=3";
         public const string TEMPLATE_REALTIME_INFO = "http://app.wifiwx.com/bus/api.php?_member_id={0}&_trace_lat_lng={1}_{2}_1&a=station_info_common&client_id={3}&key={4}&nonce={5}&routeid={6}&secret={7}&segmentid={8}&stationseq={9}&v=3";
         public const string TEMPLATE_ALL_LINES = "http://app.wifiwx.com/bus/api.php?_member_id={0}&_trace_lat_lng={1}_{2}_1&a=all_line&client_id={3}&key={4}&nonce={5}&secret={6}&v=3";
+
+        public const string SETTINGS_IS_LOCALSTORAGE_ENABLED = "IsLocalStorageEnabled";
+        public const string SETTINGS_LAST_LINES_UPDATE_TIME = "LastLinesUpdateTime";
+        public const string SETTINGS_LINES_UPDATE_CIRCLE = "LinesUpdateCircle";
+        public const string SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE = "AnnouncementUpdateCircle";
+        public const string SETTINGS_LAST_NEWS_UPDATE_TIME = "LastNewsUpdateTime";
     }
 }

@@ -135,57 +135,71 @@ namespace Host.ViewModel
 
         private bool CheckAnnouncementCircle(DateTime lastUpdateTime)
         {
-            DateTime nextUpdateTime = lastUpdateTime.AddHours(((UpdateCircle)IsolatedStorageHelper.Settings["AnnouncementCircle"]).Hours);
+            DateTime nextUpdateTime = lastUpdateTime.AddHours(((UpdateCircle)IsolatedStorageHelper.Settings[Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE]).Hours);
             return DateTime.Now > nextUpdateTime;
         }
 
         private bool CheckAllLinesCircle(DateTime lastUpdateTime)
         {
-            DateTime nextUpdateTime = lastUpdateTime.AddHours(((UpdateCircle)IsolatedStorageHelper.Settings["AllLinesCircle"]).Hours);
+            DateTime nextUpdateTime = lastUpdateTime.AddHours(((UpdateCircle)IsolatedStorageHelper.Settings[Constants.SETTINGS_LINES_UPDATE_CIRCLE]).Hours);
             return DateTime.Now > nextUpdateTime;
         }
 
         private async Task InitNews()
         {
-            if (CheckAnnouncementCircle((DateTime)IsolatedStorageHelper.Settings["LastNewsUpdateTime"]))
+            if ((bool)IsolatedStorageHelper.Settings[Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED])
             {
-                // connect to wifiwuxi.com to retrieve all news, then save to local db
-                DownloadNews();
+                if (CheckAnnouncementCircle((DateTime)IsolatedStorageHelper.Settings[Constants.SETTINGS_LAST_NEWS_UPDATE_TIME]))
+                {
+                    // connect to wifiwuxi.com to retrieve all news, then save to local db
+                    DownloadNews();
+                }
+                else
+                {
+                    try
+                    {
+                        // load cached data
+                        News = await SQLiteHelper.LoadNews();
+                    }
+                    catch (Exception)
+                    {
+                        // download all news
+                        DownloadNews();
+                    }
+                }
             }
             else
             {
-                try
-                {
-                    // load cached data
-                    News = await SQLiteHelper.LoadNews();
-                }
-                catch (Exception)
-                {
-                    // download all news
-                    DownloadNews();
-                }
+                DownloadNews();
             }
         }
 
         private async Task InitLines()
         {
-            if (CheckAllLinesCircle((DateTime)IsolatedStorageHelper.Settings["LastAllLinesUpdateTime"]))
+            if ((bool)IsolatedStorageHelper.Settings[Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED])
             {
-                // connect to wifiwuxi.com to retrieve all lines, then save to local db
-                DownloadLines();
+                if (CheckAllLinesCircle((DateTime)IsolatedStorageHelper.Settings[Constants.SETTINGS_LAST_LINES_UPDATE_TIME]))
+                {
+                    // connect to wifiwuxi.com to retrieve all lines, then save to local db
+                    DownloadLines();
+                }
+                else
+                {
+                    try
+                    {
+                        // load cached data
+                        Lines = await SQLiteHelper.LoadLines();
+                    }
+                    catch (Exception)
+                    {
+                        // download all lines
+                        DownloadLines();
+                    }
+                }
             }
             else
             {
-                try
-                {
-                    // load cached data
-                    Lines = await SQLiteHelper.LoadLines();
-                }
-                catch (Exception)
-                {
-                    // download all lines
-                    DownloadLines();
-                }
+                DownloadLines();
             }
         }
 
@@ -204,7 +218,7 @@ namespace Host.ViewModel
             // save data to sqlite
             SQLiteHelper.SaveLines(Lines);
 
-            IsolatedStorageHelper.AddOrUpdateSettings("LastAllLinesUpdateTime", DateTime.Now);
+            IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LAST_LINES_UPDATE_TIME, DateTime.Now);
 
             GlobalLoading.Instance.IsLoading = false;
         }
@@ -223,7 +237,7 @@ namespace Host.ViewModel
             // save data to sqlite
             SQLiteHelper.SaveNews(News);
 
-            IsolatedStorageHelper.AddOrUpdateSettings("LastNewsUpdateTime", DateTime.Now);
+            IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LAST_NEWS_UPDATE_TIME, DateTime.Now);
 
             GlobalLoading.Instance.IsLoading = false;
         }

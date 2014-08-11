@@ -20,8 +20,8 @@ namespace Host.View
             SettingsAllLinesCircle.ItemsSource = AppSettings.AllLinesCircleList;
             SettingsAnnouncementCircle.ItemsSource = AppSettings.AnnouncementCircleList;
 
-            UpdateCircle _allLinesCircleSettings = IsolatedStorageHelper.Settings["AllLinesCircle"] as UpdateCircle;
-            UpdateCircle _announcementCircleSettings = IsolatedStorageHelper.Settings["AnnouncementCircle"] as UpdateCircle;
+            UpdateCircle _allLinesCircleSettings = IsolatedStorageHelper.Settings[Constants.SETTINGS_LINES_UPDATE_CIRCLE] as UpdateCircle;
+            UpdateCircle _announcementCircleSettings = IsolatedStorageHelper.Settings[Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE] as UpdateCircle;
 
             SettingsAllLinesCircle.SelectedItem =
                 AppSettings.AllLinesCircleList.FirstOrDefault(s => s.Circle == _allLinesCircleSettings.Circle);
@@ -37,12 +37,12 @@ namespace Host.View
 
         private void SettingsAllLinesCircle_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            IsolatedStorageHelper.AddOrUpdateSettings("AllLinesCircle", e.AddedItems[0]);
+            IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LINES_UPDATE_CIRCLE, e.AddedItems[0]);
         }
 
         private void SettingsAnnouncementCircle_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            IsolatedStorageHelper.AddOrUpdateSettings("AnnouncementCircle", e.AddedItems[0]);
+            IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE, e.AddedItems[0]);
         }
     }
 }

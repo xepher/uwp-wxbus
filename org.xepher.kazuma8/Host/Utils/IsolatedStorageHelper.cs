@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Globalization;
 using System.IO;
 using System.IO.IsolatedStorage;
 using System.Windows;
@@ -25,22 +24,27 @@ namespace Host.Utils
 
         public static void InitAllSettings()
         {
-            if (!Settings.Contains("AllLinesCircle"))
+            if (!Settings.Contains(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
             {
-                Settings["AllLinesCircle"] = new UpdateCircle { Circle = "7天", Hours = 168 };
-            }
-            if (!Settings.Contains("LastAllLinesUpdateTime"))
-            {
-                Settings["LastAllLinesUpdateTime"] = DateTime.MinValue;
+                Settings[Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED] = true;
             }
 
-            if (!Settings.Contains("AnnouncementCircle"))
+            if (!Settings.Contains(Constants.SETTINGS_LINES_UPDATE_CIRCLE))
             {
-                Settings["AnnouncementCircle"] = new UpdateCircle {Circle = "1天", Hours = 24};
+                Settings[Constants.SETTINGS_LINES_UPDATE_CIRCLE] = new UpdateCircle { Circle = "7天", Hours = 168 };
             }
-            if (!Settings.Contains("LastNewsUpdateTime"))
+            if (!Settings.Contains(Constants.SETTINGS_LAST_LINES_UPDATE_TIME))
             {
-                Settings["LastNewsUpdateTime"] = DateTime.MinValue;
+                Settings[Constants.SETTINGS_LAST_LINES_UPDATE_TIME] = DateTime.MinValue;
+            }
+
+            if (!Settings.Contains(Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE))
+            {
+                Settings[Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE] = new UpdateCircle { Circle = "1天", Hours = 24 };
+            }
+            if (!Settings.Contains(Constants.SETTINGS_LAST_NEWS_UPDATE_TIME))
+            {
+                Settings[Constants.SETTINGS_LAST_NEWS_UPDATE_TIME] = DateTime.MinValue;
             }
         }
 

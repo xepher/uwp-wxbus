@@ -8,6 +8,7 @@
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
     xmlns:command="http://www.galasoft.ch/mvvmlight"
+    xmlns:converters="clr-namespace:Framework.Converters;assembly=Framework"
     x:Class="Host.View.Settings"
     mc:Ignorable="d"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -16,101 +17,121 @@
     SupportedOrientations="Portrait"  Orientation="Portrait"
     shell:SystemTray.IsVisible="True" shell:SystemTray.BackgroundColor="Transparent" shell:SystemTray.Opacity="0">
 
+    <phone:PhoneApplicationPage.Resources>
+        <converters:BoolToVisibilityConverter x:Key="boolToVisibilityConverter" />
+    </phone:PhoneApplicationPage.Resources>
+
     <phone:PhoneApplicationPage.DataContext>
         <Binding Path="Settings" Source="{StaticResource Locator}"/>
     </phone:PhoneApplicationPage.DataContext>
-    
+
     <!--LayoutRoot contains the root grid where all other page content is placed-->
-	<Grid x:Name="LayoutRoot" Background="Transparent">
-		<phone:Panorama x:Name="settingsPanorama">
-			<phone:Panorama.Title>
-				<TextBlock FontSize="24" Text="Settings" Margin="0 48 0 0" FontFamily="Arial Black" Foreground="White"/>
-			</phone:Panorama.Title>
+    <Grid x:Name="LayoutRoot" Background="Transparent">
+        <phone:Panorama x:Name="settingsPanorama">
+            <phone:Panorama.Background>
+                <ImageBrush ImageSource="/Assets/PanoramaBackground.png" Opacity="0.2"/>
+            </phone:Panorama.Background>
 
-			<phone:Panorama.HeaderTemplate>
-				<DataTemplate>
-					<TextBlock FontSize="48" Margin="0 0 0 -20" Text="{Binding}"/>
-				</DataTemplate>
-			</phone:Panorama.HeaderTemplate>
+            <phone:Panorama.Title>
+                <TextBlock FontSize="24" Text="系统设置" Margin="0 48 0 0" FontFamily="Arial Black" Foreground="White"/>
+            </phone:Panorama.Title>
 
-			<!--Panorama item one-->
-			<!--<phone:PanoramaItem Header="Local Resource">
+            <phone:Panorama.HeaderTemplate>
+                <DataTemplate>
+                    <TextBlock FontSize="48" Margin="0 0 0 -20" Text="{Binding}"/>
+                </DataTemplate>
+            </phone:Panorama.HeaderTemplate>
+
+            <!--Panorama item one-->
+            <!--<phone:PanoramaItem Header="Local Resource">
                 <Grid>
                     -->
-			<!--
+            <!--
                     Settings for local resource
                     -->
-			<!--
+            <!--
                 </Grid>
             </phone:PanoramaItem>-->
 
-			<!--Panorama item two-->
-			<!--<phone:PanoramaItem Header="Net Resource">
+            <!--Panorama item two-->
+            <!--<phone:PanoramaItem Header="Net Resource">
                 <Grid>
                     -->
-			<!--
+            <!--
                     Settings for net resource
                     -->
-			<!--
+            <!--
                 </Grid>
             </phone:PanoramaItem>-->
 
-			<!--Panorama item three-->
-			<phone:PanoramaItem Header="设置">
-				<Grid>
-					<Grid.ColumnDefinitions>
-						<ColumnDefinition Width="*" />
-						<ColumnDefinition Width="Auto" />
-					</Grid.ColumnDefinitions>
-                    
-					<StackPanel>
-						<TextBlock Text="本地存储设置" FontSize="14"/>
-						<StackPanel Orientation="Horizontal">
-							<TextBlock Text="线路更新周期" FontSize="30" VerticalAlignment="Center"/>
-                            <toolkit:ListPicker x:Name="SettingsAllLinesCircle" VerticalAlignment="Center" Width="200" SelectionChanged="SettingsAllLinesCircle_OnSelectionChanged">
-                                <toolkit:ListPicker.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Circle}" />
-                                    </DataTemplate>
-                                </toolkit:ListPicker.ItemTemplate>
-                            </toolkit:ListPicker>
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal">
-                            <TextBlock Text="公告更新周期" FontSize="30" VerticalAlignment="Center"/>
-                            <toolkit:ListPicker x:Name="SettingsAnnouncementCircle" VerticalAlignment="Center" Width="200" SelectionChanged="SettingsAnnouncementCircle_OnSelectionChanged">
-                                <toolkit:ListPicker.ItemTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="{Binding Circle}" />
-                                    </DataTemplate>
-                                </toolkit:ListPicker.ItemTemplate>
-                            </toolkit:ListPicker>
+            <!--Panorama item three-->
+            <phone:PanoramaItem Header="设置">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+
+                    <StackPanel>
+                        <StackPanel>
+                            <toolkit:ToggleSwitch x:Name="switchLocalStorage" Header="本地存储设置" IsChecked="{Binding LocalStorageSwitch, Mode=TwoWay}"></toolkit:ToggleSwitch>
+                            <StackPanel Visibility="{Binding IsChecked, ElementName=switchLocalStorage, Converter={StaticResource boolToVisibilityConverter}}">
+                                <Grid Margin="12,0,12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="线路更新周期" FontSize="30" VerticalAlignment="Center"/>
+                                    <toolkit:ListPicker Grid.Column="1" x:Name="SettingsAllLinesCircle" VerticalAlignment="Center" Width="120" SelectionChanged="SettingsAllLinesCircle_OnSelectionChanged" Margin="23, -4, -10, -4">
+                                        <toolkit:ListPicker.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Circle}" TextAlignment="Right"/>
+                                            </DataTemplate>
+                                        </toolkit:ListPicker.ItemTemplate>
+                                    </toolkit:ListPicker>
+                                </Grid>
+                                <Grid Margin="12,0,12,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="Auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="公告更新周期" FontSize="30" VerticalAlignment="Center"/>
+                                    <toolkit:ListPicker Grid.Column="1" x:Name="SettingsAnnouncementCircle" VerticalAlignment="Center" Width="120" SelectionChanged="SettingsAnnouncementCircle_OnSelectionChanged" Margin="23, -4, -10, -4">
+                                        <toolkit:ListPicker.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding Circle}" TextAlignment="Right"/>
+                                            </DataTemplate>
+                                        </toolkit:ListPicker.ItemTemplate>
+                                    </toolkit:ListPicker>
+                                </Grid>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
-				</Grid>
-			</phone:PanoramaItem>
+                </Grid>
+            </phone:PanoramaItem>
 
-			<!--Panorama item four-->
-			<phone:PanoramaItem Header="关于">
-				<Grid>
-					<Grid.RowDefinitions>
-						<RowDefinition Height="Auto" />
-						<RowDefinition Height="*" />
-					</Grid.RowDefinitions>
+            <!--Panorama item four-->
+            <phone:PanoramaItem Header="关于">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
 
-					<StackPanel HorizontalAlignment="Center">
-						<Image Source="../Assets/Images/Logo360-360.png" Stretch="Fill" Width="150" Height="150"/>
-					</StackPanel>
-					<StackPanel Grid.Row="1" >
-                        <TextBlock HorizontalAlignment="Center" Text="无锡公交 Beta" />
+                    <StackPanel HorizontalAlignment="Center">
+                        <Image Source="../Assets/Images/Logo360-360.png" Stretch="Fill" Width="150" Height="150"/>
+                    </StackPanel>
+                    <StackPanel Grid.Row="1" >
+                        <TextBlock HorizontalAlignment="Center" Text="无锡公交" />
                         <TextBlock HorizontalAlignment="Center" Text="Data from wifiwx.com" />
                         <TextBlock HorizontalAlignment="Center" Text="API Ver: 3" />
                         <TextBlock HorizontalAlignment="Center" Text="Developing for windowsphone platform" />
                         <TextBlock HorizontalAlignment="Center" Text="Icons designed by BUT" />
                         <TextBlock HorizontalAlignment="Center" Text="Beta通道申请: http://wpbeta.me/wuxibus" />
-					</StackPanel>
-				</Grid>
-			</phone:PanoramaItem>
-		</phone:Panorama>
-	</Grid>
+                    </StackPanel>
+                </Grid>
+            </phone:PanoramaItem>
+        </phone:Panorama>
+    </Grid>
 
 </phone:PhoneApplicationPage>

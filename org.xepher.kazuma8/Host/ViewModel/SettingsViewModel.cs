@@ -9,11 +9,32 @@ namespace Host.ViewModel
     {
         private INavigationService _navigationService;
 
-        //public readonly IList<AnnounceUpdateCircle> AnnouncementCircle = AppSettings.AnnouncementCircleList;
-        
+        private const string LocalStorageSwitchPropertyName = "LocalStorageSwitch";
+
+        private bool _localStorageSwitch;
+
+        public bool LocalStorageSwitch
+        {
+            get
+            {
+                return _localStorageSwitch;
+            }
+            set
+            {
+                Set(LocalStorageSwitchPropertyName, ref _localStorageSwitch, value);
+                IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, value);
+            }
+        }
+
         public SettingsViewModel(INavigationService navigationService)
+            : this()
         {
             _navigationService = navigationService;
+        }
+
+        public SettingsViewModel()
+        {
+            _localStorageSwitch = (bool)IsolatedStorageHelper.Settings[Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED];
         }
     }
 }
