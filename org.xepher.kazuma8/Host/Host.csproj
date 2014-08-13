@@ -125,6 +125,7 @@
     <Compile Include="Utils\Constants.cs" />
     <Compile Include="Utils\IsolatedStorageHelper.cs" />
     <Compile Include="Utils\Cryptography\MD5CryptoServiceProvider.cs" />
+    <Compile Include="Utils\LoggingHelper.cs" />
     <Compile Include="Utils\SignatureUtil.cs" />
     <Compile Include="Utils\SQLiteHelper.cs" />
     <Compile Include="Utils\SystemInfoHelper.cs" />

@@ -21,5 +21,8 @@
         public const string SETTINGS_LINES_UPDATE_CIRCLE = "LinesUpdateCircle";
         public const string SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE = "AnnouncementUpdateCircle";
         public const string SETTINGS_LAST_NEWS_UPDATE_TIME = "LastNewsUpdateTime";
+
+        public const string EXCEPTION_HANDLING_MESSAGE_TITLE = "Ooooops! Houston! We need help!";
+        public const string EXCEPTION_HANDLING_MESSAGE_CONTENT = "程序便当了, 点击Ok发送错误给开发者!";
     }
 }

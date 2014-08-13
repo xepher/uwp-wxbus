@@ -99,6 +99,10 @@ namespace Host
                 // A navigation has failed; break into the debugger
                 Debugger.Break();
             }
+            else
+            {
+                LoggingHelper.ShowExceptionError(Constants.EXCEPTION_HANDLING_MESSAGE_TITLE, e.Exception);
+            }
         }
 
         // Code to execute on Unhandled Exceptions
@@ -108,6 +112,10 @@ namespace Host
             {
                 // An unhandled exception has occurred; break into the debugger
                 Debugger.Break();
+            }
+            else
+            {
+                LoggingHelper.ShowExceptionError(Constants.EXCEPTION_HANDLING_MESSAGE_TITLE, e.ExceptionObject);
             }
         }
 
