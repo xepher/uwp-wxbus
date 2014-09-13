@@ -11,14 +11,19 @@ namespace Host.Utils
     {
         private static string dbFile = ApplicationData.Current.LocalFolder.Path + "\\database.db";
 
-        private static SQLiteAsyncConnection GetConn()
+        private static SQLiteAsyncConnection GetAsyncConn()
         {
             return new SQLiteAsyncConnection(dbFile);
         }
 
+        //private static SQLiteConnection GetConn(SQLiteOpenFlags flags)
+        //{
+        //    return new SQLiteConnection(dbFile, flags);
+        //}
+
         private static Task<bool> JudgeSQLiteTableExist(string tableName)
         {
-            SQLiteAsyncConnection conn = GetConn();
+            SQLiteAsyncConnection conn = GetAsyncConn();
             return conn.ExecuteScalarAsync<bool>(
                 string.Format("SELECT COUNT(*) FROM sqlite_master where type='table' and name='{0}'", tableName));
         }
@@ -31,54 +36,62 @@ namespace Host.Utils
             }
         }
 
-        public static async void SaveNews(IList<NewsEntity> data)
+        public static async Task SaveNews(IEnumerable<NewsEntity> data)
         {
-            SQLiteAsyncConnection conn = GetConn();
+            SQLiteAsyncConnection asyncConn = GetAsyncConn();
             bool isTableCreated = await JudgeSQLiteTableExist("NewsEntity");
-            if (!isTableCreated)
+            await asyncConn.RunInTransactionAsync(conn =>
             {
-                await conn.CreateTableAsync<NewsEntity>();
-            }
-            else
-            {
-                foreach (var item in await conn.Table<NewsEntity>().ToListAsync())
+                if (!isTableCreated)
                 {
-                    await conn.DeleteAsync(item);
+                    conn.CreateTable<NewsEntity>();
                 }
-            }
-            await conn.InsertAllAsync(data);
+                else
+                {
+                    conn.DeleteAll<NewsEntity>();
+                }
+                // can not use InsertAll, bucause in InsertAll, framework will create a new transaction
+                foreach (NewsEntity item in data)
+                {
+                    conn.Insert(item);
+                }
+            });
         }
 
         public static async Task<IList<NewsEntity>> LoadNews()
         {
-            SQLiteAsyncConnection conn = GetConn();
+            SQLiteAsyncConnection asyncConn = GetAsyncConn();
 
-            return await conn.Table<NewsEntity>().OrderByDescending(s => s.Id).ToListAsync();
+            return await asyncConn.Table<NewsEntity>().OrderByDescending(s => s.Id).ToListAsync();
         }
 
-        public static async void SaveLines(IList<LineEntity> data)
+        public static async Task SaveLines(IEnumerable<LineEntity> data)
         {
-            SQLiteAsyncConnection conn = GetConn();
+            SQLiteAsyncConnection asyncConn = GetAsyncConn();
             bool isTableCreated = await JudgeSQLiteTableExist("LineEntity");
-            if (!isTableCreated)
+            await asyncConn.RunInTransactionAsync(conn =>
             {
-                await conn.CreateTableAsync<LineEntity>();
-            }
-            else
-            {
-                foreach (var item in await conn.Table<LineEntity>().ToListAsync())
+                if (!isTableCreated)
                 {
-                    await conn.DeleteAsync(item);
+                    conn.CreateTable<LineEntity>();
                 }
-            }
-            await conn.InsertAllAsync(data);
+                else
+                {
+                    conn.DeleteAll<LineEntity>();
+                }
+                // can not use InsertAll, bucause in InsertAll, framework will create a new transaction
+                foreach (LineEntity item in data)
+                {
+                    conn.Insert(item);
+                }
+            });
         }
 
         public static async Task<IList<LineEntity>> LoadLines()
         {
-            SQLiteAsyncConnection conn = GetConn();
+            SQLiteAsyncConnection asyncConn = GetAsyncConn();
 
-            return await conn.Table<LineEntity>().ToListAsync();
+            return await asyncConn.Table<LineEntity>().ToListAsync();
         }
     }
 }

@@ -21,8 +21,8 @@ namespace Host.ViewModel
             }
             set
             {
-                Set(LocalStorageSwitchPropertyName, ref _localStorageSwitch, value);
                 IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, value);
+                Set(LocalStorageSwitchPropertyName, ref _localStorageSwitch, value);
             }
         }
 

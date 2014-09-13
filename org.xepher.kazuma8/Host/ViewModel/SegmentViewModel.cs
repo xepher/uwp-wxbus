@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Linq;
+using System.Net;
 using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
@@ -234,20 +235,33 @@ namespace Host.ViewModel
 
                 // confirm which direction
                 int indexList = 0;
-                if (string.IsNullOrEmpty(realTimeInfo.Result[0].CurStopNo))
+
+                if (Segments.Count == 2)
                 {
-                    // for wuxibus and xihuibus
-                    if (int.Parse(station.StationSeq) > int.Parse(
-                        Segments[0].List.Find(s => int.Parse(s.StationSeq) == Segments[0].List.Count).StationSeq))
+                    if (string.IsNullOrEmpty(realTimeInfo.Result[0].CurStopNo))
                     {
-                        indexList = 1;
+                        // for wuxibus and xihuibus
+                        // circle line, with same SegmentId for two direction
+                        if (Segments[0].List[0].SegmentId == Segments[1].List[0].SegmentId)
+                        {
+                            if (int.Parse(station.StationSeq) > int.Parse(
+                                Segments[0].List.Find(s => int.Parse(s.StationSeq) == Segments[0].List.Count).StationSeq))
+                            {
+                                indexList = 1;
+                            }
+                        }
+                        else
+                        {
+                            // two one-way lines, with different SegmentsId
+                            if (station.SegmentId == Segments[1].List[0].SegmentId)
+                            {
+                                indexList = 1;
+                            }
+                        }
                     }
-                }
-                else
-                {
-                    // for xinqubus
-                    if (Segments.Count == 2)
+                    else
                     {
+                        // for xinqubus
                         if (station.SegmentId == Segments[1].List[0].SegmentId)
                         {
                             indexList = 1;

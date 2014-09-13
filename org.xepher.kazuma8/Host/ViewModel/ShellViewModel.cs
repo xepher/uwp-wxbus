@@ -213,12 +213,14 @@ namespace Host.ViewModel
                     Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                     SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-            Lines = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+            List<LineEntity> result = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
 
             // save data to sqlite
-            SQLiteHelper.SaveLines(Lines);
+            await SQLiteHelper.SaveLines(result);
 
             IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LAST_LINES_UPDATE_TIME, DateTime.Now);
+
+            Lines = result;
 
             GlobalLoading.Instance.IsLoading = false;
         }
@@ -232,12 +234,14 @@ namespace Host.ViewModel
                     Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                     SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-            News = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
+            List<NewsEntity> result = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
 
             // save data to sqlite
-            SQLiteHelper.SaveNews(News);
+            await SQLiteHelper.SaveNews(result);
 
             IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LAST_NEWS_UPDATE_TIME, DateTime.Now);
+
+            News = result;
 
             GlobalLoading.Instance.IsLoading = false;
         }
