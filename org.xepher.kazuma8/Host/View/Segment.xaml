@@ -36,24 +36,24 @@
                             </Grid.RowDefinitions>
                             <Grid.ColumnDefinitions>
                                 <ColumnDefinition Width="Auto" />
-                                <ColumnDefinition Width="290" />
+                                <ColumnDefinition Width="296" />
                                 <!--<ColumnDefinition Width="120" />-->
-                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="94" />
                             </Grid.ColumnDefinitions>
 
-                            <Border Grid.Row="0" Width="48" Background="#F09609" Margin="2 2 0 0">
+                            <Border Grid.Row="0" Width="48" Background="#C2C2C2" Margin="0 1 0 0">
                                 <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding Flag_Title, Converter={StaticResource LteConverter}}" />
                             </Border>
-                            <Border Grid.Row="1" Width="48" Background="#F09609" Margin="2 0 0 0">
+                            <Border Grid.Row="1" Width="48" Background="#009298">
                                 <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding StationSeq}" />
                             </Border>
-                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Height="72" Background="#339933" Margin="2 2 2 0">
+                            <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Height="72" Background="#009298" Margin="1 1 0 0" Padding="1 0 1 0">
                                 <TextBlock Text="{Binding StationName}" Foreground="White" TextWrapping="Wrap" FontSize="26"/>
                             </Border>
-                            <Border Grid.Row="0" Grid.Column="2" Background="#8CBF26">
+                            <Border Grid.Row="0" Grid.Column="2" Background="#C2C2C2" Margin="1 1 0 0" Padding="1 0 1 0">
                                 <TextBlock Text="{Binding BusselfId}" Foreground="White"/>
                             </Border>
-                            <Border Grid.Row="1" Grid.Column="2" Background="#339933">
+                            <Border Grid.Row="1" Grid.Column="2" Background="#009298" Margin="1 0 0 0" Padding="1 0 1 0">
                                 <TextBlock Text="{Binding ActDateTime, Converter={StaticResource DateTimeConverter}}" Foreground="White"/>
                             </Border>
                             

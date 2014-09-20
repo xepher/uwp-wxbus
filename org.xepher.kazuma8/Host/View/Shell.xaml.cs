@@ -1,11 +1,12 @@
-﻿using Framework.Common;
+﻿using System.Windows.Controls;
+using Framework.Common;
 using GalaSoft.MvvmLight.Messaging;
 using Host.Model;
+using Host.Utils;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Net.NetworkInformation;
 using System;
 using System.Windows;
-using System.Windows.Input;
 using System.Windows.Navigation;
 
 namespace Host.View
@@ -20,7 +21,7 @@ namespace Host.View
 
             if (!DeviceNetworkInformation.IsNetworkAvailable)
             {
-                MessageBox.Show("Network unavailable");
+                MessageBox.Show(Constants.MSG_NETWORK_UNAVAILABLE);
                 Application.Current.Terminate();
             }
         }
@@ -76,20 +77,7 @@ namespace Host.View
             Messenger.Default.Unregister<LineEntity>(this, "Navigate");
             base.OnNavigatedFrom(e);
         }
-
-        private void txtSearchLine_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (e.Key == Key.Enter)
-            {
-                //Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
-            }
-        }
-
-        private void txtSearchLine_LostFocus(object sender, RoutedEventArgs e)
-        {
-            //Messenger.Default.Send<string>(txtSearchLine.Text, "SearchLine");
-        }
-
+        
         // Sample code for building a localized ApplicationBar
         //private void BuildLocalizedApplicationBar()
         //{
@@ -109,6 +97,11 @@ namespace Host.View
         private void AppMenuSettings_OnClick(object sender, EventArgs e)
         {
             Messenger.Default.Send<string>("", "NavigateSettings");
+        }
+
+        private void txtSearchLine_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        {
+            Messenger.Default.Send<string>(((TextBox)sender).Text, "FilterLines");
         }
     }
 }

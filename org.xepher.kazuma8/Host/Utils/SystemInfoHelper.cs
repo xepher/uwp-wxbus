@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using Host.Model;
 using Microsoft.Phone.Info;
 using Microsoft.Phone.Net.NetworkInformation;
 
@@ -10,7 +11,7 @@ namespace Host.Utils
         private const int ANID_LENGTH = 32;
         private const int ANID_OFFSET = 2;
 
-        public static void GetSystemInfo()
+        public static SystemInfo GetSystemInfo()
         {
             Debug.WriteLine("====== Start Get System Info ======");
             Debug.WriteLine("DeviceManufacturer: {0}", DeviceStatus.DeviceManufacturer);
@@ -25,10 +26,10 @@ namespace Host.Utils
             Debug.WriteLine("IsKeyboardDeployed: {0}", DeviceStatus.IsKeyboardDeployed);
             Debug.WriteLine("PowerSource: {0}", DeviceStatus.PowerSource);
             // ID_CAP_IDENTITY_DEVICE
-            Debug.WriteLine("DeviceName: {0}", GetDeviceUniqueID());
-            Constants.DEVICE_TOKEN = SignatureUtil.GetMD5HashString(GetDeviceUniqueID());
+            Debug.WriteLine("DeviceIdentityName: {0}", GetDeviceUniqueID());
+            Debug.WriteLine("Device Token: {0}", SignatureUtil.GetMD5HashString(GetDeviceUniqueID()));
             // ID_CAP_IDENTITY_USER
-            Debug.WriteLine("ANID: {0}", GetWindowsLiveAnonymousID());
+            Debug.WriteLine("DeviceIdentityUser: {0}", GetWindowsLiveAnonymousID());
             Debug.WriteLine("Device Width: {0}", System.Windows.Application.Current.Host.Content.ActualWidth);
             Debug.WriteLine("Device Height: {0}", System.Windows.Application.Current.Host.Content.ActualHeight);
             Debug.WriteLine("OS Version: {0}", Environment.OSVersion);
@@ -38,6 +39,32 @@ namespace Host.Utils
             Debug.WriteLine("IsNetworkAvailable: {0}", DeviceNetworkInformation.IsNetworkAvailable);
             Debug.WriteLine("IsWiFiEnabled: {0}", DeviceNetworkInformation.IsWiFiEnabled);
             Debug.WriteLine("====== End Get System Info ======");
+
+            return new SystemInfo()
+            {
+                DeviceManufacturer = DeviceStatus.DeviceManufacturer,
+                DeviceName = DeviceStatus.DeviceName,
+                DeviceFirmwareVersion = DeviceStatus.DeviceFirmwareVersion,
+                DeviceHardwareVersion = DeviceStatus.DeviceHardwareVersion,
+                DeviceTotalMemory = DeviceStatus.DeviceTotalMemory.ToString(),
+                ApplicationCurrentMemoryUsage = DeviceStatus.ApplicationCurrentMemoryUsage.ToString(),
+                ApplicationPeakMemoryUsage = DeviceStatus.ApplicationPeakMemoryUsage.ToString(),
+                ApplicationMemoryUsageLimit = DeviceStatus.ApplicationMemoryUsageLimit.ToString(),
+                IsKeyboardPresent = DeviceStatus.IsKeyboardPresent.ToString(),
+                IsKeyboardDeployed = DeviceStatus.IsKeyboardDeployed.ToString(),
+                PowerSource = DeviceStatus.PowerSource.ToString(),
+                DeviceIdentityName = GetDeviceUniqueID(),
+                DeviceToken = SignatureUtil.GetMD5HashString(GetDeviceUniqueID()),
+                DeviceIdentityUser = GetWindowsLiveAnonymousID(),
+                DeviceWidth = System.Windows.Application.Current.Host.Content.ActualWidth.ToString(),
+                DeviceHeight = System.Windows.Application.Current.Host.Content.ActualHeight.ToString(),
+                OSVersion = Environment.OSVersion.ToString(),
+                CellularMobileOperator = DeviceNetworkInformation.CellularMobileOperator,
+                IsCellularDataEnabled = DeviceNetworkInformation.IsCellularDataEnabled.ToString(),
+                IsCellularDataRoamingEnabled = DeviceNetworkInformation.IsCellularDataRoamingEnabled.ToString(),
+                IsNetworkAvailable = DeviceNetworkInformation.IsNetworkAvailable.ToString(),
+                IsWiFiEnabled = DeviceNetworkInformation.IsWiFiEnabled.ToString()
+            };
         }
 
         private static string GetDeviceUniqueID()

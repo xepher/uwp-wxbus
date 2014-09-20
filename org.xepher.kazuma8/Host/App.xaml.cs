@@ -101,7 +101,7 @@ namespace Host
             }
             else
             {
-                LoggingHelper.ShowExceptionError(Constants.EXCEPTION_HANDLING_MESSAGE_TITLE, e.Exception);
+                LoggingHelper.LogExceptionError("RootFrame_NavigationFailed", e.Exception);
             }
         }
 
@@ -115,7 +115,7 @@ namespace Host
             }
             else
             {
-                LoggingHelper.ShowExceptionError(Constants.EXCEPTION_HANDLING_MESSAGE_TITLE, e.ExceptionObject);
+                LoggingHelper.LogExceptionError("Application_UnhandledException", e.ExceptionObject);
             }
         }
 

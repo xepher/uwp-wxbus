@@ -24,5 +24,7 @@
 
         public const string EXCEPTION_HANDLING_MESSAGE_TITLE = "Ooooops! Houston! We need help!";
         public const string EXCEPTION_HANDLING_MESSAGE_CONTENT = "程序便当了, 点击Ok发送错误给开发者!";
+
+        public const string MSG_NETWORK_UNAVAILABLE = "网络错误, 请确保网络通畅.";
     }
 }

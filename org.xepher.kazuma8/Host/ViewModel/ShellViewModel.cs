@@ -1,4 +1,5 @@
-﻿using Framework.Common;
+﻿using System.Linq;
+using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
 using GalaSoft.MvvmLight;
@@ -25,11 +26,13 @@ namespace Host.ViewModel
 
         private const string LinesPropertyName = "Lines";
         private const string NewsPropertyName = "News";
+        private const string IsEnabledPropertyName = "IsEnabled";
 
         private ICommand _navigateToSegmentCommand;
         private ICommand _tapNewsCommand;
         private IList<LineEntity> _lines;
         private IList<NewsEntity> _news;
+        private bool _isEnabled;
 
         public ICommand NavigateToSegmentCommand
         {
@@ -65,6 +68,8 @@ namespace Host.ViewModel
                 return _tapNewsCommand;
             }
         }
+
+        public IList<LineEntity> OriginalLines { get; private set; }
         public IList<LineEntity> Lines
         {
             get
@@ -74,6 +79,8 @@ namespace Host.ViewModel
             private set
             {
                 Set(LinesPropertyName, ref _lines, value);
+                if (null != _lines)
+                    IsEnabled = true;
             }
         }
         public IList<NewsEntity> News
@@ -85,6 +92,18 @@ namespace Host.ViewModel
             private set
             {
                 Set(NewsPropertyName, ref _news, value);
+            }
+        }
+
+        public bool IsEnabled
+        {
+            get
+            {
+                return _isEnabled;
+            }
+            private set
+            {
+                Set(IsEnabledPropertyName, ref _isEnabled, value);
             }
         }
 
@@ -129,6 +148,11 @@ namespace Host.ViewModel
                 {
                     await InitLines();
                     await InitNews();
+                });
+
+                Messenger.Default.Register<string>(this, "FilterLines", input =>
+                {
+                    Lines = OriginalLines.Where(s => s.RouteName.Contains(input)).ToList();
                 });
             }
         }
@@ -188,7 +212,7 @@ namespace Host.ViewModel
                     try
                     {
                         // load cached data
-                        Lines = await SQLiteHelper.LoadLines();
+                        OriginalLines = Lines = await SQLiteHelper.LoadLines();
                     }
                     catch (Exception)
                     {
@@ -220,7 +244,7 @@ namespace Host.ViewModel
 
             IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LAST_LINES_UPDATE_TIME, DateTime.Now);
 
-            Lines = result;
+            OriginalLines = Lines = result;
 
             GlobalLoading.Instance.IsLoading = false;
         }

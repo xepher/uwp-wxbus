@@ -16,11 +16,6 @@ namespace Host.Utils
             return new SQLiteAsyncConnection(dbFile);
         }
 
-        //private static SQLiteConnection GetConn(SQLiteOpenFlags flags)
-        //{
-        //    return new SQLiteConnection(dbFile, flags);
-        //}
-
         private static Task<bool> JudgeSQLiteTableExist(string tableName)
         {
             SQLiteAsyncConnection conn = GetAsyncConn();

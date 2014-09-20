@@ -28,10 +28,10 @@
                     <ColumnDefinition Width="auto" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
-                <Grid Height="48" Width="48" Background="#F09609" Margin="2 2 0 0">
+                <Border Height="48" Width="48" Background="#C2C2C2" Margin="0 1 0 0" Padding="1 0 1 0">
                     <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding Id}" />
-                </Grid>
-                <Border Grid.Column="1" Background="#8CBF26"  Margin="0 2 0 0">
+                </Border>
+                <Border Grid.Column="1" Background="#009298"  Margin="1 1 0 0" Padding="1 0 1 0">
                     <TextBlock FontSize="32" Text="{Binding Title}" />
                 </Border>
             </Grid>
@@ -49,10 +49,10 @@
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
 
-                <Border Grid.RowSpan="2" Height="48" Background="#F09609" Margin="2 2 2 0">
+                <Border Grid.RowSpan="2" Height="48" Background="#C2C2C2" Margin="0 1 0 0" Padding="1 0 1 0">
                     <TextBlock FontSize="26" Text="{Binding RouteId}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
                 </Border>
-                <Border Grid.Row="0" Grid.Column="1" Height="48" Background="#339933">
+                <Border Grid.Row="0" Grid.Column="1" Height="48" Background="#009298" Margin="1 1 0 0" Padding="1 0 1 0">
                     <TextBlock FontSize="32" Text="{Binding RouteName}" Foreground="White" HorizontalAlignment="Right" TextWrapping="Wrap"/>
                 </Border>
                 <!--<Border Grid.RowSpan="2" Height="72" Background="#F09609" Margin="2 2 2 0">
@@ -139,7 +139,7 @@
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="*" />
                     </Grid.RowDefinitions>
-                    <!--<TextBox x:Name="txtSearchLine" VerticalAlignment="Bottom" KeyDown="txtSearchLine_KeyDown" LostFocus="txtSearchLine_LostFocus"/>-->
+                    <TextBox x:Name="txtSearchLine" VerticalAlignment="Bottom" TextChanged="txtSearchLine_TextChanged" IsEnabled="{Binding IsEnabled}"/>
                     <ListBox x:Name="lstLines" Grid.Row="1" ItemsSource="{Binding Lines}" ItemTemplate="{StaticResource dtListItemLineInfo}">
                         <i:Interaction.Triggers>
                             <i:EventTrigger EventName="Tap">
