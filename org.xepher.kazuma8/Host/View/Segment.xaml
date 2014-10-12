@@ -42,7 +42,7 @@
                             </Grid.ColumnDefinitions>
 
                             <Border Grid.Row="0" Width="48" Background="#C2C2C2" Margin="0 1 0 0">
-                                <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding Flag_Title, Converter={StaticResource LteConverter}}" />
+                                <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding FlagTitle, Converter={StaticResource LteConverter}}" />
                             </Border>
                             <Border Grid.Row="1" Width="48" Background="#009298">
                                 <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding StationSeq}" />

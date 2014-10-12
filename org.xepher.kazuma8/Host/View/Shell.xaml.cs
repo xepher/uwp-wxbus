@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using Coding4Fun.Toolkit.Controls;
 using Framework.Common;
 using GalaSoft.MvvmLight.Messaging;
 using Host.Model;
@@ -14,6 +15,7 @@ namespace Host.View
     public partial class Shell : PhoneApplicationPage
     {
         private bool _isLoadedLinesAndNews;
+        private bool _isExit;
 
         public Shell()
         {
@@ -29,6 +31,20 @@ namespace Host.View
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)
         {
             GlobalLoading.Instance.IsLoading = false;
+
+            if (!_isExit)
+            {
+                _isExit = true;
+                var toast = new ToastPrompt { Message = "再按一次退出程序" };
+                toast.Completed += (o, ex) => { _isExit = false; };
+                toast.Show();
+                e.Cancel = true;
+            }
+            else
+            {
+                NavigationService.RemoveBackEntry();
+            }
+
             base.OnBackKeyPress(e);
         }
 

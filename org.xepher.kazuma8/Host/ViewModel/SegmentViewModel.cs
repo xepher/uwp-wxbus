@@ -274,7 +274,7 @@ namespace Host.ViewModel
                 {
                     station2Item.ActDateTime = new DateTime();
                     station2Item.BusselfId = null;
-                    station2Item.Flag_Title = null;
+                    station2Item.FlagTitle = null;
                 });
 
                 // write realtime info
@@ -288,7 +288,7 @@ namespace Host.ViewModel
                         {
                             station2Item.ActDateTime = realTimeInfoItem.ActDateTime;
                             station2Item.BusselfId = realTimeInfoItem.BusselfId;
-                            station2Item.Flag_Title = realTimeInfoItem.Flag_Title;
+                            station2Item.FlagTitle = realTimeInfoItem.Flag_Title;
                         }
                     }
                     else
@@ -298,7 +298,7 @@ namespace Host.ViewModel
                         {
                             station2Item.ActDateTime = realTimeInfoItem.ActDateTime;
                             station2Item.BusselfId = realTimeInfoItem.BusselfId;
-                            station2Item.Flag_Title = realTimeInfoItem.Flag_Title;
+                            station2Item.FlagTitle = realTimeInfoItem.Flag_Title;
                         }
                     }
                 }));

@@ -50,7 +50,7 @@ namespace Host.Model
                 Set(BusselfIdPropertyName, ref _busselfId, value);
             }
         }
-        public string Flag_Title
+        public string FlagTitle
         {
             get
             {
