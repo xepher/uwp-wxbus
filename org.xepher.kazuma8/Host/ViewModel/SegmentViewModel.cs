@@ -53,10 +53,10 @@ namespace Host.ViewModel
             {
                 if (null == _tapRealTimeInfoCommand)
                 {
-                    _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(s =>
+                    _tapRealTimeInfoCommand = new RelayCommand<Station2Entity>(async s =>
                     {
                         if (null == s) return;
-                        GetRealTimeInfo(s);
+                        await GetRealTimeInfo(s);
                     });
                 }
 
@@ -111,11 +111,11 @@ namespace Host.ViewModel
             }
             else
             {
-                Messenger.Default.Register<LineEntity>(this, "Navigate", s =>
+                Messenger.Default.Register<LineEntity>(this, "Navigate", async s =>
                 {
                     SelectedLineEntity = s;
                     Segments = null;
-                    InitSegments();
+                    await InitSegments();
                 });
 
                 //Messenger.Default.Register<Station2Entity>(this, "AutoRetrieveRealTimeInformation", s =>

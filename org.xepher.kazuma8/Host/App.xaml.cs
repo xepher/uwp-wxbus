@@ -17,13 +17,13 @@ namespace Host
         private static LicenseInformation _licenseInfo = new LicenseInformation();
 
         public static bool IsTrial { get; private set; }
-        
+
         /// <summary>
         /// Provides easy access to the root frame of the Phone Application.
         /// </summary>
         /// <returns>The root frame of the Phone Application.</returns>
         public static PhoneApplicationFrame RootFrame { get; private set; }
-        
+
         /// <summary>
         /// Constructor for the Application object.
         /// </summary>
@@ -94,28 +94,22 @@ namespace Host
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            //LoggingHelper.LogExceptionError("RootFrame_NavigationFailed", Debugger.IsAttached, e.Exception);
             if (Debugger.IsAttached)
             {
                 // A navigation has failed; break into the debugger
                 Debugger.Break();
-            }
-            else
-            {
-                LoggingHelper.LogExceptionError("RootFrame_NavigationFailed", e.Exception);
             }
         }
 
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            //LoggingHelper.LogExceptionError("Application_UnhandledException", Debugger.IsAttached, e.ExceptionObject);
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
                 Debugger.Break();
-            }
-            else
-            {
-                LoggingHelper.LogExceptionError("Application_UnhandledException", e.ExceptionObject);
             }
         }
 

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO.IsolatedStorage;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -87,6 +88,21 @@ namespace Host.Utils
             SQLiteAsyncConnection asyncConn = GetAsyncConn();
 
             return await asyncConn.Table<LineEntity>().ToListAsync();
+        }
+
+        public static async Task SaveExceptionMessage(ExceptionMessage data)
+        {
+            SQLiteAsyncConnection asyncConn = GetAsyncConn();
+            bool isTableCreated = await JudgeSQLiteTableExist("ExceptionMessage");
+            await asyncConn.RunInTransactionAsync(conn =>
+            {
+                if (!isTableCreated)
+                {
+                    conn.CreateTable<ExceptionMessage>();
+                }
+
+                conn.Insert(data);
+            });
         }
     }
 }
