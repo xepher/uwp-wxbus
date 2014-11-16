@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using System.Threading;
 using Framework.Common;
 using Framework.NavigationService;
 using Framework.Serializer;
@@ -33,6 +34,8 @@ namespace Host.ViewModel
         private IList<LineEntity> _lines;
         private IList<NewsEntity> _news;
         private bool _isEnabled;
+        private Task<List<LineEntity>> filterTask;
+        private CancellationTokenSource cts;
 
         public ICommand NavigateToSegmentCommand
         {
@@ -150,9 +153,30 @@ namespace Host.ViewModel
                     await InitNews();
                 });
 
-                Messenger.Default.Register<string>(this, "FilterLines", input =>
+                Messenger.Default.Register<string>(this, "FilterLines", async input =>
                 {
-                    Lines = OriginalLines.Where(s => s.RouteName.Contains(input)).ToList();
+                    // 1. cancel old filter task
+                    if (null != filterTask)
+                    {
+                        if (!filterTask.IsCompleted)
+                        {
+                            cts.Cancel();
+                        }
+                    }
+
+                    // 2. create a new filter task
+                    // 2.1 create a new CancellationTokenSource
+                    cts = new CancellationTokenSource();
+                    // 2.2 binding CancellationTokenSource with filter task
+                    filterTask =
+                        Task.Factory.StartNew(
+                            result => { return OriginalLines.Where(s => s.RouteName.Contains(input)).ToList(); }, cts.Token);
+
+                    // 3. start filter task
+                    Lines = await filterTask;
+
+                    // without CancellationTokenSource
+                    //Lines = OriginalLines.Where(s => s.RouteName.Contains(input)).ToList();
                 });
             }
         }
