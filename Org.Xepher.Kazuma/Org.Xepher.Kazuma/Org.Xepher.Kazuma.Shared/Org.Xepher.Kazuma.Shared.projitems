@@ -15,6 +15,11 @@
     <Compile Include="$(MSBuildThisFileDirectory)App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Route.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\ISerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\JsonConvertSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\SignatureUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RouteCardViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
@@ -34,5 +39,13 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Images\bus_map_mark_bus_2x.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Images\microsoft-sdk.png" />
+    <Content Include="$(MSBuildThisFileDirectory)Resources\Images\windows-sdk.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="$(MSBuildThisFileDirectory)Utils\IoC\" />
   </ItemGroup>
 </Project>
