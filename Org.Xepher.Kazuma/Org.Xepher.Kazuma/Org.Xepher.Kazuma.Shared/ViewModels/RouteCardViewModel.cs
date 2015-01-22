@@ -1,14 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Org.Xepher.Kazuma.Models;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
     public class RouteCardViewModel
     {
-        public RouteCardViewModel(string routeName, string image)
+        public RouteCardViewModel(Route route, string image)
         {
-            RouteName = routeName;
+            RouteName = route.RouteName;
+            RouteId = route.RouteId;
+            Flag = route.Flag;
             Image = image;
         }
 
@@ -17,6 +20,18 @@ namespace Org.Xepher.Kazuma.ViewModels
             get;
             private set;
         }
+
+        public string RouteId
+        {
+            get;
+            private set;
+        }
+        public string Flag
+        {
+            get;
+            private set;
+        }
+
         public string Image
         {
             get;

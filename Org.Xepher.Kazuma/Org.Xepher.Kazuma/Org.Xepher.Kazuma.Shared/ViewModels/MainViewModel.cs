@@ -25,7 +25,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             foreach (Route route in result)
             {
-                Routes.Add(new RouteCardViewModel(route.RouteName, "ms-appx:///resources/images/bus_map_mark_bus_2x.png"));
+                Routes.Add(new RouteCardViewModel(route, "ms-appx:///resources/images/bus_map_mark_bus_2x.png"));
             }
 
             MessageDialog dialog = new MessageDialog(Routes.Count.ToString());
