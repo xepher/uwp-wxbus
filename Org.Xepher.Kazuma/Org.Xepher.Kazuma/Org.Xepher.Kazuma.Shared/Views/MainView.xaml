@@ -10,10 +10,9 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
+            <RowDefinition Height="13*" />
         </Grid.RowDefinitions>
-
-        <Grid>
-            <ListView x:Name="Routes" />
-        </Grid>
+        <TextBox x:Name="SearchBox" VerticalAlignment="Bottom"/>
+        <ListView Grid.Row="1" x:Name="Routes"/>
     </Grid>
 </Page>
