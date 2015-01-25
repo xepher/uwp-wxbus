@@ -19,15 +19,12 @@ namespace Org.Xepher.Kazuma.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private readonly INavigationService navigationService;
-
+        // used to cache requested data, will use MemoizingMRUCache to store later
         private List<RouteCardViewModel> _sourceRoutes = new List<RouteCardViewModel>();
 
         public MainViewModel(INavigationService navigationService)
             : base(navigationService)
         {
-            this.navigationService = navigationService;
-
             #region FilterData Configuration
             FilterAsyncCommand = ReactiveCommand.CreateAsyncTask(_ => FilterData(), RxApp.TaskpoolScheduler);
 
@@ -40,7 +37,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             #endregion
 
             Routes = new BindableCollection<RouteCardViewModel>();
-
+            
             RequestData();
         }
 
@@ -77,7 +74,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
         }
 
-        public ReactiveCommand<Unit> FilterAsyncCommand { get; protected set; }
+        private ReactiveCommand<Unit> FilterAsyncCommand { get; set; }
 
         private Task<Unit> FilterData()
         {

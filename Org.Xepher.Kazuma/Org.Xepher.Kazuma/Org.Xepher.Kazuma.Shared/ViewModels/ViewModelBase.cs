@@ -7,7 +7,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 {
     public abstract class ViewModelBase : Screen
     {
-        private readonly INavigationService navigationService;
+        protected readonly INavigationService navigationService;
 
         protected ViewModelBase(INavigationService navigationService)
         {
