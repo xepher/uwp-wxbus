@@ -7,17 +7,17 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Width="300" Margin="0 1 0 0">
+    <Grid MinWidth="300" Margin="0 1 0 0">
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="1*" />
             <ColumnDefinition Width="3*" />
         </Grid.ColumnDefinitions>
 
         <Border Background="#C2C2C2" >
-            <TextBlock FontSize="26" Text="{Binding RouteId}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+            <TextBlock FontSize="26" Text="{Binding CurrentRoute.RouteId}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         </Border>
         <Border Grid.Column="1" Background="#009298">
-            <TextBlock FontSize="32" Text="{Binding RouteName}" Foreground="White" HorizontalAlignment="Right" TextWrapping="Wrap"/>
+            <TextBlock FontSize="32" Text="{Binding CurrentRoute.RouteName}" Foreground="White" HorizontalAlignment="Right" TextWrapping="Wrap"/>
         </Border>
     </Grid>
 </UserControl>

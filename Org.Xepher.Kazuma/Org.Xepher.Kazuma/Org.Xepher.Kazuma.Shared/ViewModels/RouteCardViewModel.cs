@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Caliburn.Micro;
 using Org.Xepher.Kazuma.Models;
+using ReactiveUI;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -9,24 +11,11 @@ namespace Org.Xepher.Kazuma.ViewModels
     {
         public RouteCardViewModel(Route route, string image)
         {
-            RouteName = route.RouteName;
-            RouteId = route.RouteId;
-            Flag = route.Flag;
+            CurrentRoute = route;
             Image = image;
         }
 
-        public string RouteName
-        {
-            get;
-            private set;
-        }
-
-        public string RouteId
-        {
-            get;
-            private set;
-        }
-        public string Flag
+        public Route CurrentRoute
         {
             get;
             private set;

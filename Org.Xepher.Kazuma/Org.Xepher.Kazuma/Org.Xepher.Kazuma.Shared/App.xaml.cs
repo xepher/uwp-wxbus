@@ -42,6 +42,7 @@ namespace Org.Xepher.Kazuma
             container = new WinRTContainer();
             container.RegisterWinRTServices();
             container.PerRequest<MainViewModel>();
+            container.PerRequest<RouteViewModel>();
         }
 
         protected override object GetInstance(Type service, string key)
