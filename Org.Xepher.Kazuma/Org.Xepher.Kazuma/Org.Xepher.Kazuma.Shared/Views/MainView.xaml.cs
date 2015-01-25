@@ -28,13 +28,6 @@ namespace Org.Xepher.Kazuma.Views
         public MainView()
         {
             this.InitializeComponent();
-            
-            // 最终需要改成command
-            var keyUp = Observable.FromEventPattern<KeyRoutedEventArgs>(SearchBox, "KeyUp")
-                .Select(evt => ((TextBox) evt.Sender).Text)
-                .Throttle(TimeSpan.FromSeconds(0.5));
-
-            MessageBus.Current.RegisterMessageSource(keyUp);
         }
     }
 }

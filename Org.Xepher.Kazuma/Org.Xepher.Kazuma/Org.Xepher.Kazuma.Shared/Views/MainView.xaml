@@ -13,7 +13,7 @@
             <RowDefinition Height="*" />
             <RowDefinition Height="13*" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="SearchBox" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="FilterTerm" VerticalAlignment="Bottom"/>
         <ListView Grid.Row="1" x:Name="Routes" micro:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged(Routes.SelectedItem)]"/>
     </Grid>
 </Page>

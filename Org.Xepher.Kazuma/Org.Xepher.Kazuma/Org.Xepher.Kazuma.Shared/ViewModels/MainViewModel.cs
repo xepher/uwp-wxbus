@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reactive;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Windows.UI.Popups;
@@ -12,6 +13,7 @@ using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
+using Windows.System.Threading;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -26,41 +28,76 @@ namespace Org.Xepher.Kazuma.ViewModels
         {
             this.navigationService = navigationService;
 
-            Routes = new BindableCollection<RouteCardViewModel>();
+            #region FilterData Configuration
+            FilterAsyncCommand = ReactiveCommand.CreateAsyncTask(_ => FilterData(), RxApp.TaskpoolScheduler);
 
-            MessageBus.Current.Listen<string>().Subscribe(s =>
-            {
-                Routes.Clear();
-                foreach (RouteCardViewModel route in _sourceRoutes)
-                {
-                    if (string.IsNullOrEmpty(s) || route.CurrentRoute.RouteName.Contains(s))
-                    {
-                        Routes.Add(route);
-                    }
-                }
-            });
+            this.ObservableForProperty(vm => vm.FilterTerm)
+                .Throttle(TimeSpan.FromMilliseconds(800), RxApp.MainThreadScheduler)
+                .Select(v => v.Value)
+                .DistinctUntilChanged()
+                .Where(x => !string.IsNullOrWhiteSpace(x))
+                .InvokeCommand(FilterAsyncCommand);
+            #endregion
+
+            Routes = new BindableCollection<RouteCardViewModel>();
 
             RequestData();
         }
 
         private async Task RequestData()
         {
-            List<Route> result = await SignatureUtil.WebRequestAsync<List<Route>>(Constants.TEMPLATE_ALL_LINES);
-
-            foreach (Route route in result)
+            if (_sourceRoutes.Count == 0)
             {
-                RouteCardViewModel routeVM = new RouteCardViewModel(route,
-                    "ms-appx:///resources/images/bus_map_mark_bus_2x.png");
-                Routes.Add(routeVM);
-                _sourceRoutes.Add(routeVM);
+                List<Route> result = await SignatureUtil.WebRequestAsync<List<Route>>(Constants.TEMPLATE_ALL_LINES);
+
+                foreach (Route route in result)
+                {
+                    RouteCardViewModel routeVM = new RouteCardViewModel(route,
+                        "ms-appx:///resources/images/bus_map_mark_bus_2x.png");
+                    Routes.Add(routeVM);
+                    _sourceRoutes.Add(routeVM);
+                }
             }
 
             DebugLog logger = new DebugLog(typeof(string));
-            logger.Info("Total routes count: {0}", result.Count);
+            logger.Info("Total routes count: {0}", _sourceRoutes.Count);
         }
-
+        
         public BindableCollection<RouteCardViewModel> Routes { get; private set; }
 
+        #region FilterData
+        private string _FilterTerm;
+        public string FilterTerm
+        {
+            get { return _FilterTerm; }
+            set
+            {
+                _FilterTerm = value;
+                NotifyOfPropertyChange(() => FilterTerm);
+            }
+        }
+
+        public ReactiveCommand<Unit> FilterAsyncCommand { get; protected set; }
+
+        private Task<Unit> FilterData()
+        {
+            return Task.Run(() =>
+            {
+                Routes.Clear();
+                foreach (RouteCardViewModel route in _sourceRoutes)
+                {
+                    if (string.IsNullOrEmpty(FilterTerm) || route.CurrentRoute.RouteName.Contains(FilterTerm))
+                    {
+                        Routes.Add(route);
+                    }
+                }
+
+                return new Unit();
+            });
+        }
+        #endregion
+
+        #region Navigation
         public void SelectionChanged(RouteCardViewModel sender)
         {
             DebugLog logger = new DebugLog(typeof(string));
@@ -71,5 +108,6 @@ namespace Org.Xepher.Kazuma.ViewModels
                                                       .WithParam(x => x.SelectedRouteName, sender.CurrentRoute.RouteName)
                                                       .Navigate();
         }
+        #endregion
     }
 }
