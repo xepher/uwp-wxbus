@@ -38,7 +38,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             Routes = new BindableCollection<RouteCardViewModel>();
             
-            RequestData();
+            Observable.StartAsync(RequestData);
         }
 
         private async Task RequestData()
