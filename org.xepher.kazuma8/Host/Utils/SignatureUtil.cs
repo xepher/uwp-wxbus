@@ -113,7 +113,10 @@ namespace Host.Utils
 
             try
             {
-                HttpWebResponse response = (HttpWebResponse)await Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null);
+                HttpWebResponse response =
+                    (HttpWebResponse)
+                        await
+                            Task.Factory.FromAsync<WebResponse>(request.BeginGetResponse, request.EndGetResponse, null);
 
                 using (StreamReader readStream = new StreamReader(response.GetResponseStream()))
                 {
@@ -121,6 +124,10 @@ namespace Host.Utils
                     ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
                     return serializer.Deserialize<T>(readStream.ReadToEnd());
                 }
+            }
+            catch (WebException ex)
+            {
+                return Activator.CreateInstance<T>();
             }
             catch (Exception ex)
             {

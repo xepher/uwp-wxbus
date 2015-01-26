@@ -21,11 +21,11 @@ namespace Host.View
         {
             InitializeComponent();
 
-            if (!DeviceNetworkInformation.IsNetworkAvailable)
-            {
-                MessageBox.Show(Constants.MSG_NETWORK_UNAVAILABLE);
-                Application.Current.Terminate();
-            }
+            //if (!DeviceNetworkInformation.IsNetworkAvailable)
+            //{
+            //    MessageBox.Show(Constants.MSG_NETWORK_UNAVAILABLE);
+            //    Application.Current.Terminate();
+            //}
         }
 
         protected override void OnBackKeyPress(System.ComponentModel.CancelEventArgs e)

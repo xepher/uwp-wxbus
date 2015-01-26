@@ -176,7 +176,13 @@ namespace Host.ViewModel
                         SignatureUtil.GenerateSeqId(), HttpUtility.UrlEncode(SelectedLineEntity.RouteId),
                         Constants.BUS_API_SECRET));
 
-                Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
+                ObservableCollection<Station2ResultEntity> result;
+                do
+                {
+                    result = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
+                } while (result == null || result.Count == 0);
+
+                Segments = result;
 
                 GlobalLoading.Instance.IsLoading = false;
             }
@@ -224,7 +230,14 @@ namespace Host.ViewModel
                         HttpUtility.UrlEncode(SelectedLineEntity.RouteId), Constants.BUS_API_SECRET, station.SegmentId,
                         station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
-                RealTimeResultEntity realTimeInfo = await SignatureUtil.WebRequestAsync<RealTimeResultEntity>(requestUrl);
+                RealTimeResultEntity result;
+                do
+                {
+                    result = await SignatureUtil.WebRequestAsync<RealTimeResultEntity>(requestUrl);
+                    if (result.Result == null) break;
+                } while (result.Result.Count == 0);
+
+                RealTimeResultEntity realTimeInfo = result;
 
                 if (!string.IsNullOrEmpty(realTimeInfo.Message))
                 {

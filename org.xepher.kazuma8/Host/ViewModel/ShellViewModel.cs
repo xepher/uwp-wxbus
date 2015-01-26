@@ -261,7 +261,11 @@ namespace Host.ViewModel
                     Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                     SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-            List<LineEntity> result = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+            List<LineEntity> result;
+            do
+            {
+                result = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+            } while (result == null || result.Count == 0);
 
             // save data to sqlite
             await SQLiteHelper.SaveLines(result);
@@ -282,7 +286,11 @@ namespace Host.ViewModel
                     Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                     SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-            List<NewsEntity> result = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
+            List<NewsEntity> result;
+            do
+            {
+                result = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
+            } while (result == null || result.Count == 0);
 
             // save data to sqlite
             await SQLiteHelper.SaveNews(result);
