@@ -154,7 +154,7 @@
                 </Grid>
             </phone:PanoramaItem>
 
-            <phone:PanoramaItem Header="公告" d:DataContext="{Binding Source={StaticResource DesignViewModel}}">
+            <phone:PanoramaItem Header="公告" d:DataContext="{Binding Source={StaticResource DesignViewModel}}" Visibility="Collapsed">
                 <phone:PanoramaItem.RenderTransform>
                     <TranslateTransform/>
                 </phone:PanoramaItem.RenderTransform>

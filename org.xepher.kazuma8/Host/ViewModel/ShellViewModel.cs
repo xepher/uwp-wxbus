@@ -150,7 +150,7 @@ namespace Host.ViewModel
                 Messenger.Default.Register<string>(this, "LoadLinesAndNews", async s =>
                 {
                     await InitLines();
-                    await InitNews();
+                    //await InitNews();
                 });
 
                 Messenger.Default.Register<string>(this, "FilterLines", async input =>
@@ -254,16 +254,16 @@ namespace Host.ViewModel
         private async void DownloadLines()
         {
             GlobalLoading.Instance.IsLoading = true;
-
-            string requestUrl =
-                SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
-                    Constants.SETTING_USER_ID,
-                    Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                    SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
-
+            
             List<LineEntity> result;
             do
             {
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
+                        Constants.SETTING_USER_ID,
+                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+
                 result = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
             } while (result == null || result.Count == 0);
 
@@ -281,14 +281,14 @@ namespace Host.ViewModel
         {
             GlobalLoading.Instance.IsLoading = true;
 
-            string requestUrl =
-                SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_NEWS, Constants.SETTING_USER_ID,
-                    Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                    SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
-
             List<NewsEntity> result;
             do
             {
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_NEWS, Constants.SETTING_USER_ID,
+                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+
                 result = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
             } while (result == null || result.Count == 0);
 

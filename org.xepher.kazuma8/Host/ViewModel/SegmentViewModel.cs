@@ -170,15 +170,15 @@ namespace Host.ViewModel
                 if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
-                string requestUrl =
-                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS, Constants.SETTING_USER_ID,
-                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                        SignatureUtil.GenerateSeqId(), HttpUtility.UrlEncode(SelectedLineEntity.RouteId),
-                        Constants.BUS_API_SECRET));
-
                 ObservableCollection<Station2ResultEntity> result;
                 do
                 {
+                    string requestUrl =
+                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS, Constants.SETTING_USER_ID,
+                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                            SignatureUtil.GenerateSeqId(), HttpUtility.UrlEncode(SelectedLineEntity.RouteId),
+                            Constants.BUS_API_SECRET));
+
                     result = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
                 } while (result == null || result.Count == 0);
 
@@ -223,16 +223,16 @@ namespace Host.ViewModel
                 if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
-                string requestUrl =
-                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
-                        Constants.SETTING_USER_ID, Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN,
-                        Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
-                        HttpUtility.UrlEncode(SelectedLineEntity.RouteId), Constants.BUS_API_SECRET, station.SegmentId,
-                        station.StationId.Length > 10 ? station.StationSeq : station.StationId));
-
                 RealTimeResultEntity result;
                 do
                 {
+                    string requestUrl =
+                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
+                            Constants.SETTING_USER_ID, Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN,
+                            Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
+                            HttpUtility.UrlEncode(SelectedLineEntity.RouteId), Constants.BUS_API_SECRET, station.SegmentId,
+                            station.StationId.Length > 10 ? station.StationSeq : station.StationId));
+
                     result = await SignatureUtil.WebRequestAsync<RealTimeResultEntity>(requestUrl);
                     if (result.Result == null) break;
                 } while (result.Result.Count == 0);

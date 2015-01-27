@@ -90,7 +90,7 @@
                                         </toolkit:ListPicker.ItemTemplate>
                                     </toolkit:ListPicker>
                                 </Grid>
-                                <Grid Margin="12,0,12,0">
+                                <Grid Margin="12,0,12,0" Visibility="Collapsed">
                                     <Grid.ColumnDefinitions>
                                         <ColumnDefinition Width="*"/>
                                         <ColumnDefinition Width="Auto"/>

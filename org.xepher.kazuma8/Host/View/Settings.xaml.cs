@@ -11,7 +11,7 @@ namespace Host.View
     public partial class Settings : PhoneApplicationPage
     {
         ISerializer serializer = ServiceLocator.Current.GetInstance<ISerializer>();
-        //private bool _isLoaded = false;
+        private bool _isItemSourceBounded = false;
 
         public Settings()
         {
@@ -19,6 +19,7 @@ namespace Host.View
 
             SettingsAllLinesCircle.ItemsSource = AppSettings.AllLinesCircleList;
             SettingsAnnouncementCircle.ItemsSource = AppSettings.AnnouncementCircleList;
+            _isItemSourceBounded = true;
 
             UpdateCircle _allLinesCircleSettings = IsolatedStorageHelper.Settings[Constants.SETTINGS_LINES_UPDATE_CIRCLE] as UpdateCircle;
             UpdateCircle _announcementCircleSettings = IsolatedStorageHelper.Settings[Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE] as UpdateCircle;
@@ -37,12 +38,14 @@ namespace Host.View
 
         private void SettingsAllLinesCircle_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LINES_UPDATE_CIRCLE, e.AddedItems[0]);
+            if (_isItemSourceBounded && e.AddedItems.Count > 0)
+                IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_LINES_UPDATE_CIRCLE, e.AddedItems[0]);
         }
 
         private void SettingsAnnouncementCircle_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE, e.AddedItems[0]);
+            if (_isItemSourceBounded && e.AddedItems.Count > 0)
+                IsolatedStorageHelper.AddOrUpdateSettings(Constants.SETTINGS_ANNOUNCEMENT_UPDATE_CIRCLE, e.AddedItems[0]);
         }
     }
 }

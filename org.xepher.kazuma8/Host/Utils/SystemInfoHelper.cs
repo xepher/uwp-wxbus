@@ -29,7 +29,7 @@ namespace Host.Utils
             Debug.WriteLine("DeviceIdentityName: {0}", GetDeviceUniqueID());
             Debug.WriteLine("Device Token: {0}", SignatureUtil.GetMD5HashString(GetDeviceUniqueID()));
             // ID_CAP_IDENTITY_USER
-            Debug.WriteLine("DeviceIdentityUser: {0}", GetWindowsLiveAnonymousID());
+            //Debug.WriteLine("DeviceIdentityUser: {0}", GetWindowsLiveAnonymousID());
             Debug.WriteLine("Device Width: {0}", System.Windows.Application.Current.Host.Content.ActualWidth);
             Debug.WriteLine("Device Height: {0}", System.Windows.Application.Current.Host.Content.ActualHeight);
             Debug.WriteLine("OS Version: {0}", Environment.OSVersion);
@@ -55,7 +55,7 @@ namespace Host.Utils
                 PowerSource = DeviceStatus.PowerSource.ToString(),
                 DeviceIdentityName = GetDeviceUniqueID(),
                 DeviceToken = SignatureUtil.GetMD5HashString(GetDeviceUniqueID()),
-                DeviceIdentityUser = GetWindowsLiveAnonymousID(),
+                //DeviceIdentityUser = GetWindowsLiveAnonymousID(),
                 DeviceWidth = System.Windows.Application.Current.Host.Content.ActualWidth.ToString(),
                 DeviceHeight = System.Windows.Application.Current.Host.Content.ActualHeight.ToString(),
                 OSVersion = Environment.OSVersion.ToString(),
@@ -67,7 +67,7 @@ namespace Host.Utils
             };
         }
 
-        private static string GetDeviceUniqueID()
+        public static string GetDeviceUniqueID()
         {
             object uniqueId;
 
@@ -78,16 +78,16 @@ namespace Host.Utils
             return "null";
         }
 
-        private static string GetWindowsLiveAnonymousID()
-        {
-            object anid;
+        //public static string GetWindowsLiveAnonymousID()
+        //{
+        //    object anid;
 
-            if (UserExtendedProperties.TryGetValue("ANID", out anid) && null != anid && anid.ToString().Length >= (ANID_LENGTH + ANID_OFFSET))
-            {
-                return anid.ToString().Substring(ANID_OFFSET, ANID_LENGTH);
-            }
-            return "null";
-        }
+        //    if (UserExtendedProperties.TryGetValue("ANID", out anid) && null != anid && anid.ToString().Length >= (ANID_LENGTH + ANID_OFFSET))
+        //    {
+        //        return anid.ToString().Substring(ANID_OFFSET, ANID_LENGTH);
+        //    }
+        //    return "null";
+        //}
 
     }
 }

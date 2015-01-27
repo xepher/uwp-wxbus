@@ -67,15 +67,18 @@ namespace Host
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            SystemInfoHelper.GetSystemInfo();
-            CheckLicense();
+            //SystemInfoHelper.GetSystemInfo();
+            Constants.DEVICE_TOKEN = SignatureUtil.GetMD5HashString(SystemInfoHelper.GetDeviceUniqueID());
+            // No need to active license check, 
+            // because we provide this App with same experience on Trial mode and Purchased mode
+            //CheckLicense();
         }
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-            CheckLicense();
+            //CheckLicense();
         }
 
         // Code to execute when the application is deactivated (sent to background)
