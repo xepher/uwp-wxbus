@@ -254,7 +254,8 @@ namespace Host.ViewModel
         private async void DownloadLines()
         {
             GlobalLoading.Instance.IsLoading = true;
-            
+
+            int retryCount = 0;
             List<LineEntity> result;
             do
             {
@@ -265,7 +266,15 @@ namespace Host.ViewModel
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
                 result = await SignatureUtil.WebRequestAsync<List<LineEntity>>(requestUrl);
+                if (++retryCount > 10) break;
             } while (result == null || result.Count == 0);
+
+            if (retryCount > 10)
+            {
+                GlobalLoading.Instance.IsLoading = false;
+                MessageBox.Show("网络异常，请稍后再试！");
+                return;
+            }
 
             // save data to sqlite
             await SQLiteHelper.SaveLines(result);
@@ -281,6 +290,7 @@ namespace Host.ViewModel
         {
             GlobalLoading.Instance.IsLoading = true;
 
+            int retryCount = 0;
             List<NewsEntity> result;
             do
             {
@@ -290,7 +300,15 @@ namespace Host.ViewModel
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
                 result = await SignatureUtil.WebRequestAsync<List<NewsEntity>>(requestUrl);
-            } while (result == null || result.Count == 0);
+                if (++retryCount > 10) break;
+            } while (result == null || result.Count == 0 );
+
+            if (retryCount > 10)
+            {
+                GlobalLoading.Instance.IsLoading = false;
+                MessageBox.Show("网络异常，请稍后再试！");
+                return;
+            }
 
             // save data to sqlite
             await SQLiteHelper.SaveNews(result);

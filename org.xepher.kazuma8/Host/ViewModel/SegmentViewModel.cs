@@ -170,6 +170,7 @@ namespace Host.ViewModel
                 if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
+                int retryCount = 0;
                 ObservableCollection<Station2ResultEntity> result;
                 do
                 {
@@ -180,7 +181,15 @@ namespace Host.ViewModel
                             Constants.BUS_API_SECRET));
 
                     result = await SignatureUtil.WebRequestAsync<ObservableCollection<Station2ResultEntity>>(requestUrl);
+                    if (++retryCount > 10) break;
                 } while (result == null || result.Count == 0);
+
+                if (retryCount > 10)
+                {
+                    GlobalLoading.Instance.IsLoading = false;
+                    MessageBox.Show("网络异常，请稍后再试！");
+                    return;
+                }
 
                 Segments = result;
 
@@ -223,6 +232,7 @@ namespace Host.ViewModel
                 if (GlobalLoading.Instance.IsLoading) return;
                 GlobalLoading.Instance.IsLoading = true;
 
+                int retryCount = 0;
                 RealTimeResultEntity result;
                 do
                 {
@@ -234,8 +244,15 @@ namespace Host.ViewModel
                             station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
                     result = await SignatureUtil.WebRequestAsync<RealTimeResultEntity>(requestUrl);
-                    if (result.Result == null) break;
-                } while (result.Result.Count == 0);
+                    if (++retryCount > 10) break;
+                } while (null == result.Message);
+
+                if (retryCount > 10)
+                {
+                    GlobalLoading.Instance.IsLoading = false;
+                    MessageBox.Show("网络异常，请稍后再试！");
+                    return;
+                }
 
                 RealTimeResultEntity realTimeInfo = result;
 

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Host.Utils.Cryptography;
 using Microsoft.Practices.ServiceLocation;
+using Newtonsoft.Json;
 
 namespace Host.Utils
 {
@@ -125,7 +126,11 @@ namespace Host.Utils
                     return serializer.Deserialize<T>(readStream.ReadToEnd());
                 }
             }
-            catch (WebException ex)
+            catch (WebException)
+            {
+                return Activator.CreateInstance<T>();
+            }
+            catch (JsonReaderException)
             {
                 return Activator.CreateInstance<T>();
             }
