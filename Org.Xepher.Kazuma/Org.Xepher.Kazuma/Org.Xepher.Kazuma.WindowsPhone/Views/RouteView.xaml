@@ -5,13 +5,14 @@
     xmlns:local="using:Org.Xepher.Kazuma.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:micro="using:Caliburn.Micro"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot x:Name="Segments">
             <Pivot.ItemTemplate>
                 <DataTemplate>
-                    <ListView ItemsSource="{Binding List}">
+                    <ListView ItemsSource="{Binding List}"  micro:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged($this.SelectedItem)]">
                         <ListView.ItemTemplate>
                             <DataTemplate>
                                 <Grid>
@@ -28,7 +29,7 @@
                                     <Border Grid.Row="0" Width="48" Background="#C2C2C2" Margin="0 1 0 0">
                                         <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding FlagTitle}" />
                                     </Border>
-                                    <Border Grid.Row="1" Width="48" Background="#009298">
+                                    <Border Grid.Row="1" Grid.Column="0" Width="48" Background="#009298">
                                         <TextBlock FontSize="26" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom" Text="{Binding StationSeq}" />
                                     </Border>
                                     <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Height="72" Background="#009298" Margin="1 1 0 0" Padding="1 0 1 0">

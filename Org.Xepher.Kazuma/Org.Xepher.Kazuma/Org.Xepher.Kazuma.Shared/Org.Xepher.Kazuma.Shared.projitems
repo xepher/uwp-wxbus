@@ -17,6 +17,8 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\SuspensionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBudData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Segment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Station.cs" />
