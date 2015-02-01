@@ -9,13 +9,17 @@ using Org.Xepher.Kazuma.Utils;
 namespace Org.Xepher.Kazuma.WindowsPhone.UnitTest
 {
     [TestClass]
-    public class UnitTest1
+    public class SignatureUtilUnitTest
     {
         [TestMethod]
-        public async Task TestMethod1()
+        public async Task TestWebRequestAsync()
         {
             // Arrange
-            string requestUrl = Constants.TEMPLATE_ALL_LINES;
+            string requestUrl =
+                SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
+                    Constants.SETTING_USER_ID,
+                    Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                    SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
             // Act
             List<Route> result = await SignatureUtil.WebRequestAsync<List<Route>>(requestUrl);
             // Assert

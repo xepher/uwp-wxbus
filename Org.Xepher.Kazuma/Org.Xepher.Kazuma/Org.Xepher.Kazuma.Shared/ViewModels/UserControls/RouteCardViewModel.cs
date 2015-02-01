@@ -5,7 +5,7 @@ using Caliburn.Micro;
 using Org.Xepher.Kazuma.Models;
 using ReactiveUI;
 
-namespace Org.Xepher.Kazuma.ViewModels
+namespace Org.Xepher.Kazuma.ViewModels.UserControls
 {
     public class RouteCardViewModel
     {

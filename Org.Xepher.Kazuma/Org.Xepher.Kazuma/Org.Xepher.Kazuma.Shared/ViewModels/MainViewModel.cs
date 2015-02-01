@@ -14,6 +14,7 @@ using ReactiveUI;
 using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.System.Threading;
+using Org.Xepher.Kazuma.ViewModels.UserControls;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -45,7 +46,26 @@ namespace Org.Xepher.Kazuma.ViewModels
         {
             if (_sourceRoutes.Count == 0)
             {
-                List<Route> result = await SignatureUtil.WebRequestAsync<List<Route>>(Constants.TEMPLATE_ALL_LINES);
+                int retryCount = 0;
+                List<Route> result;
+                do
+                {
+                    string requestUrl =
+                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
+                            Constants.SETTING_USER_ID,
+                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                            SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+
+                    result = await SignatureUtil.WebRequestAsync<List<Route>>(requestUrl);
+                    if (++retryCount > 10) break;
+                } while (result == null || result.Count == 0);
+
+                if (retryCount > 10)
+                {
+                    //GlobalLoading.Instance.IsLoading = false;
+                    //MessageBox.Show("网络异常，请稍后再试！");
+                    return;
+                }
 
                 foreach (Route route in result)
                 {
@@ -60,7 +80,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             logger.Info("Total routes count: {0}", _sourceRoutes.Count);
         }
         
-        public BindableCollection<RouteCardViewModel> Routes { get; private set; }
+        public BindableCollection<RouteCardViewModel> Routes { get; set; }
 
         #region FilterData
         private string _FilterTerm;
@@ -70,7 +90,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             set
             {
                 _FilterTerm = value;
-                NotifyOfPropertyChange(() => FilterTerm);
+                base.NotifyOfPropertyChange(() => FilterTerm);
             }
         }
 

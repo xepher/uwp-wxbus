@@ -1,5 +1,6 @@
 ﻿using Microsoft.Practices.ServiceLocation;
 using System;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
+using Newtonsoft.Json;
 
 namespace Org.Xepher.Kazuma.Utils
 {
@@ -109,13 +111,8 @@ namespace Org.Xepher.Kazuma.Utils
             return requestUrl.Replace(string.Format("&secret={0}", Constants.BUS_API_SECRET), "") + "&signature=" + hashedRequestUrl;
         }
 
-        public static async Task<T> WebRequestAsync<T>(string template)
+        public static async Task<T> WebRequestAsync<T>(string requestUrl)
         {
-            string requestUrl = SignatureUtil.GetRealRequestUrl(string.Format(template,
-                Constants.SETTING_USER_ID,
-                Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
-
             Uri requestUri = new Uri(requestUrl);
 
             // resolve the dependency via ServiceLocator
@@ -135,6 +132,14 @@ namespace Org.Xepher.Kazuma.Utils
                 string result = await response.Content.ReadAsStringAsync().AsTask(cts.Token);
                 // return deserialized json object
                 return serializer.Deserialize<T>(result);
+            }
+            catch (WebException)
+            {
+                return Activator.CreateInstance<T>();
+            }
+            catch (JsonReaderException)
+            {
+                return Activator.CreateInstance<T>();
             }
             catch (Exception ex)
             {
