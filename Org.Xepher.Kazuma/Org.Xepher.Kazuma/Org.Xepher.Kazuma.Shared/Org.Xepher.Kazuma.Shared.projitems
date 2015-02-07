@@ -17,29 +17,26 @@
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Common\SuspensionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ModelBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBudData.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBusData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBus.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Segment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Station.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\StationWithRealTimeInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Constants.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Converter\DateTimeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\ISerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\JsonConvertSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SignatureUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RouteViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserControls\RouteCardViewModel.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserControls\StationCardViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\UserControls\RouteCardView.xaml.cs">
       <DependentUpon>RouteCardView.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="$(MSBuildThisFileDirectory)Views\UserControls\StationCardView.xaml.cs">
-      <DependentUpon>StationCardView.xaml</DependentUpon>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -48,10 +45,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="$(MSBuildThisFileDirectory)Views\UserControls\RouteCardView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="$(MSBuildThisFileDirectory)Views\UserControls\StationCardView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

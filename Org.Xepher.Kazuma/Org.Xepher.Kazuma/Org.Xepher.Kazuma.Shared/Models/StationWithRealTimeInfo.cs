@@ -31,6 +31,7 @@ namespace Org.Xepher.Kazuma.Models
             }
             set
             {
+                _actDateTime = value;
                 this.RaisePropertyChanged(ActDateTimePropertyName);
             }
         }
@@ -42,6 +43,7 @@ namespace Org.Xepher.Kazuma.Models
             }
             set
             {
+                _busselfId = value;
                 this.RaisePropertyChanged(BusselfIdPropertyName);
             }
         }
@@ -53,6 +55,7 @@ namespace Org.Xepher.Kazuma.Models
             }
             set
             {
+                _flagTitle = value;
                 this.RaisePropertyChanged(FlagTitlePropertyName);
             }
         }

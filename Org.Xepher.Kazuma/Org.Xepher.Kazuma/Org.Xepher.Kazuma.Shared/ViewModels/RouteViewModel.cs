@@ -8,6 +8,9 @@ using Caliburn.Micro;
 using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
 using System.Reactive;
+using Windows.UI.Xaml.Controls;
+using System.Linq;
+using ReactiveUI;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -20,23 +23,22 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         protected override void OnInitialize()
         {
-            this.SelectedRoute = new Route() { Flag = SelectedRouteFlag, RouteId = SelectedRouteId, RouteName = SelectedRouteName };
-
             Observable.StartAsync(InitSegments);
 
             base.OnInitialize();
         }
-
-        public Route SelectedRoute { get; private set; }
-
+        
         public string SelectedRouteFlag { get; set; }
 
         public string SelectedRouteId { get; set; }
 
         public string SelectedRouteName { get; set; }
 
+        public int SelectedIndex { get; private set; }
+
         private BindableCollection<Segment> _segments;
-        public BindableCollection<Segment> Segments {
+        public BindableCollection<Segment> Segments
+        {
             get
             {
                 return _segments;
@@ -60,7 +62,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS, Constants.SETTING_USER_ID,
                         Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                        SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
+                        SignatureUtil.GenerateSeqId(), SelectedRouteId,
                         Constants.BUS_API_SECRET));
 
                 result = await SignatureUtil.WebRequestAsync<BindableCollection<Segment>>(requestUrl);
@@ -79,16 +81,19 @@ namespace Org.Xepher.Kazuma.ViewModels
             //GlobalLoading.Instance.IsLoading = false;
         }
 
-        public void SelectionChanged(StationWithRealTimeInfo sender)
+        public void SelectionChanged(int sender)
         {
-            DebugLog logger = new DebugLog(typeof(string));
-            logger.Info(sender.ToString());
-            
-            // use this sender as parameter to call GetRealTimeInfo function
+            SelectedIndex = sender;
+            // 1. Get Current Index
+            // 2. Clear old value
+            // 3. Get realtime information, should wait Setments are loaded
+            Observable.StartAsync(GetRealTimeInfo);
         }
 
-        private async Task GetRealTimeInfo(StationWithRealTimeInfo station)
+        private async Task GetRealTimeInfo()
         {
+            StationWithRealTimeInfo station =_segments[SelectedIndex].List.Last();
+
             // if search is in-process, stop search this time
             //if (GlobalLoading.Instance.IsLoading) return;
             //GlobalLoading.Instance.IsLoading = true;
@@ -101,7 +106,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
                         Constants.SETTING_USER_ID, Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN,
                         Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
-                        SelectedRoute.RouteId, Constants.BUS_API_SECRET, station.SegmentId,
+                        SelectedRouteId, Constants.BUS_API_SECRET, station.SegmentId,
                         station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
                 result = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
@@ -123,45 +128,9 @@ namespace Org.Xepher.Kazuma.ViewModels
                 //MessageBox.Show(realTimeInfo.Message);
                 return;
             }
-
-            // confirm which direction
-            int indexList = 0;
-
-            if (Segments.Count == 2)
-            {
-                if (string.IsNullOrEmpty(realTimeInfo.Result[0].CurStopNo))
-                {
-                    // for wuxibus and xihuibus
-                    // circle line, with same SegmentId for two direction
-                    if (Segments[0].List[0].SegmentId == Segments[1].List[0].SegmentId)
-                    {
-                        if (int.Parse(station.StationSeq) > int.Parse(
-                            Segments[0].List.Find(s => int.Parse(s.StationSeq) == Segments[0].List.Count).StationSeq))
-                        {
-                            indexList = 1;
-                        }
-                    }
-                    else
-                    {
-                        // two one-way lines, with different SegmentsId
-                        if (station.SegmentId == Segments[1].List[0].SegmentId)
-                        {
-                            indexList = 1;
-                        }
-                    }
-                }
-                else
-                {
-                    // for xinqubus
-                    if (station.SegmentId == Segments[1].List[0].SegmentId)
-                    {
-                        indexList = 1;
-                    }
-                }
-            }
-
+            
             // clear old data
-            foreach (var station2Item in Segments[indexList].List)
+            foreach (var station2Item in Segments[SelectedIndex].List)
             {
                 if (null != station2Item.BusselfId)
                 {
@@ -174,7 +143,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             // write realtime info
             foreach (var realTimeInfoItem in realTimeInfo.Result)
             {
-                foreach (var station2Item in Segments[indexList].List)
+                foreach (var station2Item in Segments[SelectedIndex].List)
                 {
                     if (string.IsNullOrEmpty(realTimeInfoItem.CurStopNo))
                     {

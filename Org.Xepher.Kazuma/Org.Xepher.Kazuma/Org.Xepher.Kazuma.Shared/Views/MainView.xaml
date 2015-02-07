@@ -11,7 +11,7 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="13*" />
+            <RowDefinition Height="12*" />
         </Grid.RowDefinitions>
         <TextBox x:Name="FilterTerm" VerticalAlignment="Bottom"/>
         <ListView Grid.Row="1" x:Name="Routes" micro:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged($this.SelectedItem)]"/>
