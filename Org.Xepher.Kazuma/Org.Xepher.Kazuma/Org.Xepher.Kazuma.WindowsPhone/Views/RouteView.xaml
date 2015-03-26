@@ -5,7 +5,6 @@
     xmlns:local="using:Org.Xepher.Kazuma.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:micro="using:Caliburn.Micro"
     xmlns:converter="using:Org.Xepher.Kazuma.Utils.Converter"
     mc:Ignorable="d">
 
@@ -14,7 +13,7 @@
     </Page.Resources>
     
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Pivot x:Name="Segments" micro:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged($this.SelectedIndex)]">
+        <Pivot x:Name="Segments">
             <Pivot.ItemTemplate>
                 <DataTemplate>
                     <ListView ItemsSource="{Binding List}">

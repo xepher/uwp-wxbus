@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Newtonsoft.Json;
-using Org.Xepher.Kazuma.ViewModels.UserControls;
 
 namespace Org.Xepher.Kazuma.Models
 {

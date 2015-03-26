@@ -1,7 +1,6 @@
-﻿<cm:CaliburnApplication
+﻿<Application
     x:Class="Org.Xepher.Kazuma.App"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-    xmlns:cm="using:Caliburn.Micro">
-
-</cm:CaliburnApplication>
+    xmlns:local="using:Org.Xepher.Kazuma">
+</Application>

@@ -5,7 +5,6 @@
     xmlns:local="using:Org.Xepher.Kazuma.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:micro="using:Caliburn.Micro"
     xmlns:customAppBar="using:CustomAppBarDesktop"
     mc:Ignorable="d">
 
@@ -16,7 +15,25 @@
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="FilterTerm" VerticalAlignment="Bottom"/>
-        <ListView Grid.Row="1" x:Name="Routes" micro:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged($this.SelectedItem)]"/>
+        <ListView Grid.Row="1" x:Name="Routes">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <Grid MinWidth="400" Margin="0 1 0 0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1*" />
+                            <ColumnDefinition Width="3*" />
+                        </Grid.ColumnDefinitions>
+
+                        <Border Background="#C2C2C2" >
+                            <TextBlock FontSize="26" Text="{Binding RouteId}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+                        </Border>
+                        <Border Grid.Column="1" Background="#009298">
+                            <TextBlock FontSize="32" Text="{Binding RouteName}" Foreground="White" HorizontalAlignment="Right" TextWrapping="Wrap"/>
+                        </Border>
+                    </Grid>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
         <customAppBar:AppBar Grid.Row="2" Background="CornflowerBlue"
                              VerticalAlignment="Bottom">
             <customAppBar:AppBar.SecondaryCommands>

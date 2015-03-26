@@ -13,7 +13,6 @@ using Windows.UI.Xaml.Data;
 using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Caliburn.Micro;
 using Org.Xepher.Kazuma.Common;
 using Org.Xepher.Kazuma.ViewModels;
 using ReactiveUI;
@@ -23,11 +22,34 @@ namespace Org.Xepher.Kazuma.Views
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainView : Page
+    public sealed partial class MainView : Page, IViewFor<MainViewModel>
     {
         public MainView()
         {
             this.InitializeComponent();
+
+            RxApp.SuspensionHost.ObserveAppState<MainViewModel>().BindTo(this, x => x.ViewModel);
+
+            //this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);
+
+            this.Bind(ViewModel, vm => vm.Routes, v => v.Routes.ItemsSource);
+
+            this.NavigationCacheMode = NavigationCacheMode.Required;
         }
+
+        object IViewFor.ViewModel
+        {
+            get { return ViewModel; }
+            set { ViewModel = (MainViewModel)ViewModel; }
+        }
+
+        public MainViewModel ViewModel
+        {
+            get { return (MainViewModel)GetValue(ViewModelProperty); }
+            set { SetValue(ViewModelProperty, value); }
+        }
+        public static readonly DependencyProperty ViewModelProperty =
+            DependencyProperty.Register("ViewModel", typeof(MainViewModel), typeof(MainView), new PropertyMetadata(null));
+
     }
 }

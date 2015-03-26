@@ -4,7 +4,6 @@ using System.Collections.ObjectModel;
 using System.Reactive.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Caliburn.Micro;
 using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
 using System.Reactive;
@@ -16,16 +15,9 @@ namespace Org.Xepher.Kazuma.ViewModels
 {
     public class RouteViewModel : ViewModelBase
     {
-        public RouteViewModel(INavigationService navigationService)
-            : base(navigationService)
+        public RouteViewModel()
+            : base()
         {
-        }
-
-        protected override void OnInitialize()
-        {
-            Observable.StartAsync(InitSegments);
-
-            base.OnInitialize();
         }
         
         public string SelectedRouteFlag { get; set; }
@@ -36,8 +28,8 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         public int SelectedIndex { get; private set; }
 
-        private BindableCollection<Segment> _segments;
-        public BindableCollection<Segment> Segments
+        private ObservableCollection<Segment> _segments;
+        public ObservableCollection<Segment> Segments
         {
             get
             {
@@ -46,7 +38,6 @@ namespace Org.Xepher.Kazuma.ViewModels
             private set
             {
                 _segments = value;
-                base.NotifyOfPropertyChange(() => Segments);
             }
         }
 
@@ -56,7 +47,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             //GlobalLoading.Instance.IsLoading = true;
 
             int retryCount = 0;
-            BindableCollection<Segment> result;
+            ObservableCollection<Segment> result;
             do
             {
                 string requestUrl =
@@ -65,7 +56,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                         SignatureUtil.GenerateSeqId(), SelectedRouteId,
                         Constants.BUS_API_SECRET));
 
-                result = await SignatureUtil.WebRequestAsync<BindableCollection<Segment>>(requestUrl);
+                result = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
                 if (++retryCount > 10) break;
             } while (result == null || result.Count == 0);
 
