@@ -6,14 +6,24 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:micro="using:Caliburn.Micro"
+    xmlns:customAppBar="using:CustomAppBarDesktop"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="12*" />
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="FilterTerm" VerticalAlignment="Bottom"/>
         <ListView Grid.Row="1" x:Name="Routes" micro:Message.Attach="[Event SelectionChanged] = [Action SelectionChanged($this.SelectedItem)]"/>
+        <customAppBar:AppBar Grid.Row="2" Background="CornflowerBlue"
+                             VerticalAlignment="Bottom">
+            <customAppBar:AppBar.SecondaryCommands>
+                <AppBarButton x:Name="ClearCache"
+                              Label="Clear Cache"
+                              Icon="Clear" />
+            </customAppBar:AppBar.SecondaryCommands>
+        </customAppBar:AppBar>
     </Grid>
 </Page>

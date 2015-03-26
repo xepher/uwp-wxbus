@@ -15,17 +15,21 @@ using System.Reactive.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using Windows.System.Threading;
 using Org.Xepher.Kazuma.ViewModels.UserControls;
+using Windows.Storage;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        // used to cache requested data, will use MemoizingMRUCache to store later
+        // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
         private List<RouteCardViewModel> _sourceRoutes = new List<RouteCardViewModel>();
+        ApplicationDataContainer localSettings = null;
 
         public MainViewModel(INavigationService navigationService)
             : base(navigationService)
         {
+            localSettings = ApplicationData.Current.LocalSettings;
+
             #region FilterData Configuration
             FilterAsyncCommand = ReactiveCommand.CreateAsyncTask(_ => FilterData(), RxApp.TaskpoolScheduler);
 
@@ -38,16 +42,17 @@ namespace Org.Xepher.Kazuma.ViewModels
             #endregion
 
             Routes = new BindableCollection<RouteCardViewModel>();
-            
+
             Observable.StartAsync(RequestData);
         }
 
         private async Task RequestData()
         {
-            if (_sourceRoutes.Count == 0)
+            List<Route> result = await StorageHelper.ReadData<List<Route>>(ApplicationData.Current.LocalFolder, "Routes.data");
+
+            if (result.Count == 0)
             {
                 int retryCount = 0;
-                List<Route> result;
                 do
                 {
                     string requestUrl =
@@ -66,20 +71,22 @@ namespace Org.Xepher.Kazuma.ViewModels
                     //MessageBox.Show("网络异常，请稍后再试！");
                     return;
                 }
+                
+                StorageHelper.WriteData(ApplicationData.Current.LocalFolder, "Routes.data", result);
+            }
 
-                foreach (Route route in result)
-                {
-                    RouteCardViewModel routeVM = new RouteCardViewModel(route,
-                        "ms-appx:///resources/images/bus_map_mark_bus_2x.png");
-                    Routes.Add(routeVM);
-                    _sourceRoutes.Add(routeVM);
-                }
+            foreach (Route route in result)
+            {
+                RouteCardViewModel routeVM = new RouteCardViewModel(route,
+                    "ms-appx:///resources/images/bus_map_mark_bus_2x.png");
+                Routes.Add(routeVM);
+                _sourceRoutes.Add(routeVM);
             }
 
             DebugLog logger = new DebugLog(typeof(string));
             logger.Info("Total routes count: {0}", _sourceRoutes.Count);
         }
-        
+
         public BindableCollection<RouteCardViewModel> Routes { get; set; }
 
         #region FilterData
@@ -126,5 +133,13 @@ namespace Org.Xepher.Kazuma.ViewModels
                                                       .Navigate();
         }
         #endregion
+
+        #region Debug
+        private async void ClearCache()
+        {
+            await ApplicationData.Current.ClearAsync();
+        }
+
+        #endregion Debug
     }
 }

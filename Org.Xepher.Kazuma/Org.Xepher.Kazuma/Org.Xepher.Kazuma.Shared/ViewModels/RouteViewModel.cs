@@ -92,6 +92,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         private async Task GetRealTimeInfo()
         {
+            // use MemoizingMRUCache to cache realtime info
             StationWithRealTimeInfo station =_segments[SelectedIndex].List.Last();
 
             // if search is in-process, stop search this time

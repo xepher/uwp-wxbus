@@ -28,6 +28,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\ISerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\JsonConvertSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SignatureUtil.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\StorageHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RouteViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\UserControls\RouteCardViewModel.cs" />
