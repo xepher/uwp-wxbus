@@ -36,7 +36,7 @@ namespace Org.Xepher.Kazuma.Views
         object IViewFor.ViewModel
         {
             get { return ViewModel; }
-            set { ViewModel = (MainViewModel)ViewModel; }
+            set { ViewModel = (MainViewModel)value; }
         }
 
         public MainViewModel ViewModel

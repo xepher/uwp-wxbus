@@ -13,34 +13,66 @@ using ReactiveUI;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
-    public class MainViewModel : ReactiveObject
+    public class MainViewModel : ReactiveObject, IRoutableViewModel
     {
+        /* COOLSTUFF: What is UrlPathSegment
+         * 
+         * Imagine that the router state is like the path of the URL - what 
+         * would the path look like for this particular page? Maybe it would be
+         * the current user's name, or an "id". In this case, it's just a 
+         * constant. You can get the whole path via 
+         * IRoutingState.GetUrlForCurrentRoute.
+         */
+        public string UrlPathSegment
+        {
+            get { return "Main"; }
+        }
+        
+        public IScreen HostScreen { get; protected set; }
+
         // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
         private IList<Route> _sourceRoutes = new List<Route>();
 
-        public MainViewModel()
-            : base()
+        /* COOLSTUFF: Why the Screen here?
+         *
+         * Every RoutableViewModel has a pointer to its IScreen. This is really
+         * useful in a unit test runner, because you can create a dummy screen,
+         * invoke Commands / change Properties, then test to see if you navigated
+         * to the correct new screen 
+         */
+        public MainViewModel(IScreen screen)
         {
+            HostScreen = screen;
+
             #region FilterData Configuration
 
             this.ObservableForProperty(vm => vm.FilterTerm)
-               .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+               .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
                .Select(v => v.Value)
                .DistinctUntilChanged()
-               .Where(x => !string.IsNullOrWhiteSpace(x))
-               .Subscribe(_ =>
+               .Subscribe(v =>
                {
-                   ObservableCollection<Route> resultList = new ObservableCollection<Route>();
-                   foreach (Route route in _sourceRoutes)
+                   if (string.IsNullOrEmpty(v))
                    {
-                       if (string.IsNullOrEmpty(FilterTerm) || route.RouteName.Contains(FilterTerm))
-                       {
-                           resultList.Add(route);
-                       }
+                       Routes = _sourceRoutes;
                    }
-                   Routes = resultList;
+                   else
+                   {
+                       IList<Route> resultList = new List<Route>();
+                       foreach (Route route in _sourceRoutes)
+                       {
+                           if (route.RouteName.Contains(v))
+                           {
+                               resultList.Add(route);
+                           }
+                       }
+                       Routes = resultList;
+                   }
                });
 
+            #endregion
+
+            #region Navigation Configuration
             #endregion
 
             Observable.StartAsync(RequestData);
@@ -61,7 +93,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                             Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                             SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-                    Routes = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
+                    Routes = await SignatureUtil.WebRequestAsync<List<Route>>(requestUrl);
                     if (++retryCount > 10) break;
                 } while (Routes == null || Routes.Count == 0);
 
@@ -98,7 +130,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             get { return _filterTerm; }
             set { this.RaiseAndSetIfChanged(ref _filterTerm, value); }
         }
-        
+
         #endregion
 
         #region Navigation

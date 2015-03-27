@@ -29,6 +29,7 @@ namespace Org.Xepher.Kazuma
     public sealed partial class App : Application
     {
         readonly AutoSuspendHelper autoSuspendHelper;
+        public static AppBootstrapper Bootstrapper;
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
 #endif
@@ -42,8 +43,8 @@ namespace Org.Xepher.Kazuma
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             autoSuspendHelper = new AutoSuspendHelper(this);
-
-            RxApp.SuspensionHost.CreateNewAppState = () => new MainViewModel();
+            Bootstrapper = new AppBootstrapper();
+            RxApp.SuspensionHost.CreateNewAppState = () => Bootstrapper;
             RxApp.SuspensionHost.SetupDefaultSuspendResume();
         }
 
@@ -106,7 +107,7 @@ namespace Org.Xepher.Kazuma
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(MainView), e.Arguments))
+                if (!rootFrame.Navigate(typeof(Shell), e.Arguments))
                 {
                     throw new Exception("Failed to create initial page");
                 }
