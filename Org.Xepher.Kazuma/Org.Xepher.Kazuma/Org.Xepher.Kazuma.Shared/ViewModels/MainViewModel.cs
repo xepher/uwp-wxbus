@@ -50,15 +50,17 @@ namespace Org.Xepher.Kazuma.ViewModels
             #endregion
 
             #region Navigation Configuration
-
+            
             this.ObservableForProperty(vm => vm.SelectedRoute)
+                .Where(v => null != v.Value)
                 .Select(v => v.Value)
-                .DistinctUntilChanged()
+                //.DistinctUntilChanged()
                 .Subscribe(r =>
                 {
                     base.HostScreen.Router.Navigate.Execute(new RouteViewModel(base.HostScreen, r));
-                });
 
+                    this.SelectedRoute = null;
+                });
             #endregion
 
             //ClearCacheAsyncCommand = ReactiveCommand.CreateAsyncObservable(_ => Observable.Start(() =>

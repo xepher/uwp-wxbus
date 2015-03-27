@@ -36,6 +36,8 @@ namespace Org.Xepher.Kazuma.Views
 
         private void InitializeBindingSettings()
         {
+            // these binding are untestable, don't put complex logic binding in here
+
             RxApp.SuspensionHost.ObserveAppState<MainViewModel>().BindTo(this, x => x.ViewModel);
 
             this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);

@@ -50,7 +50,9 @@ namespace Org.Xepher.Kazuma
             dependencyResolver.RegisterConstant(this, typeof(IScreen));
 
             dependencyResolver.Register(() => new MainView(), typeof(IViewFor<MainViewModel>));
+#if WINDOWS_PHONE_APP
             dependencyResolver.Register(() => new RouteView(), typeof(IViewFor<RouteViewModel>));
+#endif
         }
     }
 }
