@@ -1,9 +1,9 @@
-﻿using Microsoft.Practices.ServiceLocation;
-using System;
+﻿using System;
 using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Windows.Networking;
 using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
@@ -122,7 +122,7 @@ namespace Org.Xepher.Kazuma.Utils
             HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter();
             HttpClient httpClient = new HttpClient(filter);
             httpClient.DefaultRequestHeaders.Add("UserAgent", "Org.Xepher.Kazuma.WindowsPhone; Develop for WindowsPhone;");
-            httpClient.DefaultRequestHeaders.Host = new Windows.Networking.HostName("app.wifiwx.com");
+            httpClient.DefaultRequestHeaders.Host = new HostName("app.wifiwx.com");
             httpClient.DefaultRequestHeaders.Append("KeepAlive", "true");
             httpClient.DefaultRequestHeaders.AcceptEncoding.ParseAdd("gzip");
 

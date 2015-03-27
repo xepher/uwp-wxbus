@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Runtime.Serialization;
@@ -14,20 +16,31 @@ namespace Org.Xepher.Kazuma.ViewModels
     public class MainViewModel : ReactiveObject
     {
         // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
-        private ObservableCollection<Route> _sourceRoutes = new ObservableCollection<Route>();
+        private IList<Route> _sourceRoutes = new List<Route>();
 
         public MainViewModel()
             : base()
         {
             #region FilterData Configuration
-            //FilterAsyncCommand = ReactiveCommand.CreateAsyncTask(_ => FilterData(), RxApp.TaskpoolScheduler);
 
-            //this.ObservableForProperty(vm => vm.FilterTerm)
-            //    .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
-            //    .Select(v => v.Value)
-            //    .DistinctUntilChanged()
-            //    .Where(x => !string.IsNullOrWhiteSpace(x))
-            //    .InvokeCommand(FilterAsyncCommand);
+            this.ObservableForProperty(vm => vm.FilterTerm)
+               .Throttle(TimeSpan.FromMilliseconds(500), RxApp.MainThreadScheduler)
+               .Select(v => v.Value)
+               .DistinctUntilChanged()
+               .Where(x => !string.IsNullOrWhiteSpace(x))
+               .Subscribe(_ =>
+               {
+                   ObservableCollection<Route> resultList = new ObservableCollection<Route>();
+                   foreach (Route route in _sourceRoutes)
+                   {
+                       if (string.IsNullOrEmpty(FilterTerm) || route.RouteName.Contains(FilterTerm))
+                       {
+                           resultList.Add(route);
+                       }
+                   }
+                   Routes = resultList;
+               });
+
             #endregion
 
             Observable.StartAsync(RequestData);
@@ -68,9 +81,9 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
         }
 
-        private ObservableCollection<Route> _routes;
-        
-        public ObservableCollection<Route> Routes
+        private IList<Route> _routes;
+
+        public IList<Route> Routes
         {
             get { return _routes; }
             set { this.RaiseAndSetIfChanged(ref _routes, value); }
@@ -78,33 +91,14 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         #region FilterData
 
-        private string _filterTerm;
-        
+        private string _filterTerm = string.Empty;
+
         public string FilterTerm
         {
             get { return _filterTerm; }
             set { this.RaiseAndSetIfChanged(ref _filterTerm, value); }
         }
-
-        //[IgnoreDataMember]
-        //public ReactiveCommand<Unit> FilterAsyncCommand { get; protected set; }
-
-        //private Task<Unit> FilterData()
-        //{
-        //    return Task.Run(() =>
-        //    {
-        //        Routes.Clear();
-        //        foreach (Route route in _sourceRoutes)
-        //        {
-        //            if (string.IsNullOrEmpty(FilterTerm) || route.RouteName.Contains(FilterTerm))
-        //            {
-        //                Routes.Add(route);
-        //            }
-        //        }
-
-        //        return new Unit();
-        //    });
-        //}
+        
         #endregion
 
         #region Navigation

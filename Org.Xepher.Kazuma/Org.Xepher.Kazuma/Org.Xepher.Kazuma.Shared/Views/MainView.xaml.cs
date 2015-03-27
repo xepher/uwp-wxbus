@@ -28,14 +28,10 @@ namespace Org.Xepher.Kazuma.Views
         {
             this.InitializeComponent();
 
-            RxApp.SuspensionHost.ObserveAppState<MainViewModel>().BindTo(this, x => x.ViewModel);
-
-            //this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);
-
-            this.Bind(ViewModel, vm => vm.Routes, v => v.Routes.ItemsSource);
-
-            this.NavigationCacheMode = NavigationCacheMode.Required;
+            InitializeBindingSettings();
         }
+
+        #region BasicBinding for View and ViewModel
 
         object IViewFor.ViewModel
         {
@@ -51,5 +47,17 @@ namespace Org.Xepher.Kazuma.Views
         public static readonly DependencyProperty ViewModelProperty =
             DependencyProperty.Register("ViewModel", typeof(MainViewModel), typeof(MainView), new PropertyMetadata(null));
 
+        private void InitializeBindingSettings()
+        {
+            RxApp.SuspensionHost.ObserveAppState<MainViewModel>().BindTo(this, x => x.ViewModel);
+
+            this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);
+
+            this.Bind(ViewModel, vm => vm.Routes, v => v.Routes.ItemsSource);
+
+            this.NavigationCacheMode = NavigationCacheMode.Required;
+        }
+
+        #endregion
     }
 }
