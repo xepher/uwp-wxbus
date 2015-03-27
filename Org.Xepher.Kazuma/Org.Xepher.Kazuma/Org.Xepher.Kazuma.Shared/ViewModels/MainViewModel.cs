@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Reactive;
 using System.Reactive.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Org.Xepher.Kazuma.Models;
@@ -13,36 +10,15 @@ using ReactiveUI;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
-    public class MainViewModel : ReactiveObject, IRoutableViewModel
+    public class MainViewModel : ViewModelBase
     {
-        /* COOLSTUFF: What is UrlPathSegment
-         * 
-         * Imagine that the router state is like the path of the URL - what 
-         * would the path look like for this particular page? Maybe it would be
-         * the current user's name, or an "id". In this case, it's just a 
-         * constant. You can get the whole path via 
-         * IRoutingState.GetUrlForCurrentRoute.
-         */
-        public string UrlPathSegment
-        {
-            get { return "Main"; }
-        }
-        
-        public IScreen HostScreen { get; protected set; }
-
         // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
         private IList<Route> _sourceRoutes = new List<Route>();
 
-        /* COOLSTUFF: Why the Screen here?
-         *
-         * Every RoutableViewModel has a pointer to its IScreen. This is really
-         * useful in a unit test runner, because you can create a dummy screen,
-         * invoke Commands / change Properties, then test to see if you navigated
-         * to the correct new screen 
-         */
         public MainViewModel(IScreen screen)
+            : base(screen)
         {
-            HostScreen = screen;
+            PathSegment = "Main";
 
             #region FilterData Configuration
 

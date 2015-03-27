@@ -18,6 +18,7 @@ using Windows.UI.Xaml.Media.Animation;
 using Windows.UI.Xaml.Navigation;
 using Org.Xepher.Kazuma.ViewModels;
 using Org.Xepher.Kazuma.Views;
+using Splat;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -29,7 +30,6 @@ namespace Org.Xepher.Kazuma
     public sealed partial class App : Application
     {
         readonly AutoSuspendHelper autoSuspendHelper;
-        public static AppBootstrapper Bootstrapper;
 #if WINDOWS_PHONE_APP
         private TransitionCollection transitions;
 #endif
@@ -43,8 +43,12 @@ namespace Org.Xepher.Kazuma
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             autoSuspendHelper = new AutoSuspendHelper(this);
-            Bootstrapper = new AppBootstrapper();
-            RxApp.SuspensionHost.CreateNewAppState = () => Bootstrapper;
+
+            // Register Appbootstrapper itself, other register should put in Appbootstrapper
+            AppBootstrapper bootstrapper = new AppBootstrapper();
+            Locator.CurrentMutable.RegisterConstant(bootstrapper, typeof(AppBootstrapper));
+            
+            RxApp.SuspensionHost.CreateNewAppState = () => bootstrapper;
             RxApp.SuspensionHost.SetupDefaultSuspendResume();
         }
 

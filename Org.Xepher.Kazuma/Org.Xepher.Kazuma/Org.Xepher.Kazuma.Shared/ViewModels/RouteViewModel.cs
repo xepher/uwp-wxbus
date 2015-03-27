@@ -15,9 +15,10 @@ namespace Org.Xepher.Kazuma.ViewModels
 {
     public class RouteViewModel : ViewModelBase
     {
-        public RouteViewModel()
-            : base()
+        public RouteViewModel(IScreen screen)
+            : base(screen)
         {
+            PathSegment = "Route";
         }
         
         public string SelectedRouteFlag { get; set; }
