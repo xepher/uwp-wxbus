@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -18,7 +19,7 @@ namespace Org.Xepher.Kazuma.ViewModels
         public MainViewModel(IScreen screen)
             : base(screen)
         {
-            PathSegment = "Main";
+            base.PathSegment = "Main";
 
             #region FilterData Configuration
 
@@ -49,14 +50,29 @@ namespace Org.Xepher.Kazuma.ViewModels
             #endregion
 
             #region Navigation Configuration
+
+            this.ObservableForProperty(vm => vm.SelectedRoute)
+                .Select(v => v.Value)
+                .DistinctUntilChanged()
+                .Subscribe(r =>
+                {
+                    base.HostScreen.Router.Navigate.Execute(new RouteViewModel(base.HostScreen, r));
+                });
+
             #endregion
+
+            //ClearCacheAsyncCommand = ReactiveCommand.CreateAsyncObservable(_ => Observable.Start(() =>
+            //{
+            //    Routes.Clear();
+            //    _sourceRoutes = new List<Route>();
+            //}));
 
             Observable.StartAsync(RequestData);
         }
 
         private async Task RequestData()
         {
-            Routes = await StorageHelper.ReadData<ObservableCollection<Route>>(ApplicationData.Current.LocalFolder, "Routes.data");
+            Routes = await StorageHelper.ReadData<List<Route>>(ApplicationData.Current.LocalFolder, "Routes.data");
 
             if (null == Routes || Routes.Count == 0)
             {
@@ -109,21 +125,20 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         #endregion
 
-        #region Navigation
-        public void SelectionChanged(Route sender)
+        #region Navigation parameter
+
+        private Route _selectedRoute;
+
+        public Route SelectedRoute
         {
-            //navigationService.UriFor<RouteViewModel>().WithParam(x => x.SelectedRouteFlag, sender.Flag)
-            //                                          .WithParam(x => x.SelectedRouteId, sender.RouteId)
-            //                                          .WithParam(x => x.SelectedRouteName, sender.RouteName)
-            //                                          .Navigate();
+            get { return _selectedRoute; }
+            set { this.RaiseAndSetIfChanged(ref _selectedRoute, value); }
         }
         #endregion
 
         #region Debug
-        private async void ClearCache()
-        {
-            await ApplicationData.Current.ClearAsync();
-        }
+
+        //public ReactiveCommand<Unit> ClearCacheAsyncCommand { get; protected set; }
 
         #endregion Debug
     }

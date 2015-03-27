@@ -9,83 +9,94 @@ using Org.Xepher.Kazuma.Utils;
 using System.Reactive;
 using Windows.UI.Xaml.Controls;
 using System.Linq;
+using Windows.Storage;
 using ReactiveUI;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
     public class RouteViewModel : ViewModelBase
     {
-        public RouteViewModel(IScreen screen)
+        public RouteViewModel(IScreen screen, Route selectedRoute)
             : base(screen)
         {
-            PathSegment = "Route";
+            base.PathSegment = "Route";
+            this.SelectedRoute = selectedRoute;
+
+            #region Query Settings
+
+            this.ObservableForProperty(vm => vm.SelectedSegmentIndex)
+                .Subscribe(i =>
+                {
+                    Observable.StartAsync(GetRealTimeInfo);
+                });
+
+            this.ObservableForProperty(vm=>vm.Segments)
+                .Subscribe(i =>
+                {
+                    Observable.StartAsync(GetRealTimeInfo);
+                });
+            
+            #endregion
+
+            Observable.StartAsync(InitSegments);
         }
-        
-        public string SelectedRouteFlag { get; set; }
 
-        public string SelectedRouteId { get; set; }
-
-        public string SelectedRouteName { get; set; }
-
-        public int SelectedIndex { get; private set; }
-
-        private ObservableCollection<Segment> _segments;
-        public ObservableCollection<Segment> Segments
+        public Route SelectedRoute { get; private set; }
+       
+        private int _selectedSegmentIndex;
+        public int SelectedSegmentIndex
         {
-            get
-            {
-                return _segments;
-            }
-            private set
-            {
-                _segments = value;
-            }
+            get { return _selectedSegmentIndex; }
+            set { this.RaiseAndSetIfChanged(ref _selectedSegmentIndex, value); }
+        }
+
+        private IList<Segment> _segments;
+        public IList<Segment> Segments
+        {
+            get { return _segments; }
+            set { this.RaiseAndSetIfChanged(ref _segments, value); }
         }
 
         private async Task InitSegments()
         {
-            //if (GlobalLoading.Instance.IsLoading) return;
-            //GlobalLoading.Instance.IsLoading = true;
+            Segments =
+                await
+                    StorageHelper.ReadData<List<Segment>>(ApplicationData.Current.LocalFolder,
+                        String.Format("{0}.data", SelectedRoute.RouteId));
 
-            int retryCount = 0;
-            ObservableCollection<Segment> result;
-            do
+            if (null == Segments || Segments.Count == 0)
             {
-                string requestUrl =
-                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS, Constants.SETTING_USER_ID,
-                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                        SignatureUtil.GenerateSeqId(), SelectedRouteId,
-                        Constants.BUS_API_SECRET));
+                int retryCount = 0;
+                IList<Segment> result;
+                do
+                {
+                    string requestUrl =
+                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS,
+                            Constants.SETTING_USER_ID,
+                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                            SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
+                            Constants.BUS_API_SECRET));
 
-                result = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
-                if (++retryCount > 10) break;
-            } while (result == null || result.Count == 0);
+                    result = await SignatureUtil.WebRequestAsync<List<Segment>>(requestUrl);
+                    if (++retryCount > 10) break;
+                } while (result == null || result.Count == 0);
 
-            if (retryCount > 10)
-            {
-                //GlobalLoading.Instance.IsLoading = false;
-                //MessageBox.Show("网络异常，请稍后再试！");
-                return;
+                if (retryCount > 10)
+                {
+                    //GlobalLoading.Instance.IsLoading = false;
+                    //MessageBox.Show("网络异常，请稍后再试！");
+                    return;
+                }
+
+                Segments = result;
+                StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format("{0}.data", SelectedRoute.RouteId), Segments);
             }
-
-            Segments = result;
-
-            //GlobalLoading.Instance.IsLoading = false;
-        }
-
-        public void SelectionChanged(int sender)
-        {
-            SelectedIndex = sender;
-            // 1. Get Current Index
-            // 2. Clear old value
-            // 3. Get realtime information, should wait Setments are loaded
-            Observable.StartAsync(GetRealTimeInfo);
         }
 
         private async Task GetRealTimeInfo()
         {
             // use MemoizingMRUCache to cache realtime info
-            StationWithRealTimeInfo station =_segments[SelectedIndex].List.Last();
+            StationWithRealTimeInfo station =_segments[SelectedSegmentIndex].List.Last();
 
             // if search is in-process, stop search this time
             //if (GlobalLoading.Instance.IsLoading) return;
@@ -99,7 +110,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
                         Constants.SETTING_USER_ID, Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN,
                         Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
-                        SelectedRouteId, Constants.BUS_API_SECRET, station.SegmentId,
+                        SelectedRoute.RouteId, Constants.BUS_API_SECRET, station.SegmentId,
                         station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
                 result = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
@@ -123,7 +134,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
             
             // clear old data
-            foreach (var station2Item in Segments[SelectedIndex].List)
+            foreach (var station2Item in Segments[SelectedSegmentIndex].List)
             {
                 if (null != station2Item.BusselfId)
                 {
@@ -136,7 +147,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             // write realtime info
             foreach (var realTimeInfoItem in realTimeInfo.Result)
             {
-                foreach (var station2Item in Segments[SelectedIndex].List)
+                foreach (var station2Item in Segments[SelectedSegmentIndex].List)
                 {
                     if (string.IsNullOrEmpty(realTimeInfoItem.CurStopNo))
                     {

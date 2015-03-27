@@ -110,6 +110,10 @@
       <HintPath>..\..\packages\reactiveui-core.6.4.0.1\lib\Portable-Win81+WPA81\ReactiveUI.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="ReactiveUI.Events, Version=6.4.0.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\reactiveui-events.6.4.0.1\lib\WPA81\ReactiveUI.Events.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Splat, Version=1.6.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Splat.1.6.2\lib\Portable-Win81+Wpa81\Splat.dll</HintPath>
       <Private>True</Private>

@@ -2,9 +2,6 @@
 using Org.Xepher.Kazuma.Views;
 using ReactiveUI;
 using Splat;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Org.Xepher.Kazuma
 {
@@ -53,6 +50,7 @@ namespace Org.Xepher.Kazuma
             dependencyResolver.RegisterConstant(this, typeof(IScreen));
 
             dependencyResolver.Register(() => new MainView(), typeof(IViewFor<MainViewModel>));
+            dependencyResolver.Register(() => new RouteView(), typeof(IViewFor<RouteViewModel>));
         }
     }
 }

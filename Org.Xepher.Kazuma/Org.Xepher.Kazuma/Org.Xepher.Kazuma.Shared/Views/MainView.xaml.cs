@@ -1,19 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
+﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
-using Org.Xepher.Kazuma.Common;
 using Org.Xepher.Kazuma.ViewModels;
 using ReactiveUI;
 
@@ -54,6 +41,10 @@ namespace Org.Xepher.Kazuma.Views
             this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);
 
             this.Bind(ViewModel, vm => vm.Routes, v => v.Routes.ItemsSource);
+
+            this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
+
+            //this.BindCommand(ViewModel, vm => vm.ClearCacheAsyncCommand, v => v.ClearCache);
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
