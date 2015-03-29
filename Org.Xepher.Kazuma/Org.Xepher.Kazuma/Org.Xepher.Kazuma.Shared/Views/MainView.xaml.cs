@@ -3,13 +3,16 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
 using Org.Xepher.Kazuma.ViewModels;
 using ReactiveUI;
+using Splat;
+using System;
+using System.Reactive.Linq;
 
 namespace Org.Xepher.Kazuma.Views
 {
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
     /// </summary>
-    public sealed partial class MainView : Page, IViewFor<MainViewModel>
+    public sealed partial class MainView : Page, IViewFor<MainViewModel>, IEnableLogger
     {
         public MainView()
         {
@@ -38,7 +41,7 @@ namespace Org.Xepher.Kazuma.Views
         {
             // these binding are untestable, don't put complex logic binding in here
 
-            RxApp.SuspensionHost.ObserveAppState<MainViewModel>().BindTo(this, x => x.ViewModel);
+            //RxApp.SuspensionHost.ObserveAppState<MainViewModel>().BindTo(this, x => x.ViewModel);
 
             this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);
 
@@ -47,6 +50,11 @@ namespace Org.Xepher.Kazuma.Views
             this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
 
             //this.BindCommand(ViewModel, vm => vm.ClearCacheAsyncCommand, v => v.ClearCache);
+
+            //this.WhenAnyObservable(v => v.ViewModel.ClearCacheAsyncCommand).Subscribe(_ =>
+            //{
+            //    LogHost.Default.Debug("button clicked!!!");
+            //});
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }

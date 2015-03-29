@@ -1,8 +1,9 @@
 ﻿using ReactiveUI;
+using Splat;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
-    public abstract class ViewModelBase : ReactiveObject, IRoutableViewModel
+    public abstract class ViewModelBase : ReactiveObject, IRoutableViewModel, IEnableLogger
     {
         public string PathSegment { get; protected set; }
 

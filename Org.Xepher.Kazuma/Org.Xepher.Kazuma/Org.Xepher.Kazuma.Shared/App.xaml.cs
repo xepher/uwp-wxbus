@@ -47,7 +47,8 @@ namespace Org.Xepher.Kazuma
             // Register Appbootstrapper itself, other register should put in Appbootstrapper
             AppBootstrapper bootstrapper = new AppBootstrapper();
             Locator.CurrentMutable.RegisterConstant(bootstrapper, typeof(AppBootstrapper));
-            
+
+            // you should handle the AppState by yourself
             RxApp.SuspensionHost.CreateNewAppState = () => bootstrapper;
             RxApp.SuspensionHost.SetupDefaultSuspendResume();
         }

@@ -1,7 +1,9 @@
-﻿using Org.Xepher.Kazuma.ViewModels;
+﻿using System;
+using Org.Xepher.Kazuma.ViewModels;
 using Org.Xepher.Kazuma.Views;
 using ReactiveUI;
 using Splat;
+using Org.Xepher.Kazuma.Utils.Logger;
 
 namespace Org.Xepher.Kazuma
 {
@@ -39,7 +41,11 @@ namespace Org.Xepher.Kazuma
 
             // TODO: This is a good place to set up any other app 
             // startup tasks, like setting the logging level
+#if DEBUG
             LogHost.Default.Level = LogLevel.Debug;
+#else
+            LogHost.Default.Level = LogLevel.Info;
+#endif
 
             // Navigate to the opening page of the application
             Router.Navigate.Execute(new MainViewModel(this));
@@ -47,6 +53,9 @@ namespace Org.Xepher.Kazuma
 
         private void RegisterParts(IMutableDependencyResolver dependencyResolver)
         {
+#if DEBUG
+            dependencyResolver.RegisterConstant(new ConsoleLogger(), typeof(ILogger));
+#endif
             dependencyResolver.RegisterConstant(this, typeof(IScreen));
 
             dependencyResolver.Register(() => new MainView(), typeof(IViewFor<MainViewModel>));

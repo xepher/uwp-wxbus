@@ -8,6 +8,7 @@ using Windows.Storage;
 using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
+using Splat;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -50,7 +51,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             #endregion
 
             #region Navigation Configuration
-            
+
             this.ObservableForProperty(vm => vm.SelectedRoute)
                 .Where(v => null != v.Value)
                 .Select(v => v.Value)
@@ -63,11 +64,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 });
             #endregion
 
-            //ClearCacheAsyncCommand = ReactiveCommand.CreateAsyncObservable(_ => Observable.Start(() =>
-            //{
-            //    Routes.Clear();
-            //    _sourceRoutes = new List<Route>();
-            //}));
+            //ClearCacheAsyncCommand = ReactiveCommand.Create();
 
             Observable.StartAsync(RequestData);
         }
@@ -78,6 +75,9 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (null == Routes || Routes.Count == 0)
             {
+#if DEBUG
+                this.Log().Debug("Load Routes via internet");
+#endif
                 int retryCount = 0;
                 do
                 {
@@ -99,6 +99,12 @@ namespace Org.Xepher.Kazuma.ViewModels
                 }
 
                 StorageHelper.WriteData(ApplicationData.Current.LocalFolder, "Routes.data", Routes);
+            }
+            else
+            {
+#if DEBUG
+                this.Log().Debug("Load Routes via LocalFolder");
+#endif
             }
 
             foreach (Route route in Routes)
@@ -140,7 +146,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         #region Debug
 
-        //public ReactiveCommand<Unit> ClearCacheAsyncCommand { get; protected set; }
+        //public ReactiveCommand<object> ClearCacheAsyncCommand { get; protected set; }
 
         #endregion Debug
     }

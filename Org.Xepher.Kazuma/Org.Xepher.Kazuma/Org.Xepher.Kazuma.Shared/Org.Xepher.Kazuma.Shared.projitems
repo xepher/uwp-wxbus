@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Converter\DateTimeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\ISerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\JsonConvertSerializer.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\Logger\ConsoleLogger.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SignatureUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\StorageHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />

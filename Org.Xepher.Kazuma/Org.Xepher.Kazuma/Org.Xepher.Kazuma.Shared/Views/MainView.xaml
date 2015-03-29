@@ -36,11 +36,11 @@
         </ListView>
         <customAppBar:AppBar Grid.Row="2" Background="CornflowerBlue"
                              VerticalAlignment="Bottom">
-            <customAppBar:AppBar.SecondaryCommands>
+            <customAppBar:AppBar.PrimaryCommands>
                 <AppBarButton x:Name="ClearCache"
                               Label="Clear Cache"
                               Icon="Clear" />
-            </customAppBar:AppBar.SecondaryCommands>
+            </customAppBar:AppBar.PrimaryCommands>
         </customAppBar:AppBar>
     </Grid>
 </Page>
