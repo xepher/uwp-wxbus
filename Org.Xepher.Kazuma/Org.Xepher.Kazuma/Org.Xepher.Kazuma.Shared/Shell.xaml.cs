@@ -23,7 +23,7 @@ namespace Org.Xepher.Kazuma
     /// </summary>
     public sealed partial class Shell : Page
     {
-        public AppBootstrapper AppBootstrapper { get; protected set; }
+        public AppBootstrapper AppBootstrapper { get; private set; }
 
         public Shell()
         {

@@ -53,11 +53,6 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="$(MSBuildThisFileDirectory)Resources\Images\bus_map_mark_bus_2x.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Resources\Images\microsoft-sdk.png" />
-    <Content Include="$(MSBuildThisFileDirectory)Resources\Images\windows-sdk.png" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="$(MSBuildThisFileDirectory)Utils\IoC\" />
   </ItemGroup>
 </Project>
