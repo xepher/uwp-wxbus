@@ -2,15 +2,13 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reactive.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
-using System.Reactive;
-using Windows.UI.Xaml.Controls;
 using System.Linq;
 using Windows.Storage;
 using ReactiveUI;
+using Splat;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -22,27 +20,37 @@ namespace Org.Xepher.Kazuma.ViewModels
             base.PathSegment = "Route";
             this.SelectedRoute = selectedRoute;
 
-            #region Query Settings
+            #region Query Configuration
 
-            this.ObservableForProperty(vm => vm.SelectedSegmentIndex)
-                .Subscribe(i =>
-                {
-                    Observable.StartAsync(GetRealTimeInfo);
-                });
+            //this.WhenAnyValue(vm => vm.SelectedSegmentIndex, vm => vm.Segments, vm => vm.IsBusy, (x, y, z) => y.Count > 0 && !z)
+            //    .Subscribe(async _ => await GetRealTimeInfo());
 
-            this.ObservableForProperty(vm=>vm.Segments)
-                .Subscribe(i =>
-                {
-                    Observable.StartAsync(GetRealTimeInfo);
-                });
-            
-            #endregion
+            #endregion Query Configuration
 
-            Observable.StartAsync(InitSegments);
+            #region Refresh Data Configuration
+
+            RefreshCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
+
+            RefreshCommand.Subscribe(async _ =>
+            {
+                Segments.Clear();
+                await RequestInternetData();
+            });
+
+            SearchCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
+
+            SearchCommand.Subscribe(async _ =>
+            {
+                await GetRealTimeInfo();
+            });
+
+            #endregion Refresh Data Configuration
+
+            Observable.StartAsync(RequestLocalData);
         }
 
         public Route SelectedRoute { get; private set; }
-       
+
         private int _selectedSegmentIndex;
         public int SelectedSegmentIndex
         {
@@ -57,46 +65,65 @@ namespace Org.Xepher.Kazuma.ViewModels
             set { this.RaiseAndSetIfChanged(ref _segments, value); }
         }
 
-        private async Task InitSegments()
+        private async Task RequestLocalData()
         {
+#if DEBUG
+            this.Log().Debug("Load Segments via LocalFolder");
+#endif
+            IsBusy = true;
+
             Segments =
                 await
-                    StorageHelper.ReadData<List<Segment>>(ApplicationData.Current.LocalFolder,
+                    StorageHelper.ReadData<ObservableCollection<Segment>>(ApplicationData.Current.LocalFolder,
                         String.Format("{0}.data", SelectedRoute.RouteId));
 
             if (null == Segments || Segments.Count == 0)
             {
-                int retryCount = 0;
-                IList<Segment> result;
-                do
-                {
-                    string requestUrl =
-                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS,
-                            Constants.SETTING_USER_ID,
-                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                            SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
-                            Constants.BUS_API_SECRET));
-
-                    result = await SignatureUtil.WebRequestAsync<List<Segment>>(requestUrl);
-                    if (++retryCount > 10) break;
-                } while (result == null || result.Count == 0);
-
-                if (retryCount > 10)
-                {
-                    //GlobalLoading.Instance.IsLoading = false;
-                    //MessageBox.Show("网络异常，请稍后再试！");
-                    return;
-                }
-
-                Segments = result;
-                StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format("{0}.data", SelectedRoute.RouteId), Segments);
+                await RequestInternetData();
             }
+
+            IsBusy = false;
+        }
+
+        private async Task RequestInternetData()
+        {
+#if DEBUG
+            this.Log().Debug("Load Segments via internet");
+#endif
+            IsBusy = true;
+
+            int retryCount = 0;
+            do
+            {
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS,
+                        Constants.SETTING_USER_ID,
+                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
+                        Constants.BUS_API_SECRET));
+
+                Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
+                if (++retryCount > 10) break;
+            } while (Segments == null || Segments.Count == 0);
+
+            if (retryCount > 10)
+            {
+                //GlobalLoading.Instance.IsLoading = false;
+                //MessageBox.Show("网络异常，请稍后再试！");
+                return;
+            }
+
+            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format("{0}.data", SelectedRoute.RouteId), Segments);
+
+            IsBusy = false;
         }
 
         private async Task GetRealTimeInfo()
         {
+            IsBusy = true;
+
             // use MemoizingMRUCache to cache realtime info
-            StationWithRealTimeInfo station =_segments[SelectedSegmentIndex].List.Last();
+            StationWithRealTimeInfo station = _segments[SelectedSegmentIndex].List.Last();
 
             // if search is in-process, stop search this time
             //if (GlobalLoading.Instance.IsLoading) return;
@@ -132,7 +159,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 //MessageBox.Show(realTimeInfo.Message);
                 return;
             }
-            
+
             // clear old data
             foreach (var station2Item in Segments[SelectedSegmentIndex].List)
             {
@@ -172,8 +199,23 @@ namespace Org.Xepher.Kazuma.ViewModels
                     }
                 }
             }
-
-            //GlobalLoading.Instance.IsLoading = false;
+            
+            IsBusy = false;
         }
+
+        #region Refresh Data
+
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { this.RaiseAndSetIfChanged(ref _isBusy, value); }
+        }
+
+        public ReactiveCommand<object> RefreshCommand { get; protected set; }
+
+        public ReactiveCommand<object> SearchCommand { get; protected set; }
+
+        #endregion Refresh Data
     }
 }

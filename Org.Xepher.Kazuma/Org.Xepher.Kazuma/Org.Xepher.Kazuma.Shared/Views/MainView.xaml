@@ -7,12 +7,21 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:customAppBar="using:CustomAppBarDesktop"
     mc:Ignorable="d">
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact" Opacity="0.6">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
+            </CommandBar.PrimaryCommands>
+            <CommandBar.SecondaryCommands>
+                <AppBarButton x:Name="Setting" Icon="Setting" Label="Setting" IsEnabled="False" />
+            </CommandBar.SecondaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="12*" />
-            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
         <TextBox x:Name="FilterTerm"/>
         <ListView Grid.Row="1" x:Name="Routes">
@@ -34,13 +43,5 @@
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
-        <customAppBar:AppBar Grid.Row="2" Background="CornflowerBlue"
-                             VerticalAlignment="Bottom">
-            <customAppBar:AppBar.PrimaryCommands>
-                <AppBarButton x:Name="ClearCache"
-                              Label="Clear Cache"
-                              Icon="Clear" />
-            </customAppBar:AppBar.PrimaryCommands>
-        </customAppBar:AppBar>
     </Grid>
 </Page>

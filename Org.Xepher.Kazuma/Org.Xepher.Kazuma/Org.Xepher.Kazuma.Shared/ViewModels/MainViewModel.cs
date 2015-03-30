@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Windows.Storage;
@@ -15,7 +14,7 @@ namespace Org.Xepher.Kazuma.ViewModels
     public class MainViewModel : ViewModelBase
     {
         // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
-        private IList<Route> _sourceRoutes = new List<Route>();
+        private IList<Route> _sourceRoutes = new ObservableCollection<Route>();
 
         public MainViewModel(IScreen screen)
             : base(screen)
@@ -25,33 +24,33 @@ namespace Org.Xepher.Kazuma.ViewModels
             #region FilterData Configuration
 
             this.ObservableForProperty(vm => vm.FilterTerm)
-               .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
-               .Select(v => v.Value)
-               .DistinctUntilChanged()
-               .Subscribe(v =>
-               {
-                   if (string.IsNullOrEmpty(v))
-                   {
-                       Routes = _sourceRoutes;
-                   }
-                   else
-                   {
-                       IList<Route> resultList = new List<Route>();
-                       foreach (Route route in _sourceRoutes)
-                       {
-                           if (route.RouteName.Contains(v))
-                           {
-                               resultList.Add(route);
-                           }
-                       }
-                       Routes = resultList;
-                   }
-               });
+                .Throttle(TimeSpan.FromMilliseconds(300), RxApp.MainThreadScheduler)
+                .Select(v => v.Value)
+                .DistinctUntilChanged()
+                .Subscribe(v =>
+                {
+                    if (string.IsNullOrEmpty(v))
+                    {
+                        Routes = _sourceRoutes;
+                    }
+                    else
+                    {
+                        IList<Route> resultList = new ObservableCollection<Route>();
+                        foreach (Route route in _sourceRoutes)
+                        {
+                            if (route.RouteName.Contains(v))
+                            {
+                                resultList.Add(route);
+                            }
+                        }
+                        Routes = resultList;
+                    }
+                });
 
-            #endregion
+            #endregion FilterData Configuration
 
             #region Navigation Configuration
-
+            // RouteView
             this.ObservableForProperty(vm => vm.SelectedRoute)
                 .Where(v => null != v.Value)
                 .Select(v => v.Value)
@@ -62,55 +61,104 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                     this.SelectedRoute = null;
                 });
-            #endregion
 
-            //ClearCacheAsyncCommand = ReactiveCommand.Create();
+            // SettingsView
+            NavigateSettingsCommand = ReactiveCommand.Create();
 
-            Observable.StartAsync(RequestData);
+            NavigateSettingsCommand.Subscribe(_ =>
+            {
+                base.HostScreen.Router.Navigate.Execute(new SettingsViewModel(base.HostScreen));
+            });
+
+            #endregion Navigation Configuration
+
+            #region Refresh Data Configuration
+
+            RefreshCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
+
+            RefreshCommand.Subscribe(async _ =>
+            {
+                _sourceRoutes.Clear();
+                Routes.Clear();
+                await RequestInternetData();
+            });
+
+            // don't use ToProperty(), because the ToProperty() is a Lazy Observation
+            // https://github.com/reactiveui/ReactiveUI/blob/master/docs/basics/to-property.md
+            this.WhenAny(vm => vm.IsBusy, x => x.Value)
+                .Select(x => !x)
+                .Subscribe(x =>
+                {
+                    IsEnabled = x;
+                });
+            
+            #endregion Refresh Data Configuration
+
+            Observable.StartAsync(RequestLocalData);
         }
 
-        private async Task RequestData()
+        private void BindSourceRoutes()
         {
-            Routes = await StorageHelper.ReadData<List<Route>>(ApplicationData.Current.LocalFolder, "Routes.data");
-
-            if (null == Routes || Routes.Count == 0)
-            {
-#if DEBUG
-                this.Log().Debug("Load Routes via internet");
-#endif
-                int retryCount = 0;
-                do
-                {
-                    string requestUrl =
-                        SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
-                            Constants.SETTING_USER_ID,
-                            Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
-                            SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
-
-                    Routes = await SignatureUtil.WebRequestAsync<List<Route>>(requestUrl);
-                    if (++retryCount > 10) break;
-                } while (Routes == null || Routes.Count == 0);
-
-                if (retryCount > 10)
-                {
-                    //GlobalLoading.Instance.IsLoading = false;
-                    //MessageBox.Show("网络异常，请稍后再试！");
-                    return;
-                }
-
-                StorageHelper.WriteData(ApplicationData.Current.LocalFolder, "Routes.data", Routes);
-            }
-            else
-            {
-#if DEBUG
-                this.Log().Debug("Load Routes via LocalFolder");
-#endif
-            }
-
             foreach (Route route in Routes)
             {
                 _sourceRoutes.Add(route);
             }
+        }
+
+        private async Task RequestLocalData()
+        {
+#if DEBUG
+            this.Log().Debug("Load Routes via LocalFolder");
+#endif
+            IsBusy = true;
+
+            Routes = await StorageHelper.ReadData<ObservableCollection<Route>>(ApplicationData.Current.LocalFolder, "Routes.data");
+
+            if (null == Routes || Routes.Count == 0)
+            {
+                await RequestInternetData();
+            }
+            else
+            {
+                BindSourceRoutes();
+            }
+
+            IsBusy = false;
+        }
+
+        private async Task RequestInternetData()
+        {
+#if DEBUG
+            this.Log().Debug("Load Routes via internet");
+#endif
+
+            IsBusy = true;
+
+            int retryCount = 0;
+            do
+            {
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
+                        Constants.SETTING_USER_ID,
+                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+
+                Routes = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
+                if (++retryCount > 10) break;
+            } while (Routes == null || Routes.Count == 0);
+
+            if (retryCount > 10)
+            {
+                //GlobalLoading.Instance.IsLoading = false;
+                //MessageBox.Show("网络异常，请稍后再试！");
+                return;
+            }
+
+            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, "Routes.data", Routes);
+
+            BindSourceRoutes();
+
+            IsBusy = false;
         }
 
         private IList<Route> _routes;
@@ -131,7 +179,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             set { this.RaiseAndSetIfChanged(ref _filterTerm, value); }
         }
 
-        #endregion
+        #endregion FilterData
 
         #region Navigation parameter
 
@@ -142,12 +190,29 @@ namespace Org.Xepher.Kazuma.ViewModels
             get { return _selectedRoute; }
             set { this.RaiseAndSetIfChanged(ref _selectedRoute, value); }
         }
-        #endregion
 
-        #region Debug
+        public ReactiveCommand<object> NavigateSettingsCommand { get; protected set; }
 
-        //public ReactiveCommand<object> ClearCacheAsyncCommand { get; protected set; }
+        #endregion Navigation parameter
 
-        #endregion Debug
+        #region Refresh Data
+
+        private bool _isBusy;
+        public bool IsBusy
+        {
+            get { return _isBusy; }
+            set { this.RaiseAndSetIfChanged(ref _isBusy, value); }
+        }
+        
+        private bool _isEnabled;
+        public bool IsEnabled
+        {
+            get { return _isEnabled; }
+            set { this.RaiseAndSetIfChanged(ref _isEnabled, value); }
+        }
+
+        public ReactiveCommand<object> RefreshCommand { get; protected set; }
+
+        #endregion Refresh Data
     }
 }

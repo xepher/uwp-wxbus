@@ -41,7 +41,11 @@ namespace Org.Xepher.Kazuma.Views
             this.Bind(ViewModel, vm => vm.Segments, v => v.Segments.ItemsSource);
 
             this.Bind(ViewModel, vm => vm.SelectedSegmentIndex, v => v.Segments.SelectedIndex);
-            
+
+            this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
+
+            this.BindCommand(ViewModel, vm => vm.SearchCommand, v => v.Search);
+
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 

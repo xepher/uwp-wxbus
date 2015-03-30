@@ -45,17 +45,16 @@ namespace Org.Xepher.Kazuma.Views
 
             this.Bind(ViewModel, vm => vm.FilterTerm, v => v.FilterTerm.Text);
 
+            this.Bind(ViewModel, vm => vm.IsEnabled, v => v.FilterTerm.IsEnabled);
+
             this.Bind(ViewModel, vm => vm.Routes, v => v.Routes.ItemsSource);
 
             this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
 
-            //this.BindCommand(ViewModel, vm => vm.ClearCacheAsyncCommand, v => v.ClearCache);
+            this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
-            //this.WhenAnyObservable(v => v.ViewModel.ClearCacheAsyncCommand).Subscribe(_ =>
-            //{
-            //    LogHost.Default.Debug("button clicked!!!");
-            //});
-
+            this.BindCommand(ViewModel, vm => vm.NavigateSettingsCommand, v => v.Setting);
+            
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 

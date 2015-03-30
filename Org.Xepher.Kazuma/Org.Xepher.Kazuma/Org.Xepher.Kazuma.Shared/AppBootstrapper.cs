@@ -61,6 +61,7 @@ namespace Org.Xepher.Kazuma
             dependencyResolver.Register(() => new MainView(), typeof(IViewFor<MainViewModel>));
 #if WINDOWS_PHONE_APP
             dependencyResolver.Register(() => new RouteView(), typeof(IViewFor<RouteViewModel>));
+            dependencyResolver.Register(() => new SettingsView(), typeof(IViewFor<SettingsViewModel>));
 #endif
         }
     }

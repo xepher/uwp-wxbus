@@ -11,7 +11,15 @@
     <Page.Resources>
         <converter:DateTimeConverter x:Key="DateTimeConverter" />
     </Page.Resources>
-    
+    <Page.BottomAppBar>
+        <CommandBar ClosedDisplayMode="Compact" Opacity="0.6">
+            <CommandBar.PrimaryCommands>
+                <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
+                <AppBarButton x:Name="Search" Icon="Find" Label="Search"/>
+            </CommandBar.PrimaryCommands>
+        </CommandBar>
+    </Page.BottomAppBar>
+
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Pivot x:Name="Segments">
             <Pivot.ItemTemplate>
