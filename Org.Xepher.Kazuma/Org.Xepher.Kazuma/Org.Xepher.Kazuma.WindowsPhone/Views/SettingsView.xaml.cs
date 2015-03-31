@@ -49,7 +49,7 @@ namespace Org.Xepher.Kazuma.Views
 
         private void InitializeBindingSettings()
         {
-            
+            this.Bind(ViewModel, vm => vm.IsLocalStorageOn, v => v.LocalStorage.IsOn);
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }

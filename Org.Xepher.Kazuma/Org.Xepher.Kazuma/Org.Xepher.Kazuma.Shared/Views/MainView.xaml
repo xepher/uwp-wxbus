@@ -5,15 +5,14 @@
     xmlns:local="using:Org.Xepher.Kazuma.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:customAppBar="using:CustomAppBarDesktop"
     mc:Ignorable="d">
     <Page.BottomAppBar>
-        <CommandBar ClosedDisplayMode="Compact" Opacity="0.6">
+        <CommandBar Opacity="0.6">
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
-                <AppBarButton x:Name="Setting" Icon="Setting" Label="Setting" IsEnabled="False" />
+                <AppBarButton x:Name="Setting" Icon="Setting" Label="Setting"/>
             </CommandBar.SecondaryCommands>
         </CommandBar>
     </Page.BottomAppBar>

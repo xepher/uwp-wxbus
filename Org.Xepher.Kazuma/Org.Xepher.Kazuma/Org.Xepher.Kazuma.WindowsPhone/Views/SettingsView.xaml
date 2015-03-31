@@ -5,10 +5,47 @@
     xmlns:local="using:Org.Xepher.Kazuma.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    mc:Ignorable="d"
-    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+    xmlns:userControls="using:Org.Xepher.Kazuma.Views.UserControls"
+    mc:Ignorable="d">
 
     <Grid>
+        <Pivot>
+            <Pivot.Title>
+                <Grid x:Name="PivotTitle"
+                      Margin="0,16,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="Auto" />
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Margin="10,-3,0,0"
+                               TextTrimming="CharacterEllipsis"
+                               TextWrapping="NoWrap"
+                               VerticalAlignment="Center"
+                               Grid.Column="1"
+                               Text="WxBus.Beta" />
+                    <TextBlock x:Name="AppVersion"
+                               VerticalAlignment="Bottom"
+                               Grid.Column="2"
+                               FontWeight="Light"
+                               Margin="16,0,0,0" />
+                </Grid>
+            </Pivot.Title>
+            <PivotItem Header="general">
+                <StackPanel>
+                    <ToggleSwitch x:Name="LocalStorage" 
+                                  Header="Local Storage"
+                                  OffContent="Off"
+                                  OnContent="On" />
 
+                    <!--<Border Height="1"
+                            Margin="0,12"
+                            Background="{StaticResource SecondColor}" />-->
+                </StackPanel>
+            </PivotItem>
+            <PivotItem Header="about">
+                <userControls:License />
+            </PivotItem>
+        </Pivot>
     </Grid>
 </Page>

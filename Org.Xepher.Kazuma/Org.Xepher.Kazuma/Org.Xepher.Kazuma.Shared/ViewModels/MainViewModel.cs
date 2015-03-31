@@ -91,10 +91,17 @@ namespace Org.Xepher.Kazuma.ViewModels
                 {
                     IsEnabled = x;
                 });
-            
+
             #endregion Refresh Data Configuration
 
-            Observable.StartAsync(RequestLocalData);
+            if (ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn"))
+            {
+                Observable.StartAsync(RequestLocalData);
+            }
+            else
+            {
+                Observable.StartAsync(RequestInternetData);
+            }
         }
 
         private void BindSourceRoutes()
@@ -203,7 +210,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             get { return _isBusy; }
             set { this.RaiseAndSetIfChanged(ref _isBusy, value); }
         }
-        
+
         private bool _isEnabled;
         public bool IsEnabled
         {

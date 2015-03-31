@@ -45,8 +45,15 @@ namespace Org.Xepher.Kazuma.ViewModels
             });
 
             #endregion Refresh Data Configuration
-
-            Observable.StartAsync(RequestLocalData);
+            
+            if (ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn"))
+            {
+                Observable.StartAsync(RequestLocalData);
+            }
+            else
+            {
+                Observable.StartAsync(RequestInternetData);
+            }
         }
 
         public Route SelectedRoute { get; private set; }
