@@ -158,6 +158,8 @@ namespace Org.Xepher.Kazuma.ViewModels
             {
                 //GlobalLoading.Instance.IsLoading = false;
                 //MessageBox.Show("网络异常，请稍后再试！");
+
+                IsBusy = false;
                 return;
             }
 

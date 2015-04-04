@@ -20,25 +20,24 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <RowDefinition Height="12*" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <TextBox x:Name="FilterTerm"/>
         <ListView Grid.Row="1" x:Name="Routes">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <Grid MinWidth="400" Margin="0 1 0 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="1*" />
-                            <ColumnDefinition Width="3*" />
-                        </Grid.ColumnDefinitions>
-
-                        <Border Background="#C2C2C2" >
-                            <TextBlock FontSize="26" Text="{Binding RouteId}" Foreground="White" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
-                        </Border>
-                        <Border Grid.Column="1" Background="#009298">
-                            <TextBlock FontSize="32" Text="{Binding RouteName}" Foreground="White" HorizontalAlignment="Right" TextWrapping="Wrap"/>
-                        </Border>
-                    </Grid>
+                    <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
+                        <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <StackPanel Margin="0,0,0,0" Orientation="Vertical">
+                            <TextBlock Text="{Binding RouteName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </StackPanel>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>

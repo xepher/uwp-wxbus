@@ -25,36 +25,26 @@
             <Pivot.ItemTemplate>
                 <DataTemplate>
                     <ListView ItemsSource="{Binding List}">
+                        <ListView.ItemContainerStyle>
+                            <Style TargetType="ListViewItem">
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                            </Style>
+                        </ListView.ItemContainerStyle>
                         <ListView.ItemTemplate>
                             <DataTemplate>
-                                <Grid MinWidth="400">
-                                    <Grid.RowDefinitions>
-                                        <RowDefinition Height="*" />
-                                        <RowDefinition Height="*" />
-                                    </Grid.RowDefinitions>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="6*" MinWidth="300" MaxWidth="300"/>
-                                        <ColumnDefinition Width="*" />
-                                    </Grid.ColumnDefinitions>
-
-                                    <Border Grid.Row="0" Width="48" Background="#C2C2C2" Margin="0 1 0 0">
-                                        <TextBlock FontSize="26" Foreground="White" Text="{Binding FlagTitle}" />
-                                    </Border>
-                                    <Border Grid.Row="1" Grid.Column="0" Width="48" Background="#009298">
-                                        <TextBlock FontSize="26" Foreground="White" Text="{Binding StationSeq}" />
-                                    </Border>
-                                    <Border Grid.Row="0" Grid.RowSpan="2" Grid.Column="1" Height="72" Background="#009298" Margin="1 1 0 0" Padding="1 0 1 0">
+                                <StackPanel Margin="4,4,0,0" Orientation="Horizontal" Background="DarkCyan">
+                                    <StackPanel Orientation="Vertical" MinWidth="30">
+                                        <TextBlock FontSize="26" Foreground="White" Text="{Binding StationSeq}" HorizontalAlignment="Right"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Vertical">
                                         <TextBlock Text="{Binding StationName}" Foreground="White" TextWrapping="Wrap" FontSize="26"/>
-                                    </Border>
-                                    <Border Grid.Row="0" Grid.Column="2" Background="#C2C2C2" Margin="1 1 0 0" Padding="1 0 1 0">
-                                        <TextBlock Text="{Binding BusselfId}" Foreground="White"/>
-                                    </Border>
-                                    <Border Grid.Row="1" Grid.Column="2" Background="#009298" Margin="1 0 0 0" Padding="1 0 1 0">
-                                        <TextBlock Text="{Binding ActDateTime, Converter={StaticResource DateTimeConverter}}" Foreground="White"/>
-                                    </Border>
-
-                                </Grid>
+                                        <StackPanel Orientation="Horizontal">
+                                            <TextBlock MinWidth="100" Text="{Binding BusselfId}" Foreground="White" />
+                                            <TextBlock MinWidth="100" Text="{Binding ActDateTime, Converter={StaticResource DateTimeConverter}}" Foreground="White"/>
+                                            <TextBlock MinWidth="100" Text="{Binding FlagTitle}" Foreground="White" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </StackPanel>
                             </DataTemplate>
                         </ListView.ItemTemplate>
                     </ListView>

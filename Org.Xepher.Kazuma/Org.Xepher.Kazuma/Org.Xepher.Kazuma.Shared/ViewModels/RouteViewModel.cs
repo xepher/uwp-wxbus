@@ -117,6 +117,8 @@ namespace Org.Xepher.Kazuma.ViewModels
             {
                 //GlobalLoading.Instance.IsLoading = false;
                 //MessageBox.Show("网络异常，请稍后再试！");
+
+                IsBusy = false;
                 return;
             }
 
@@ -131,11 +133,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             // use MemoizingMRUCache to cache realtime info
             StationWithRealTimeInfo station = _segments[SelectedSegmentIndex].List.Last();
-
-            // if search is in-process, stop search this time
-            //if (GlobalLoading.Instance.IsLoading) return;
-            //GlobalLoading.Instance.IsLoading = true;
-
+            
             int retryCount = 0;
             RealTimeBusData result;
             do
@@ -155,6 +153,8 @@ namespace Org.Xepher.Kazuma.ViewModels
             {
                 //GlobalLoading.Instance.IsLoading = false;
                 //MessageBox.Show("网络异常，请稍后再试！");
+
+                IsBusy = false;
                 return;
             }
 
@@ -164,6 +164,8 @@ namespace Org.Xepher.Kazuma.ViewModels
             {
                 //GlobalLoading.Instance.IsLoading = false;
                 //MessageBox.Show(realTimeInfo.Message);
+                
+                IsBusy = false;
                 return;
             }
 
