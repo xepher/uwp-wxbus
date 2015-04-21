@@ -9,20 +9,19 @@
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
         <!--
             COOLSTUFF: RoutedViewHost
         
             RoutedViewHost will take a Router and display whatever ViewModel 
             is at the front of the route stack.
         -->
-        <StackPanel>
-            <Border x:Name="MessageBorder" Visibility="Collapsed" Background="{ThemeResource PhoneAccentBrush}">
-                <TextBlock x:Name="MessageBlock" Foreground="White" FontWeight="Bold" Margin="12, 10, 12, 10" TextWrapping="Wrap"/>
-            </Border>
-            <reactiveUi:RoutedViewHost
-                Router="{Binding Router}"
-                HorizontalContentAlignment="Stretch"
-                VerticalContentAlignment="Stretch" />
-        </StackPanel>
+        <Border x:Name="MessageBorder" Grid.Row="0" Visibility="Collapsed" Background="{ThemeResource PhoneAccentBrush}">
+            <TextBlock x:Name="MessageBlock" Foreground="White" FontWeight="Bold" Margin="12, 10, 12, 10" TextWrapping="Wrap"/>
+        </Border>
+        <reactiveUi:RoutedViewHost Grid.Row="1" Router="{Binding Router}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
     </Grid>
 </Page>
