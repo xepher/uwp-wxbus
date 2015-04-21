@@ -46,9 +46,6 @@ namespace Org.Xepher.Kazuma
 #else
             LogHost.Default.Level = LogLevel.Info;
 #endif
-
-            // Navigate to the opening page of the application
-            Router.Navigate.Execute(new MainViewModel(this));
         }
 
         private void RegisterParts(IMutableDependencyResolver dependencyResolver)
@@ -57,6 +54,7 @@ namespace Org.Xepher.Kazuma
             dependencyResolver.RegisterConstant(new ConsoleLogger(), typeof(ILogger));
 #endif
             dependencyResolver.RegisterConstant(this, typeof(IScreen));
+            dependencyResolver.RegisterConstant(new MessageBus(), typeof(IMessageBus));
 
             dependencyResolver.Register(() => new MainView(), typeof(IViewFor<MainViewModel>));
 #if WINDOWS_PHONE_APP

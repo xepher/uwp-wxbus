@@ -16,11 +16,11 @@ namespace Org.Xepher.Kazuma.ViewModels
         // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
         private IList<Route> _sourceRoutes = new ObservableCollection<Route>();
 
-        public MainViewModel(IScreen screen)
-            : base(screen)
+        public MainViewModel(IScreen screen, IMessageBus messageBus)
+            : base(screen, messageBus)
         {
             base.PathSegment = "Main";
-
+            
             #region FilterData Configuration
 
             this.ObservableForProperty(vm => vm.FilterTerm)
@@ -57,7 +57,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 //.DistinctUntilChanged()
                 .Subscribe(r =>
                 {
-                    base.HostScreen.Router.Navigate.Execute(new RouteViewModel(base.HostScreen, r));
+                    base.HostScreen.Router.Navigate.Execute(new RouteViewModel(base.HostScreen, base.HostMessageBus, r));
 
                     this.SelectedRoute = null;
                 });
@@ -67,7 +67,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             NavigateSettingsCommand.Subscribe(_ =>
             {
-                base.HostScreen.Router.Navigate.Execute(new SettingsViewModel(base.HostScreen));
+                base.HostScreen.Router.Navigate.Execute(new SettingsViewModel(base.HostScreen, base.HostMessageBus));
             });
 
             #endregion Navigation Configuration
@@ -156,8 +156,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (retryCount > 10)
             {
-                //GlobalLoading.Instance.IsLoading = false;
-                //MessageBox.Show("网络异常，请稍后再试！");
+                base.HostMessageBus.SendMessage<string>("网络异常，请稍后再试", "TopBarMessage");
 
                 IsBusy = false;
                 return;
@@ -176,6 +175,11 @@ namespace Org.Xepher.Kazuma.ViewModels
         {
             get { return _routes; }
             set { this.RaiseAndSetIfChanged(ref _routes, value); }
+        }
+
+        public string Title
+        {
+            get { return string.Format("WxBus -> Current Available Routes Count: {0}", _sourceRoutes.Count); }
         }
 
         #region FilterData

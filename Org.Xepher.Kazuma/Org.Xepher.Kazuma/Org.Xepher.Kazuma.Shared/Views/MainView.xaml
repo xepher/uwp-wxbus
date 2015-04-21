@@ -20,10 +20,12 @@
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
-        <TextBox x:Name="FilterTerm"/>
-        <ListView Grid.Row="1" x:Name="Routes">
+        <TextBlock x:Name="RouteCount" Margin="4,0,0,0"/>
+        <TextBox Grid.Row="1" x:Name="FilterTerm" Margin="4,0,0,0"/>
+        <ListView Grid.Row="2" x:Name="Routes">
             <ListView.ItemContainerStyle>
                 <Style TargetType="ListViewItem">
                     <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

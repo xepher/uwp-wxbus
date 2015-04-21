@@ -11,8 +11,8 @@ namespace Org.Xepher.Kazuma.ViewModels
     {
         ApplicationDataContainer localSettings = null;
 
-        public SettingsViewModel(IScreen screen)
-            : base(screen)
+        public SettingsViewModel(IScreen screen, IMessageBus messageBus)
+            : base(screen, messageBus)
         {
             base.PathSegment = "Settings";
 
@@ -23,10 +23,10 @@ namespace Org.Xepher.Kazuma.ViewModels
             // IsLocalStorageOn default value
             _isLocalStorageOn = ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn");
 
-            this.WhenAnyValue(vm => vm.IsLocalStorageOn)
+            this.ObservableForProperty(vm => vm.IsLocalStorageOn)
                 .Subscribe(x =>
                 {
-                    ApplicationDataSettingsHelper.SaveOrUpdateValue("IsLocalStorageOn", x);
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue("IsLocalStorageOn", x.Value);
                 });
 
             #endregion Local Storage Configuration

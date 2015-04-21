@@ -19,6 +19,7 @@ using Windows.UI.Xaml.Navigation;
 using Org.Xepher.Kazuma.ViewModels;
 using Org.Xepher.Kazuma.Views;
 using Splat;
+using Org.Xepher.Kazuma.Utils;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -112,10 +113,29 @@ namespace Org.Xepher.Kazuma
                 // When the navigation stack isn't restored navigate to the first page,
                 // configuring the new page by passing required information as a navigation
                 // parameter
-                if (!rootFrame.Navigate(typeof(Shell), e.Arguments))
+                if (rootFrame.Navigate(typeof(Shell), e.Arguments))
+                {
+                    IScreen hostScreen = Locator.Current.GetService<IScreen>();
+                    IMessageBus hostMessageBus = Locator.Current.GetService<IMessageBus>();
+                    // Navigate to the opening page of the application
+                    hostScreen.Router.Navigate.Execute(new MainViewModel(hostScreen, hostMessageBus));
+                }
+                else
                 {
                     throw new Exception("Failed to create initial page");
                 }
+            }
+
+            if (!string.IsNullOrEmpty(e.Arguments))
+            {
+                // if only get service, use Locator.Current is enough
+                IScreen hostScreen = Locator.Current.GetService<IScreen>();
+                IMessageBus hostMessageBus = Locator.Current.GetService<IMessageBus>();
+                if (hostScreen.Router.NavigationStack.Count > 1)
+                {
+                    hostScreen.Router.NavigationStack.RemoveRange(1, hostScreen.Router.NavigationStack.Count - 1);
+                }
+                hostScreen.Router.Navigate.Execute(new RouteViewModel(hostScreen, hostMessageBus, SecondaryTileHelper.PrepareNavigationParameter(e.TileId, e.Arguments)));
             }
 
             // Ensure the current window is active

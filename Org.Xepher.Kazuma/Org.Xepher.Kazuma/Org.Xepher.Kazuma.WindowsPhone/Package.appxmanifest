@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="8e3393ac-efb2-4dcf-b79f-77ab7094ac8d" Publisher="CN=Shaojun" Version="1.0.0.0" />
-  <mp:PhoneIdentity PhoneProductId="8e3393ac-efb2-4dcf-b79f-77ab7094ac8d" PhonePublisherId="00000000-0000-0000-0000-000000000000" />
+  <Identity Name="47786.WxBus.Beta" Publisher="CN=332D0718-8931-4CE1-BCF1-EE77E59C2F00" Version="1.5.0.1" />
+  <mp:PhoneIdentity PhoneProductId="8c71cc7e-8802-4c2f-8659-fbd307acedae" PhonePublisherId="332D0718-8931-4CE1-BCF1-EE77E59C2F00" />
   <Properties>
-    <DisplayName>Org.Xepher.Kazuma.WindowsPhone</DisplayName>
-    <PublisherDisplayName>Shaojun</PublisherDisplayName>
+    <DisplayName>WxBus.Beta</DisplayName>
+    <PublisherDisplayName>心比天高小屁孩</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
   <Prerequisites>
@@ -26,5 +26,6 @@
   </Applications>
   <Capabilities>
     <Capability Name="internetClientServer" />
+    <DeviceCapability Name="location" />
   </Capabilities>
 </Package>

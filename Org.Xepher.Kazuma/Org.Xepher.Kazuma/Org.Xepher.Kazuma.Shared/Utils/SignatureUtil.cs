@@ -121,7 +121,7 @@ namespace Org.Xepher.Kazuma.Utils
             CancellationTokenSource cts = new CancellationTokenSource();
             HttpBaseProtocolFilter filter = new HttpBaseProtocolFilter();
             HttpClient httpClient = new HttpClient(filter);
-            httpClient.DefaultRequestHeaders.Add("UserAgent", "Org.Xepher.Kazuma.WindowsPhone; Develop for WindowsPhone;");
+            httpClient.DefaultRequestHeaders.Add("UserAgent", "Org.Xepher.Kazuma.WindowsPhone; Develop for WindowsPhone8.1;");
             httpClient.DefaultRequestHeaders.Host = new HostName("app.wifiwx.com");
             httpClient.DefaultRequestHeaders.Append("KeepAlive", "true");
             httpClient.DefaultRequestHeaders.AcceptEncoding.ParseAdd("gzip");

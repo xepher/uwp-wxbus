@@ -13,6 +13,8 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Splat;
+using Windows.UI.Popups;
+using ReactiveUI;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -23,16 +25,29 @@ namespace Org.Xepher.Kazuma
     /// </summary>
     public sealed partial class Shell : Page
     {
-        public AppBootstrapper AppBootstrapper { get; private set; }
+        private IScreen HostScreen { get; set; }
+        private IMessageBus HostMessageBus { get; set; }
 
         public Shell()
         {
             this.InitializeComponent();
 
-            AppBootstrapper = (AppBootstrapper)Locator.CurrentMutable.GetService(typeof(AppBootstrapper));
+            HostScreen = Locator.Current.GetService<IScreen>();
+            HostMessageBus = Locator.Current.GetService<IMessageBus>();
 
-            DataContext = AppBootstrapper;
+            DataContext = HostScreen;
 
+            this.ObservableForProperty(v => v.MessageBlock.Text)
+                .Subscribe(s =>
+                {
+                    if (string.IsNullOrEmpty(s.Value))
+                        MessageBorder.Visibility = Visibility.Collapsed;
+                    else
+                        MessageBorder.Visibility = Visibility.Visible;
+                });
+
+            HostMessageBus.Listen<string>("TopBarMessage").Subscribe(x => this.MessageBlock.Text = x);
+            
 #if WINDOWS_PHONE_APP
             Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
 #endif
@@ -63,9 +78,9 @@ namespace Org.Xepher.Kazuma
 #if WINDOWS_PHONE_APP
         private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
-            if (this.AppBootstrapper.Router.NavigateBack.CanExecute(null))
+            if (this.HostScreen.Router.NavigateBack.CanExecute(null))
             {
-                this.AppBootstrapper.Router.NavigateBack.Execute(null);
+                this.HostScreen.Router.NavigateBack.Execute(null);
 
                 e.Handled = true;
             }

@@ -9,13 +9,15 @@ using System.Linq;
 using Windows.Storage;
 using ReactiveUI;
 using Splat;
+using Windows.UI.StartScreen;
+using Windows.UI.Xaml;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
     public class RouteViewModel : ViewModelBase
     {
-        public RouteViewModel(IScreen screen, Route selectedRoute)
-            : base(screen)
+        public RouteViewModel(IScreen screen, IMessageBus messageBus, Route selectedRoute)
+            : base(screen, messageBus)
         {
             base.PathSegment = "Route";
             this.SelectedRoute = selectedRoute;
@@ -27,7 +29,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             #endregion Query Configuration
 
-            #region Refresh Data Configuration
+            #region ApplicationBar Configuration
 
             RefreshCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
 
@@ -44,8 +46,15 @@ namespace Org.Xepher.Kazuma.ViewModels
                 await GetRealTimeInfo();
             });
 
-            #endregion Refresh Data Configuration
-            
+            PinCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
+
+            PinCommand.Subscribe(async _ =>
+            {
+                await PinToScreen();
+            });
+
+            #endregion ApplicationBar Configuration
+
             if (ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn"))
             {
                 Observable.StartAsync(RequestLocalData);
@@ -57,6 +66,13 @@ namespace Org.Xepher.Kazuma.ViewModels
         }
 
         public Route SelectedRoute { get; private set; }
+
+        private StationWithRealTimeInfo _selectedSegmentListItem;
+        public StationWithRealTimeInfo SelectedSegmentListItem
+        {
+            get { return _selectedSegmentListItem; }
+            set { this.RaiseAndSetIfChanged(ref _selectedSegmentListItem, value); }
+        }
 
         private int _selectedSegmentIndex;
         public int SelectedSegmentIndex
@@ -115,8 +131,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (retryCount > 10)
             {
-                //GlobalLoading.Instance.IsLoading = false;
-                //MessageBox.Show("网络异常，请稍后再试！");
+                base.HostMessageBus.SendMessage<string>("网络异常，请稍后再试", "TopBarMessage");
 
                 IsBusy = false;
                 return;
@@ -133,7 +148,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             // use MemoizingMRUCache to cache realtime info
             StationWithRealTimeInfo station = _segments[SelectedSegmentIndex].List.Last();
-            
+
             int retryCount = 0;
             RealTimeBusData result;
             do
@@ -151,8 +166,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (retryCount > 10)
             {
-                //GlobalLoading.Instance.IsLoading = false;
-                //MessageBox.Show("网络异常，请稍后再试！");
+                base.HostMessageBus.SendMessage<string>("网络异常，请稍后再试", "TopBarMessage");
 
                 IsBusy = false;
                 return;
@@ -162,9 +176,8 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (!string.IsNullOrEmpty(realTimeInfo.Message))
             {
-                //GlobalLoading.Instance.IsLoading = false;
-                //MessageBox.Show(realTimeInfo.Message);
-                
+                base.HostMessageBus.SendMessage<string>(realTimeInfo.Message, "TopBarMessage");
+
                 IsBusy = false;
                 return;
             }
@@ -208,11 +221,62 @@ namespace Org.Xepher.Kazuma.ViewModels
                     }
                 }
             }
-            
+
             IsBusy = false;
         }
 
-        #region Refresh Data
+        private async Task PinToScreen()
+        {
+            // Let us first verify if we need to pin or unpin
+            if (SecondaryTile.Exists(Constants.APPBAR_TILE_ID + "." + SelectedRoute.RouteId))
+            {
+                // First prepare the tile to be unpinned
+                SecondaryTile secondaryTile = new SecondaryTile(Constants.APPBAR_TILE_ID + "." + SelectedRoute.RouteId);
+
+                // Now make the delete request.
+                //bool isUnpinned = await secondaryTile.RequestDeleteForSelectionAsync(SecondaryTileHelper.GetElementRect((FrameworkElement)sender), Windows.UI.Popups.Placement.Above);
+                bool isUnpinned = false;
+                if (isUnpinned)
+                {
+                    //rootPage.NotifyUser(MainPage.appbarTileId + " unpinned.", NotifyType.StatusMessage);
+                }
+                else
+                {
+                    //rootPage.NotifyUser(MainPage.appbarTileId + " not unpinned.", NotifyType.ErrorMessage);
+                }
+            }
+            else
+            {
+                // Prepare package images for the medium tile size in our tile to be pinned
+                Uri square150x150Logo = new Uri("ms-appx:///Assets/Images/Logo150-150.png");
+
+                // Create a Secondary tile with all the required arguments.
+                // Note the last argument specifies what size the Secondary tile should show up as by default in the Pin to start fly out.
+                // It can be set to TileSize.Square150x150, TileSize.Wide310x150, or TileSize.Default.  
+                // If set to TileSize.Wide310x150, then the asset for the wide size must be supplied as well.  
+                // TileSize.Default will default to the wide size if a wide size is provided, and to the medium size otherwise. 
+                SecondaryTile secondaryTile = new SecondaryTile(Constants.APPBAR_TILE_ID + "." + SelectedRoute.RouteId,
+                                                                SelectedRoute.RouteName,
+                                                                SelectedRoute.RouteId,
+                                                                square150x150Logo,
+                                                                TileSize.Square150x150);
+
+                // Whether or not the app name should be displayed on the tile can be controlled for each tile size.  The default is false.
+                secondaryTile.VisualElements.ShowNameOnSquare150x150Logo = true;
+
+                // Specify a foreground text value.
+                // The tile background color is inherited from the parent unless a separate value is specified.
+                secondaryTile.VisualElements.ForegroundText = ForegroundText.Dark;
+
+                // OK, the tile is created and we can now attempt to pin the tile.
+                // Since pinning a secondary tile on Windows Phone will exit the app and take you to the start screen, any code after 
+                // RequestCreateForSelectionAsync or RequestCreateAsync is not guaranteed to run.  For an example of how to use the OnSuspending event to do
+                // work after RequestCreateForSelectionAsync or RequestCreateAsync returns, see Scenario9_PinTileAndUpdateOnSuspend in the SecondaryTiles.WindowsPhone project.
+                await secondaryTile.RequestCreateAsync();
+            }
+        }
+
+        #region ApplicationBar
 
         private bool _isBusy;
         public bool IsBusy
@@ -225,6 +289,8 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         public ReactiveCommand<object> SearchCommand { get; protected set; }
 
-        #endregion Refresh Data
+        public ReactiveCommand<object> PinCommand { get; protected set; }
+
+        #endregion ApplicationBar
     }
 }

@@ -9,52 +9,52 @@
 
     <ScrollViewer>
         <StackPanel>
-            <TextBlock TextWrapping="Wrap"
-                       FontSize="14">
-                            <Run Text="WxBus.Beta"
-                                 FontSize="28" />
-                            <LineBreak />
-                            <Run Text="Code Copyright 2012-2015 Shaojun, WxBus Authors" />
-                            <LineBreak />
-                            <Run Text="Design Copyright 2012-2015 BUT, WxBus Authors" />
-                            <LineBreak />
-                            <LineBreak />
-                            <Run Text="License"
-                                 FontSize="22" />
-                            <LineBreak />
-                            <Run Text="WxBus is licensed under the MIT License" />
-                            <LineBreak />
-                            <LineBreak />
-                            <Run Text="Sources"
-                                 FontSize="22" />                            
-                            <LineBreak />
-                            <Run Text="The sources to this application can be retrieved at https://github.com/xepher/wp-wuxibus.git" />
-                            <LineBreak />
-                            <Run Text="If you want to manually deploy the package by yourself, without having to pay for a Dev License, follow the steps in this link:" />
-                            <Hyperlink NavigateUri="https://msdn.microsoft.com/en-us/library/windows/apps/dn614128.aspx">Msdn library</Hyperlink>
-                            <LineBreak />
-                            <LineBreak />
-                            <Run Text="Libraries"
-                                 FontSize="22" />                            
-                            <LineBreak />
-                            <Run Text="Some WxBus plugins use external libraries that make extensive use of the following persons' or companies' code:" />
-                            <LineBreak />
-                            <Run Text="Newtonsoft.Json - Copyright (c) 2007 James Newton-King -" /> 
-                            <Hyperlink Foreground="DarkOrange"
-                                       NavigateUri="https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md">MIT License</Hyperlink>
-                            <LineBreak />
-                            <Run Text="ReactiveUI - ReactiveUI.net - " />
-                            <Hyperlink Foreground="DarkOrange"
-                                       NavigateUri="https://rx.codeplex.com/license">Apache License 2.0 (Apache)</Hyperlink>
-                            <Italic>Public domain</Italic>
-                            <LineBreak />
-                            <Run Text="Splat - Paul Betts - " />
-                            <Italic>Public domain</Italic>
-                            <LineBreak />
-                            <Run Text="Rx (Reactive Extensions) - Copyright (c) 2012 Microsoft Open Technologies, Inc - " />
-                            <Hyperlink Foreground="DarkOrange"
-                                       NavigateUri="https://rx.codeplex.com/license">Apache License 2.0 (Apache)</Hyperlink>
-                            <LineBreak />
+            <TextBlock TextWrapping="Wrap" FontSize="14">
+                <Run Text="WxBus.Beta" FontSize="28" />
+                <LineBreak />
+                <Run Text="Copyright 2012-2015 Shaojun, WxBus Authors" />
+                <LineBreak />
+                <Run Text="Copyright 2014-2015 BUT, WxBus Designer" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Data Source" FontSize="22" />
+                <LineBreak />
+                <Run Text="Wifiwx.com" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="License" FontSize="22" />
+                <LineBreak />
+                <Run Text="WxBus is licensed under the MIT License" />
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Sources" FontSize="22" />                            
+                <LineBreak />
+                <Run Text="The sources to this application can be retrieved at https://github.com/xepher/wp-wuxibus.git" />
+                <LineBreak />
+                <Run Text="If you want to manually deploy the package by yourself, without having to pay for a Dev License, follow the steps in this link:" />
+                <Hyperlink NavigateUri="https://msdn.microsoft.com/en-us/library/windows/apps/dn614128.aspx">Msdn library</Hyperlink>
+                <LineBreak />
+                <LineBreak />
+                <Run Text="Libraries" FontSize="22" />                            
+                <LineBreak />
+                <Run Text="Some WxBus plugins use external libraries that make extensive use of the following persons' or companies' code:" />
+                <LineBreak />
+                <Run Text="Newtonsoft.Json - Copyright (c) 2007 James Newton-King -" /> 
+                <Hyperlink Foreground="DarkOrange"
+                           NavigateUri="https://raw.githubusercontent.com/JamesNK/Newtonsoft.Json/master/LICENSE.md">MIT License</Hyperlink>
+                <LineBreak />
+                <Run Text="ReactiveUI - ReactiveUI.net - " />
+                <Hyperlink Foreground="DarkOrange"
+                           NavigateUri="https://rx.codeplex.com/license">Apache License 2.0 (Apache)</Hyperlink>
+                <Italic>Public domain</Italic>
+                <LineBreak />
+                <Run Text="Splat - Paul Betts - " />
+                <Italic>Public domain</Italic>
+                <LineBreak />
+                <Run Text="Rx (Reactive Extensions) - Copyright (c) 2012 Microsoft Open Technologies, Inc - " />
+                <Hyperlink Foreground="DarkOrange"
+                           NavigateUri="https://rx.codeplex.com/license">Apache License 2.0 (Apache)</Hyperlink>
+                <LineBreak />
             </TextBlock>
             <TextBlock TextWrapping="Wrap">
                             <Run Text="The MIT License (MIT)" />

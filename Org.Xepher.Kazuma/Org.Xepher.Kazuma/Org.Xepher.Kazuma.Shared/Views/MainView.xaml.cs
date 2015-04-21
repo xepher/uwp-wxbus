@@ -51,6 +51,8 @@ namespace Org.Xepher.Kazuma.Views
 
             this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
 
+            this.OneWayBind(ViewModel, vm => vm.Title, v => v.RouteCount.Text);
+
             this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
             this.BindCommand(ViewModel, vm => vm.NavigateSettingsCommand, v => v.Setting);

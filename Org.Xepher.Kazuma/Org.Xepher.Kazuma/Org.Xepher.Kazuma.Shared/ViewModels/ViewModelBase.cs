@@ -25,6 +25,12 @@ namespace Org.Xepher.Kazuma.ViewModels
             get; protected set;
         }
 
+        public IMessageBus HostMessageBus
+        {
+            get;
+            protected set;
+        }
+
         /* COOLSTUFF: Why the Screen here?
          *
          * Every RoutableViewModel has a pointer to its IScreen. This is really
@@ -32,9 +38,10 @@ namespace Org.Xepher.Kazuma.ViewModels
          * invoke Commands / change Properties, then test to see if you navigated
          * to the correct new screen 
          */
-        public ViewModelBase(IScreen screen)
+        public ViewModelBase(IScreen screen, IMessageBus messageBus)
         {
             HostScreen = screen;
+            HostMessageBus = messageBus;
         }
     }
 }
