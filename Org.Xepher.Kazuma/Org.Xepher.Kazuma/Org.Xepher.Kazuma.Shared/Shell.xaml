@@ -6,22 +6,17 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:reactiveUi="using:ReactiveUI"
+    xmlns:ctrls="using:Org.Xepher.Kazuma.Views.UserControls"
     mc:Ignorable="d">
 
     <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
         <!--
             COOLSTUFF: RoutedViewHost
         
             RoutedViewHost will take a Router and display whatever ViewModel 
             is at the front of the route stack.
         -->
-        <Border x:Name="MessageBorder" Grid.Row="0" Visibility="Collapsed" Background="{ThemeResource PhoneAccentBrush}">
-            <TextBlock x:Name="MessageBlock" Foreground="White" FontWeight="Bold" Margin="12, 10, 12, 10" TextWrapping="Wrap"/>
-        </Border>
-        <reactiveUi:RoutedViewHost Grid.Row="1" Router="{Binding Router}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
+        <ctrls:MessageBar x:Name="MessageBar" Canvas.ZIndex="10000"/>
+        <reactiveUi:RoutedViewHost Router="{Binding Router}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch"/>
     </Grid>
 </Page>

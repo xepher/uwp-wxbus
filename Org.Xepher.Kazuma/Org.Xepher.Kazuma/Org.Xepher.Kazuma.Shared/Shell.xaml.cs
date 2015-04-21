@@ -37,16 +37,7 @@ namespace Org.Xepher.Kazuma
 
             DataContext = HostScreen;
 
-            this.ObservableForProperty(v => v.MessageBlock.Text)
-                .Subscribe(s =>
-                {
-                    if (string.IsNullOrEmpty(s.Value))
-                        MessageBorder.Visibility = Visibility.Collapsed;
-                    else
-                        MessageBorder.Visibility = Visibility.Visible;
-                });
-
-            HostMessageBus.Listen<string>("TopBarMessage").Subscribe(x => this.MessageBlock.Text = x);
+            HostMessageBus.Listen<string>("TopBarMessage").Subscribe(x => this.MessageBar.Message = x);
             
 #if WINDOWS_PHONE_APP
             Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;

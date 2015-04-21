@@ -153,9 +153,6 @@
     <Reference Include="Newtonsoft.Json">
       <HintPath>..\..\packages\Newtonsoft.Json.6.0.8\lib\portable-net40+sl5+wp80+win8+wpa81\Newtonsoft.Json.dll</HintPath>
     </Reference>
-    <Reference Include="QKit">
-      <HintPath>..\..\packages\QKit.0.4.1\lib\wpa81\QKit.dll</HintPath>
-    </Reference>
     <Reference Include="ReactiveUI, Version=6.4.0.1, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\reactiveui-core.6.4.0.1\lib\Portable-Win81+WPA81\ReactiveUI.dll</HintPath>
       <Private>True</Private>
@@ -185,10 +182,6 @@
     </Reference>
     <Reference Include="System.Reactive.WindowsRuntime">
       <HintPath>..\..\packages\Rx-WinRT.2.2.5\lib\portable-win81+wpa81\System.Reactive.WindowsRuntime.dll</HintPath>
-    </Reference>
-    <Reference Include="WinRTXamlToolkit, Version=1.8.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\WinRTXamlToolkit.WindowsPhone.1.8.1\lib\wpa\WinRTXamlToolkit.dll</HintPath>
-      <Private>True</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
