@@ -152,6 +152,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                 Routes = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
                 if (++retryCount > 10) break;
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format("获取数据失败，第{0}次尝试", retryCount - 1), "TopBarMessage");
             } while (Routes == null || Routes.Count == 0);
 
             if (retryCount > 10)

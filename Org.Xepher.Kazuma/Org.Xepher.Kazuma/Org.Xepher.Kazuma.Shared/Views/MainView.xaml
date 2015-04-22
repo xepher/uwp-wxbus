@@ -7,7 +7,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
     <Page.BottomAppBar>
-        <CommandBar Opacity="0.6">
+        <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
             </CommandBar.PrimaryCommands>

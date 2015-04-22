@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Package xmlns="http://schemas.microsoft.com/appx/2010/manifest" xmlns:m2="http://schemas.microsoft.com/appx/2013/manifest" xmlns:m3="http://schemas.microsoft.com/appx/2014/manifest" xmlns:mp="http://schemas.microsoft.com/appx/2014/phone/manifest">
-  <Identity Name="47786.WxBus.Beta" Publisher="CN=332D0718-8931-4CE1-BCF1-EE77E59C2F00" Version="1.5.0.1" />
+  <Identity Name="47786.WxBus.Beta" Publisher="CN=332D0718-8931-4CE1-BCF1-EE77E59C2F00" Version="1.5.0.2" />
   <mp:PhoneIdentity PhoneProductId="8c71cc7e-8802-4c2f-8659-fbd307acedae" PhonePublisherId="332D0718-8931-4CE1-BCF1-EE77E59C2F00" />
   <Properties>
     <DisplayName>WxBus.Beta</DisplayName>

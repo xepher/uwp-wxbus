@@ -127,6 +127,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
                 if (++retryCount > 10) break;
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format("获取数据失败，第{0}次尝试", retryCount - 1), "TopBarMessage");
             } while (Segments == null || Segments.Count == 0);
 
             if (retryCount > 10)
@@ -162,6 +163,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                 result = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
                 if (++retryCount > 10) break;
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format("获取数据失败，第{0}次尝试", retryCount - 1), "TopBarMessage");
             } while (null == result.Message);
 
             if (retryCount > 10)

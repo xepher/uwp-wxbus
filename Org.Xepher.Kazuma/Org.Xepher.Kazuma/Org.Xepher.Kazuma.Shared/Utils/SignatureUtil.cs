@@ -10,6 +10,8 @@ using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
 using Newtonsoft.Json;
+using ReactiveUI;
+using Splat;
 
 namespace Org.Xepher.Kazuma.Utils
 {
@@ -143,7 +145,7 @@ namespace Org.Xepher.Kazuma.Utils
             }
             catch (Exception ex)
             {
-                throw ex;
+                return Activator.CreateInstance<T>();
             }
         }
     }

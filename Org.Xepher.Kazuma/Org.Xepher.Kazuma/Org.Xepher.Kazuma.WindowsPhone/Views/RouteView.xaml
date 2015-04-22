@@ -13,7 +13,7 @@
         <converter:DateTimeConverter x:Key="DateTimeConverter" />
     </Page.Resources>
     <Page.BottomAppBar>
-        <CommandBar ClosedDisplayMode="Compact" Opacity="0.6">
+        <CommandBar>
             <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
             <AppBarButton x:Name="Search" Icon="Find" Label="Search"/>
             <AppBarButton x:Name="Pin" Icon="Pin" Label="Pin"/>

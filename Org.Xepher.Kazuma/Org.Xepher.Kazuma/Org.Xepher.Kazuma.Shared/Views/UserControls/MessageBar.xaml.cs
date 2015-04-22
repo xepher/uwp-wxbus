@@ -41,7 +41,6 @@ namespace Org.Xepher.Kazuma.Views.UserControls
 
             _timer = new DispatcherTimer();
             _timer.Interval = TimeSpan.FromSeconds(_timesToTick);
-            _timer.Tick += _timer_Tick;
 
             this.ObservableForProperty(v => v.MessageBlock.Text)
                 .Subscribe(s =>
@@ -53,6 +52,7 @@ namespace Org.Xepher.Kazuma.Views.UserControls
                     else
                     {
                         this.Visibility = Visibility.Visible;
+                        _timer.Tick += _timer_Tick;
                         _timer.Start();
                     }
                 });
@@ -60,10 +60,9 @@ namespace Org.Xepher.Kazuma.Views.UserControls
 
         void _timer_Tick(object sender, object e)
         {
-            _timesToTick--;
-            if (_timesToTick == 0)
+            if (--_timesToTick == 0)
             {
-                _timesToTick = 3;
+                _timesToTick = 2;
                 _timer.Tick -= _timer_Tick;
                 _timer.Stop();
                 Message = string.Empty;
