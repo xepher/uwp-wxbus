@@ -19,7 +19,7 @@ namespace Org.Xepher.Kazuma.ViewModels
         public MainViewModel(IScreen screen, IMessageBus messageBus)
             : base(screen, messageBus)
         {
-            base.PathSegment = "Main";
+            base.PathSegment = Constants.PATH_SEGMENT_MAIN;
             
             #region FilterData Configuration
 
@@ -94,7 +94,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             #endregion Refresh Data Configuration
 
-            if (ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn"))
+            if (ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
             {
                 Observable.StartAsync(RequestLocalData);
             }
@@ -119,7 +119,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 #endif
             IsBusy = true;
 
-            Routes = await StorageHelper.ReadData<ObservableCollection<Route>>(ApplicationData.Current.LocalFolder, "Routes.data");
+            Routes = await StorageHelper.ReadData<ObservableCollection<Route>>(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES);
 
             if (null == Routes || Routes.Count == 0)
             {
@@ -152,18 +152,18 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                 Routes = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
                 if (++retryCount > 10) break;
-                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format("获取数据失败，第{0}次尝试", retryCount - 1), "TopBarMessage");
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
             } while (Routes == null || Routes.Count == 0);
 
             if (retryCount > 10)
             {
-                base.HostMessageBus.SendMessage<string>("网络异常，请稍后再试", "TopBarMessage");
+                base.HostMessageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 IsBusy = false;
                 return;
             }
 
-            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, "Routes.data", Routes);
+            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES, Routes);
 
             BindSourceRoutes();
 

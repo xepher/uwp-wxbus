@@ -6,6 +6,7 @@ using ReactiveUI;
 using Splat;
 using System;
 using System.Reactive.Linq;
+using Windows.UI.Popups;
 
 namespace Org.Xepher.Kazuma.Views
 {
@@ -56,7 +57,7 @@ namespace Org.Xepher.Kazuma.Views
             this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
             this.BindCommand(ViewModel, vm => vm.NavigateSettingsCommand, v => v.Setting);
-            
+
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 

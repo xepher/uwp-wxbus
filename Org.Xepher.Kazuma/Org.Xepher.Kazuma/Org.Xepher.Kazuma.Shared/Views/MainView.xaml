@@ -34,7 +34,7 @@
             <ListView.ItemTemplate>
                 <DataTemplate>
                     <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
-                        <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0"/>
+                        <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
                         <StackPanel Margin="0,0,0,0" Orientation="Vertical">
                             <TextBlock Text="{Binding RouteName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
                             <TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>

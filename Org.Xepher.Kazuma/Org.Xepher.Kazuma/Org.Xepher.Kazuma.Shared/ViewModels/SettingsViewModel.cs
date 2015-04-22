@@ -14,19 +14,19 @@ namespace Org.Xepher.Kazuma.ViewModels
         public SettingsViewModel(IScreen screen, IMessageBus messageBus)
             : base(screen, messageBus)
         {
-            base.PathSegment = "Settings";
+            base.PathSegment = Constants.PATH_SEGMENT_SETTINGS;
 
             this.localSettings = ApplicationData.Current.LocalSettings;
 
             #region Local Storage Configuration
 
             // IsLocalStorageOn default value
-            _isLocalStorageOn = ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn");
+            _isLocalStorageOn = ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED);
 
             this.ObservableForProperty(vm => vm.IsLocalStorageOn)
                 .Subscribe(x =>
                 {
-                    ApplicationDataSettingsHelper.SaveOrUpdateValue("IsLocalStorageOn", x.Value);
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, x.Value);
                 });
 
             #endregion Local Storage Configuration

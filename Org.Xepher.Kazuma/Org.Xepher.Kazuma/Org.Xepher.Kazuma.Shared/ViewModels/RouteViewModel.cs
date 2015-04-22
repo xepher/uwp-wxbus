@@ -19,7 +19,7 @@ namespace Org.Xepher.Kazuma.ViewModels
         public RouteViewModel(IScreen screen, IMessageBus messageBus, Route selectedRoute)
             : base(screen, messageBus)
         {
-            base.PathSegment = "Route";
+            base.PathSegment = Constants.PATH_SEGMENT_ROUTE;
             this.SelectedRoute = selectedRoute;
 
             #region Query Configuration
@@ -55,7 +55,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             #endregion ApplicationBar Configuration
 
-            if (ApplicationDataSettingsHelper.ReadValue<bool>("IsLocalStorageOn"))
+            if (ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
             {
                 Observable.StartAsync(RequestLocalData);
             }
@@ -98,7 +98,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             Segments =
                 await
                     StorageHelper.ReadData<ObservableCollection<Segment>>(ApplicationData.Current.LocalFolder,
-                        String.Format("{0}.data", SelectedRoute.RouteId));
+                        String.Format(Constants.STORAGE_FILE_ROUTE, SelectedRoute.RouteId));
 
             if (null == Segments || Segments.Count == 0)
             {
@@ -127,18 +127,18 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
                 if (++retryCount > 10) break;
-                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format("获取数据失败，第{0}次尝试", retryCount - 1), "TopBarMessage");
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
             } while (Segments == null || Segments.Count == 0);
 
             if (retryCount > 10)
             {
-                base.HostMessageBus.SendMessage<string>("网络异常，请稍后再试", "TopBarMessage");
+                base.HostMessageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 IsBusy = false;
                 return;
             }
 
-            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format("{0}.data", SelectedRoute.RouteId), Segments);
+            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format(Constants.STORAGE_FILE_ROUTE, SelectedRoute.RouteId), Segments);
 
             IsBusy = false;
         }
@@ -163,12 +163,12 @@ namespace Org.Xepher.Kazuma.ViewModels
 
                 result = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
                 if (++retryCount > 10) break;
-                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format("获取数据失败，第{0}次尝试", retryCount - 1), "TopBarMessage");
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
             } while (null == result.Message);
 
             if (retryCount > 10)
             {
-                base.HostMessageBus.SendMessage<string>("网络异常，请稍后再试", "TopBarMessage");
+                base.HostMessageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 IsBusy = false;
                 return;
@@ -178,7 +178,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (!string.IsNullOrEmpty(realTimeInfo.Message))
             {
-                base.HostMessageBus.SendMessage<string>(realTimeInfo.Message, "TopBarMessage");
+                base.HostMessageBus.SendMessage<string>(realTimeInfo.Message, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 IsBusy = false;
                 return;
@@ -230,10 +230,10 @@ namespace Org.Xepher.Kazuma.ViewModels
         private async Task PinToScreen()
         {
             // Let us first verify if we need to pin or unpin
-            if (SecondaryTile.Exists(Constants.APPBAR_TILE_ID + "." + SelectedRoute.RouteId))
+            if (SecondaryTile.Exists(Constants.APPBAR_TILE_ID + SelectedRoute.RouteId))
             {
                 // First prepare the tile to be unpinned
-                SecondaryTile secondaryTile = new SecondaryTile(Constants.APPBAR_TILE_ID + "." + SelectedRoute.RouteId);
+                SecondaryTile secondaryTile = new SecondaryTile(Constants.APPBAR_TILE_ID + SelectedRoute.RouteId);
 
                 // Now make the delete request.
                 //bool isUnpinned = await secondaryTile.RequestDeleteForSelectionAsync(SecondaryTileHelper.GetElementRect((FrameworkElement)sender), Windows.UI.Popups.Placement.Above);
@@ -257,7 +257,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 // It can be set to TileSize.Square150x150, TileSize.Wide310x150, or TileSize.Default.  
                 // If set to TileSize.Wide310x150, then the asset for the wide size must be supplied as well.  
                 // TileSize.Default will default to the wide size if a wide size is provided, and to the medium size otherwise. 
-                SecondaryTile secondaryTile = new SecondaryTile(Constants.APPBAR_TILE_ID + "." + SelectedRoute.RouteId,
+                SecondaryTile secondaryTile = new SecondaryTile(Constants.APPBAR_TILE_ID + SelectedRoute.RouteId,
                                                                 SelectedRoute.RouteName,
                                                                 SelectedRoute.RouteId,
                                                                 square150x150Logo,

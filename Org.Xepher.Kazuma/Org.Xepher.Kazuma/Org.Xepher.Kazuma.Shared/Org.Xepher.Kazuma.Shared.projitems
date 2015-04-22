@@ -37,6 +37,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SecondaryTileHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SignatureUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\StorageHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\SystemInfoHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RouteViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsViewModel.cs" />
