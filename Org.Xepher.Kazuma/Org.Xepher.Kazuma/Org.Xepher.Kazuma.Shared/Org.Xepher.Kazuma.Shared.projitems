@@ -31,6 +31,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Constants.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Converter\DateTimeConverter.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\GeoHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Utils\IAPHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\ISerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\JsonConvertSerializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\Logger\ConsoleLogger.cs" />
@@ -38,10 +39,14 @@
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SignatureUtil.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\StorageHelper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Utils\SystemInfoHelper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)ViewModels\IAPViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\MainViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\RouteViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\SettingsViewModel.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ViewModels\ViewModelBase.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Views\IAPView.xaml.cs">
+      <DependentUpon>IAPView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)Views\MainView.xaml.cs">
       <DependentUpon>MainView.xaml</DependentUpon>
     </Compile>
@@ -54,6 +59,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="$(MSBuildThisFileDirectory)Shell.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="$(MSBuildThisFileDirectory)Views\IAPView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

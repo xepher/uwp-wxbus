@@ -1,0 +1,37 @@
+﻿<Page
+    x:Class="Org.Xepher.Kazuma.Views.IAPView"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Org.Xepher.Kazuma.Views"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+        <TextBlock Text="WxBus -> In-app Purchase" Margin="4,0,0,0"/>
+        <ListView x:Name="ProductList" Grid.Row="1" Margin="4,0,0,0">
+            <ListView.ItemContainerStyle>
+                <Style TargetType="ListViewItem">
+                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                </Style>
+            </ListView.ItemContainerStyle>
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel Orientation="Horizontal" Background="DarkCyan">
+                        <Image Source="ms-appx:///Assets/Images/Logo150-150.png"/>
+                        <StackPanel>
+                            <TextBlock Text="{Binding Name}" FontSize="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding Description}" FontSize="20" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding FormattedPrice}" FontSize="20" VerticalAlignment="Center"/>
+                            <Button Content="Buy" Click="Button_Click" HorizontalAlignment="Stretch"/>
+                        </StackPanel>
+                    </StackPanel>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+    </Grid>
+</Page>

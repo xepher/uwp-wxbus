@@ -8,6 +8,7 @@ using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using Splat;
+using System.Linq;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -20,7 +21,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             : base(screen, messageBus)
         {
             base.PathSegment = Constants.PATH_SEGMENT_MAIN;
-            
+
             #region FilterData Configuration
 
             this.ObservableForProperty(vm => vm.FilterTerm)
@@ -78,8 +79,6 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             RefreshCommand.Subscribe(async _ =>
             {
-                _sourceRoutes.Clear();
-                Routes.Clear();
                 await RequestInternetData();
             });
 
@@ -104,14 +103,6 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
         }
 
-        private void BindSourceRoutes()
-        {
-            foreach (Route route in Routes)
-            {
-                _sourceRoutes.Add(route);
-            }
-        }
-
         private async Task RequestLocalData()
         {
 #if DEBUG
@@ -127,7 +118,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
             else
             {
-                BindSourceRoutes();
+                _sourceRoutes = Routes.Select(x => x).ToList();
             }
 
             IsBusy = false;
@@ -138,7 +129,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 #if DEBUG
             this.Log().Debug("Load Routes via internet");
 #endif
-
+            ObservableCollection<Route> _routesResult;
             IsBusy = true;
 
             int retryCount = 0;
@@ -150,10 +141,10 @@ namespace Org.Xepher.Kazuma.ViewModels
                         Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
-                Routes = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
+                _routesResult = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (Routes == null || Routes.Count == 0);
+            } while (null == _routesResult || _routesResult.Count == 0);
 
             if (retryCount > 10)
             {
@@ -163,9 +154,12 @@ namespace Org.Xepher.Kazuma.ViewModels
                 return;
             }
 
-            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES, Routes);
+            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES, _routes);
 
-            BindSourceRoutes();
+            _sourceRoutes.Clear();
+            Routes.Clear();
+            Routes = _routesResult;
+            _sourceRoutes = _routesResult.Select(x => x).ToList();
 
             IsBusy = false;
         }

@@ -11,6 +11,7 @@ using ReactiveUI;
 using Splat;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls.Maps;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -35,7 +36,6 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             RefreshCommand.Subscribe(async _ =>
             {
-                Segments.Clear();
                 await RequestInternetData();
             });
 
@@ -88,6 +88,13 @@ namespace Org.Xepher.Kazuma.ViewModels
             set { this.RaiseAndSetIfChanged(ref _segments, value); }
         }
 
+        private MapIcon _myPosition;
+        public MapIcon MyPosition
+        {
+            get { return _myPosition; }
+            set { this.RaiseAndSetIfChanged(ref _myPosition, value); }
+        }
+
         private async Task RequestLocalData()
         {
 #if DEBUG
@@ -113,6 +120,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 #if DEBUG
             this.Log().Debug("Load Segments via internet");
 #endif
+            ObservableCollection<Segment> _segmentsResult;
             IsBusy = true;
 
             int retryCount = 0;
@@ -125,10 +133,10 @@ namespace Org.Xepher.Kazuma.ViewModels
                         SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
                         Constants.BUS_API_SECRET));
 
-                Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
+                _segmentsResult = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (Segments == null || Segments.Count == 0);
+            } while (null == _segmentsResult || _segmentsResult.Count == 0);
 
             if (retryCount > 10)
             {
@@ -139,6 +147,9 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
 
             StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format(Constants.STORAGE_FILE_ROUTE, SelectedRoute.RouteId), Segments);
+
+            Segments.Clear();
+            Segments = _segmentsResult;
 
             IsBusy = false;
         }
@@ -151,7 +162,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             StationWithRealTimeInfo station = _segments[SelectedSegmentIndex].List.Last();
 
             int retryCount = 0;
-            RealTimeBusData result;
+            RealTimeBusData realTimeInfo;
             do
             {
                 string requestUrl =
@@ -161,10 +172,10 @@ namespace Org.Xepher.Kazuma.ViewModels
                         SelectedRoute.RouteId, Constants.BUS_API_SECRET, station.SegmentId,
                         station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
-                result = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
+                realTimeInfo = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (null == result.Message);
+            } while (null == realTimeInfo || null == realTimeInfo.Message);
 
             if (retryCount > 10)
             {
@@ -173,8 +184,6 @@ namespace Org.Xepher.Kazuma.ViewModels
                 IsBusy = false;
                 return;
             }
-
-            RealTimeBusData realTimeInfo = result;
 
             if (!string.IsNullOrEmpty(realTimeInfo.Message))
             {

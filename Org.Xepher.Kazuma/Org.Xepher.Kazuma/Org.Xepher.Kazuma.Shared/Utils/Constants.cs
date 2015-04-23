@@ -35,6 +35,8 @@ namespace Org.Xepher.Kazuma.Utils
         public const string MSG_NETWORK_UNAVAILABLE = "网络异常，请稍后再试";
         public const string MSG_NETWORK_RETRY = "获取数据失败，第{0}次尝试";
 
+        public const string MSG_MAP_SET_VIEW_FAILURE = "地图定位失败，请重试";
+
         public const string MSGBUS_TOKEN_MESSAGEBAR = "TopBarMessage";
 
         public const string APPBAR_TILE_ID = "App.SecondaryTile.";
@@ -45,6 +47,7 @@ namespace Org.Xepher.Kazuma.Utils
         public const string PATH_SEGMENT_MAIN = "Main";
         public const string PATH_SEGMENT_ROUTE = "Route";
         public const string PATH_SEGMENT_SETTINGS = "Settings";
+        public const string PATH_SEGMENT_IAP = "IAP";
 
         private static string GetDeviceID()
         {

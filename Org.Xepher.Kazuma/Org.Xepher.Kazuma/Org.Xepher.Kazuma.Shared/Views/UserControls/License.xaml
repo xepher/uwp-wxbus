@@ -16,6 +16,11 @@
                 <LineBreak />
                 <Run Text="Copyright 2014-2015 BUT, WxBus Designer" />
                 <LineBreak />
+            </TextBlock>
+            <StackPanel>
+                <Button x:Name="Donate" Content="Donate us" HorizontalAlignment="Stretch" Click="Donate_Click"/>
+            </StackPanel>
+            <TextBlock TextWrapping="Wrap">
                 <LineBreak />
                 <Run Text="Data Source" FontSize="22" />
                 <LineBreak />
@@ -37,7 +42,7 @@
                 <LineBreak />
                 <Run Text="Libraries" FontSize="22" />                            
                 <LineBreak />
-                <Run Text="Some WxBus plugins use external libraries that make extensive use of the following persons' or companies' code:" />
+                <Run Text="WxBus use external libraries that make extensive use of the following persons' or companies' code:" />
                 <LineBreak />
                 <Run Text="Newtonsoft.Json - Copyright (c) 2007 James Newton-King -" /> 
                 <Hyperlink Foreground="DarkOrange"

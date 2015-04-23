@@ -143,7 +143,7 @@ namespace Org.Xepher.Kazuma.Utils
             {
                 return Activator.CreateInstance<T>();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return Activator.CreateInstance<T>();
             }
