@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Org.Xepher.Kazuma.Models
 {
-    public class RealTimeBusData
+    public class RealTimeData
     {
         public string Message { get; set; }
         public List<RealTimeBus> Result { get; set; }

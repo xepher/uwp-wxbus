@@ -20,6 +20,7 @@ using Org.Xepher.Kazuma.ViewModels;
 using Org.Xepher.Kazuma.Views;
 using Splat;
 using Org.Xepher.Kazuma.Utils;
+using Org.Xepher.Kazuma.Common;
 
 // The Blank Application template is documented at http://go.microsoft.com/fwlink/?LinkId=234227
 
@@ -44,11 +45,11 @@ namespace Org.Xepher.Kazuma
             this.InitializeComponent();
             this.Suspending += this.OnSuspending;
             autoSuspendHelper = new AutoSuspendHelper(this);
-
+            
             // Register Appbootstrapper itself, other register should put in Appbootstrapper
-            AppBootstrapper bootstrapper = new AppBootstrapper();
-            Locator.CurrentMutable.RegisterConstant(bootstrapper, typeof(AppBootstrapper));
-
+            IAppBootstrapper bootstrapper = new AppBootstrapper();
+            Locator.CurrentMutable.RegisterConstant(bootstrapper, typeof(IAppBootstrapper));
+            
             // you should handle the AppState by yourself
             RxApp.SuspensionHost.CreateNewAppState = () => bootstrapper;
             RxApp.SuspensionHost.SetupDefaultSuspendResume();
@@ -115,7 +116,7 @@ namespace Org.Xepher.Kazuma
                 // parameter
                 if (rootFrame.Navigate(typeof(Shell), e.Arguments))
                 {
-                    IScreen hostScreen = Locator.Current.GetService<IScreen>();
+                    IAppBootstrapper hostScreen = Locator.Current.GetService<IAppBootstrapper>();
                     IMessageBus hostMessageBus = Locator.Current.GetService<IMessageBus>();
                     // Navigate to the opening page of the application
                     hostScreen.Router.Navigate.Execute(new MainViewModel(hostScreen, hostMessageBus));
@@ -128,8 +129,7 @@ namespace Org.Xepher.Kazuma
 
             if (!string.IsNullOrEmpty(e.Arguments))
             {
-                // if only get service, use Locator.Current is enough
-                IScreen hostScreen = Locator.Current.GetService<IScreen>();
+                IAppBootstrapper hostScreen = Locator.Current.GetService<IAppBootstrapper>();
                 IMessageBus hostMessageBus = Locator.Current.GetService<IMessageBus>();
                 if (hostScreen.Router.NavigationStack.Count > 1)
                 {

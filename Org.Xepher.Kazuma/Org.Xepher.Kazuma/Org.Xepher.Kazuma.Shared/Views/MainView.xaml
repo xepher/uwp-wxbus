@@ -5,11 +5,13 @@
     xmlns:local="using:Org.Xepher.Kazuma.Views"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:Maps="using:Windows.UI.Xaml.Controls.Maps"
     mc:Ignorable="d">
     <Page.BottomAppBar>
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
+                <AppBarButton x:Name="Location" Icon="Target" Label="Location"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="Setting" Icon="Setting" Label="Setting"/>
@@ -17,31 +19,66 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-        <TextBlock x:Name="RouteCount" Margin="4,0,0,0"/>
-        <TextBox Grid.Row="1" x:Name="FilterTerm" Margin="4,0,0,0"/>
-        <ListView Grid.Row="2" x:Name="Routes">
-            <ListView.ItemContainerStyle>
-                <Style TargetType="ListViewItem">
-                    <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
-                </Style>
-            </ListView.ItemContainerStyle>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
-                        <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
-                        <StackPanel Margin="0,0,0,0" Orientation="Vertical">
-                            <TextBlock Text="{Binding RouteName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
-                            <TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>
-                        </StackPanel>
-                    </StackPanel>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-    </Grid>
+    <FlipView>
+        <FlipViewItem>
+            <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <TextBlock x:Name="RouteCount" Margin="4,0,0,0"/>
+                <TextBox Grid.Row="1" x:Name="FilterTerm" Margin="4,0,0,0"/>
+                <ListView Grid.Row="2" x:Name="Routes">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
+                                <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
+                                <StackPanel Margin="0,0,0,0" Orientation="Vertical">
+                                    <TextBlock Text="{Binding RouteName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </FlipViewItem>
+        <FlipViewItem>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                
+                <Maps:MapControl x:Name="Map" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" MapServiceToken="XfyndYxHpFoRLiG0J77MZg"/>
+                <ListView Grid.Row="1" x:Name="SegmentsNearby">
+                    <ListView.ItemContainerStyle>
+                        <Style TargetType="ListViewItem">
+                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                        </Style>
+                    </ListView.ItemContainerStyle>
+                    <ListView.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
+                                <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
+                                <StackPanel Margin="0,0,0,0" Orientation="Vertical">
+                                    <TextBlock Text="{Binding SegmentName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <!--<TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>-->
+                                        <TextBlock Text="{Binding SegmentName2}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListView.ItemTemplate>
+                </ListView>
+            </Grid>
+        </FlipViewItem>
+    </FlipView>
 </Page>

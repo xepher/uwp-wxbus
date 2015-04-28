@@ -7,6 +7,11 @@ using Splat;
 using System;
 using System.Reactive.Linq;
 using Windows.UI.Popups;
+using System.Linq;
+using Windows.UI.Xaml.Controls.Maps;
+using Windows.Devices.Geolocation;
+using Org.Xepher.Kazuma.Models;
+using Org.Xepher.Kazuma.Utils;
 
 namespace Org.Xepher.Kazuma.Views
 {
@@ -15,6 +20,8 @@ namespace Org.Xepher.Kazuma.Views
     /// </summary>
     public sealed partial class MainView : Page, IViewFor<MainViewModel>, IEnableLogger
     {
+        MapIcon myposition = null;
+
         public MainView()
         {
             this.InitializeComponent();
@@ -50,17 +57,97 @@ namespace Org.Xepher.Kazuma.Views
 
             this.Bind(ViewModel, vm => vm.Routes, v => v.Routes.ItemsSource);
 
+            this.Bind(ViewModel, vm => vm.SegmentsNearby, v => v.SegmentsNearby.ItemsSource);
+
             this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
 
             this.OneWayBind(ViewModel, vm => vm.Title, v => v.RouteCount.Text);
 
             this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
+            this.BindCommand(ViewModel, vm => vm.LocationCommand, v => v.Location);
+
             this.BindCommand(ViewModel, vm => vm.NavigateSettingsCommand, v => v.Setting);
+
+            this.WhenAnyValue(v => v.ViewModel.HostBootstrapper.MyPosition)
+                .Where(x => x.Latitude != 0 && x.Longitude != 0)
+                .Subscribe(async position =>
+                {
+                    foreach (MapIcon item in this.Map.MapElements)
+                    {
+                        if (item.Title == "Me")
+                            myposition = item;
+                    }
+
+                    if (null == myposition)
+                    {
+                        myposition = new MapIcon()
+                        {
+                            Location = new Geopoint(position),
+                            Title = "Me",
+                            //Image = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromUri(new System.Uri("ms-appx:///Assets/pin.png")),
+                            NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
+                            ZIndex = 900
+                        };
+
+                        this.Map.MapElements.Add(myposition);
+                    }
+                    else
+                    {
+                        myposition.Location = new Geopoint(position);
+                    }
+
+                    await this.Map.TrySetViewAsync(myposition.Location, 16, 0, 0, MapAnimationKind.Bow);
+                });
+
+            Observable.FromEventPattern<SelectionChangedEventArgs>(this.SegmentsNearby, "SelectionChanged")
+                .Select(x => x.Sender)
+                .Subscribe(async sender =>
+                {
+                    this.Map.MapElements.Clear();
+                    if (null != myposition)
+                    {
+                        this.Map.MapElements.Add(myposition);
+                    }
+
+                    foreach (StationNearBy station in ((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations)
+                    {
+                        MapIcon pin = new MapIcon
+                        {
+                            Location = new Geopoint(GeoHelper.bd_decrypt(new BasicGeoposition { Latitude = station.BGPS.Latitude, Longitude = station.BGPS.Longitude })),
+                            Title = station.StationName,
+                            NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
+                            ZIndex = 900
+                        };
+
+                        this.Map.MapElements.Add(pin);
+                    }
+
+                    if (((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations.Any())
+                    {
+                        await this.Map.TrySetViewAsync(new Geopoint(GeoHelper.bd_decrypt(new BasicGeoposition { Latitude = ((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations.First().BGPS.Latitude, Longitude = ((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations.First().BGPS.Longitude })),
+                            18, 0, 0, MapAnimationKind.Bow);
+                    }
+                });
+
+            //this.WhenAnyValue(v => v.ViewModel.SegmentsNearby)
+            //    .Where(x => null != x && x.Any())
+            //    .Subscribe(lstSegmentsNearby =>
+            //    {
+            //        foreach (SegmentNearby item in lstSegmentsNearby)
+            //        {
+
+            //        }
+            //    });
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 
         #endregion
+
+        private void SegmentsNearby_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

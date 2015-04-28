@@ -16,10 +16,13 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="$(MSBuildThisFileDirectory)AppBootstrapper.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Common\IAppBootstrapper.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Common\SuspensionManager.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ModelBase.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBusData.cs" />
-    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTimeBus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\NearBy\SegmentNearBy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\NearBy\StationNearBy.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTime\RealTimeBus.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\RealTime\RealTimeBusData.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Route.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Segment.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Station.cs" />

@@ -25,13 +25,9 @@ namespace Org.Xepher.Kazuma.Views
     /// </summary>
     public sealed partial class RouteView : Page, IViewFor<RouteViewModel>
     {
-        Geolocator geoLocator = null;
-
         public RouteView()
         {
             this.InitializeComponent();
-
-            geoLocator = new Geolocator { DesiredAccuracy = PositionAccuracy.High, MovementThreshold = 2, ReportInterval = 1000, DesiredAccuracyInMeters = 2 };
 
             InitializeBindingSettings();
         }
@@ -57,7 +53,7 @@ namespace Org.Xepher.Kazuma.Views
             this.Bind(ViewModel, vm => vm.Segments, v => v.Segments.ItemsSource);
 
             this.Bind(ViewModel, vm => vm.SelectedSegmentIndex, v => v.Segments.SelectedIndex);
-            
+
             this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
             this.BindCommand(ViewModel, vm => vm.SearchCommand, v => v.Search);
@@ -75,83 +71,43 @@ namespace Org.Xepher.Kazuma.Views
                         rootGrid.RowDefinitions[1].Height = new GridLength(3, GridUnitType.Star);
                 });
 
-            Observable.FromEventPattern<StatusChangedEventArgs>(geoLocator, "StatusChanged")
-                .Select(x => x.EventArgs)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(async args =>
+            this.WhenAnyValue(v => v.ViewModel.HostBootstrapper.MyPosition)
+                .Where(x => x.Latitude != 0 && x.Longitude != 0)
+                .Subscribe(async position =>
                 {
-                    IMessageBus messageBus = Locator.Current.GetService<IMessageBus>();
-                    switch (args.Status)
+                    MapIcon myposition = null;
+                    foreach (MapIcon item in this.Map.MapElements)
                     {
-                        case PositionStatus.Ready:
-                            // Location platform is providing valid data.
-                            Geoposition location = await geoLocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
-
-                            ViewModel.MyPosition = new MapIcon()
-                                {
-                                    Location = new Geopoint(GeoHelper.gcj_encrypt(location.Coordinate.Point.Position)),
-                                    Title = "Me",
-                                    NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
-                                    ZIndex = 900
-                                };
-                            break;
-
-                        case PositionStatus.Initializing:
-                            // Location platform is acquiring a fix. It may or may not have data. Or the data may be less accurate.
-                            break;
-
-                        case PositionStatus.NoData:
-                            // Location platform could not obtain location data.
-                            break;
-
-                        case PositionStatus.Disabled:
-                            // The permission to access location data is denied by the user or other policies.
-                            messageBus.SendMessage<string>("定位服务已被关闭，请到设置中打开", Constants.MSGBUS_TOKEN_MESSAGEBAR);
-                            break;
-
-                        case PositionStatus.NotInitialized:
-                            // The location platform is not initialized. This indicates that the application has not made a request for location data.
-                            break;
-
-                        case PositionStatus.NotAvailable:
-                            // The location platform is not available on this version of the OS.
-                            break;
-
-                        default:
-                            // Unknown
-                            break;
+                        if (item.Title == "Me")
+                            myposition = item;
                     }
-                });
 
-            Observable.FromEventPattern<PositionChangedEventArgs>(geoLocator, "PositionChanged")
-                .Select(x => x.EventArgs)
-                .ObserveOn(RxApp.MainThreadScheduler)
-                .Subscribe(args =>
-                {
-                    ViewModel.MyPosition = new MapIcon()
+                    if (null == myposition)
                     {
-                        Location = new Geopoint(GeoHelper.gcj_encrypt(args.Position.Coordinate.Point.Position)),
-                        Title = "Me",
-                        NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
-                        ZIndex = 900
-                    };
+                        myposition = new MapIcon()
+                        {
+                            Location = new Geopoint(position),
+                            Title = "Me",
+                            //Image = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromUri(new System.Uri("ms-appx:///Assets/pin.png")),
+                            NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
+                            ZIndex = 900
+                        };
+
+                        this.Map.MapElements.Add(myposition);
+                    }
+                    else
+                    {
+                        myposition.Location = new Geopoint(position);
+                    }
+
+                    await this.Map.TrySetViewAsync(myposition.Location, 16, 0, 0, MapAnimationKind.Bow);
                 });
 
-            this.WhenAnyValue(v => v.ViewModel.MyPosition)
-                .Where(icon => null != icon)
-                .Subscribe(async icon =>
-                {
-                    this.Map.MapElements.Add(icon);
-                    await this.Map.TrySetViewAsync(icon.Location, 16, 0, 0, Windows.UI.Xaml.Controls.Maps.MapAnimationKind.Bow);
-                });
-
-            this.WhenAnyValue(v => v.Segments.Items.Count, v => v.Segments.SelectedItem)
-                .Where((v, i) => v.Item1 > 0 && v.Item2 != null)
-                .Subscribe(v =>
+            this.WhenAnyValue(v => v.Segments.SelectedItem)
+                .Where(x => null != x)
+                .Subscribe(async item =>
                 {
                     this.Map.MapElements.Clear();
-                    if (null != ViewModel.MyPosition)
-                        this.Map.MapElements.Add(ViewModel.MyPosition);
 
                     List<BasicGeoposition> positionList = (Segments.SelectedItem as Segment).List.Select(model => GeoHelper.bd_decrypt(new BasicGeoposition() { Latitude = model.BGPS.Latitude, Longitude = model.BGPS.Longitude })).ToList();
                     Geopath polylinePath = new Geopath(positionList);
@@ -181,6 +137,8 @@ namespace Org.Xepher.Kazuma.Views
                         };
                         this.Map.MapElements.Add(pin);
                     }
+
+                    await this.Map.TrySetViewAsync(geopointList.First(), 16, 0, 0, MapAnimationKind.Bow);
                 });
 
             this.NavigationCacheMode = NavigationCacheMode.Required;
@@ -188,20 +146,16 @@ namespace Org.Xepher.Kazuma.Views
 
         #endregion
 
-        // TODO: need to be binded via Rx
+        // Because the ListView use visualization, so cannot binding dynamicly
         private async void ListView_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Org.Xepher.Kazuma.Models.StationWithRealTimeInfo selectedItem = (Org.Xepher.Kazuma.Models.StationWithRealTimeInfo)((sender as ListView).SelectedItem);
-
-            var gl = new Windows.Devices.Geolocation.Geolocator() { DesiredAccuracy = Windows.Devices.Geolocation.PositionAccuracy.High };
-            //var location = await gl.GetGeopositionAsync(System.TimeSpan.FromMinutes(5), System.TimeSpan.FromSeconds(5));
+            StationWithRealTimeInfo selectedItem = (StationWithRealTimeInfo)((sender as ListView).SelectedItem);
 
             // set location to which user clicked
-            var geoPosition = Org.Xepher.Kazuma.Utils.GeoHelper.bd_decrypt(new Windows.Devices.Geolocation.BasicGeoposition() { Latitude = selectedItem.BGPS.Latitude, Longitude = selectedItem.BGPS.Longitude });
-            var location = new Windows.Devices.Geolocation.Geopoint(geoPosition);
+            var geoPosition = GeoHelper.bd_decrypt(new BasicGeoposition() { Latitude = selectedItem.BGPS.Latitude, Longitude = selectedItem.BGPS.Longitude });
+            var location = new Geopoint(geoPosition);
 
-            //this.Map.TrySetViewAsync(location.Coordinate.Point, 16, 0, 0, Windows.UI.Xaml.Controls.Maps.MapAnimationKind.Bow);
-            await this.Map.TrySetViewAsync(location, 16, 0, 0, Windows.UI.Xaml.Controls.Maps.MapAnimationKind.Bow);
+            await this.Map.TrySetViewAsync(location, 16, 0, 0, MapAnimationKind.Bow);
         }
     }
 }

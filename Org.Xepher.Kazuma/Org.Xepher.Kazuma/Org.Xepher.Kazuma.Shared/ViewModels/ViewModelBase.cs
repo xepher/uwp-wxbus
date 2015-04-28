@@ -1,4 +1,6 @@
-﻿using ReactiveUI;
+﻿using Org.Xepher.Kazuma.Common;
+using Org.Xepher.Kazuma.Utils;
+using ReactiveUI;
 using Splat;
 
 namespace Org.Xepher.Kazuma.ViewModels
@@ -20,9 +22,25 @@ namespace Org.Xepher.Kazuma.ViewModels
             get { return PathSegment; }
         }
 
+        /// <summary>
+        /// Don't use this IScreen object, use HostBootstrapper instead
+        /// </summary>
         public IScreen HostScreen
         {
-            get; protected set;
+            get;
+            protected set;
+        }
+
+        public IAppBootstrapper HostBootstrapper
+        {
+            get
+            {
+                return (IAppBootstrapper)HostScreen;
+            }
+            protected set
+            {
+                HostScreen = HostBootstrapper;
+            }
         }
 
         public IMessageBus HostMessageBus
@@ -38,9 +56,9 @@ namespace Org.Xepher.Kazuma.ViewModels
          * invoke Commands / change Properties, then test to see if you navigated
          * to the correct new screen 
          */
-        public ViewModelBase(IScreen screen, IMessageBus messageBus)
+        public ViewModelBase(IAppBootstrapper bootstrapper, IMessageBus messageBus)
         {
-            HostScreen = screen;
+            HostScreen = bootstrapper;
             HostMessageBus = messageBus;
         }
     }

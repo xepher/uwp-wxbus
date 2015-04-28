@@ -4,6 +4,9 @@ using Org.Xepher.Kazuma.Views;
 using ReactiveUI;
 using Splat;
 using Org.Xepher.Kazuma.Utils.Logger;
+using Windows.Devices.Geolocation;
+using Org.Xepher.Kazuma.Utils;
+using Org.Xepher.Kazuma.Common;
 
 namespace Org.Xepher.Kazuma
 {
@@ -27,9 +30,17 @@ namespace Org.Xepher.Kazuma
      * which decides which View to Navigate to when the application starts.
      */
 
-    public class AppBootstrapper : ReactiveObject, IScreen
+    public class AppBootstrapper : ReactiveObject, IAppBootstrapper
     {
         public RoutingState Router { get; private set; }
+
+        private BasicGeoposition _myPosition;
+        public BasicGeoposition MyPosition
+        {
+            get { return _myPosition; }
+            //set { this.RaiseAndSetIfChanged(ref _myPosition, GeoHelper.bd_encrypt(value)); }
+            set { this.RaiseAndSetIfChanged(ref _myPosition, value); } // TODO: need to confirm wifiwx.com use oringal gps position
+        }
 
         public AppBootstrapper(IMutableDependencyResolver dependencyResolver = null, RoutingState testRouter = null)
         {
@@ -53,15 +64,18 @@ namespace Org.Xepher.Kazuma
 #if DEBUG
             dependencyResolver.RegisterConstant(new ConsoleLogger(), typeof(ILogger));
 #endif
-            dependencyResolver.RegisterConstant(this, typeof(IScreen));
+            dependencyResolver.RegisterConstant(this, typeof(IAppBootstrapper));
             dependencyResolver.RegisterConstant(new MessageBus(), typeof(IMessageBus));
 
             dependencyResolver.Register(() => new MainView(), typeof(IViewFor<MainViewModel>));
 #if WINDOWS_PHONE_APP
             dependencyResolver.Register(() => new RouteView(), typeof(IViewFor<RouteViewModel>));
+#endif
             dependencyResolver.Register(() => new SettingsView(), typeof(IViewFor<SettingsViewModel>));
             dependencyResolver.Register(() => new IAPView(), typeof(IViewFor<IAPViewModel>));
-#endif
+
+            IMessageBus messageBus = Locator.Current.GetService<IMessageBus>();
+            messageBus.Listen<BasicGeoposition>(Constants.MSGBUS_TOKEN_MY_GEOPOSITION).Subscribe(x => MyPosition = x);
         }
     }
 }

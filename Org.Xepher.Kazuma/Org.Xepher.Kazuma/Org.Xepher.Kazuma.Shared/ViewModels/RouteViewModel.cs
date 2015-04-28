@@ -12,24 +12,18 @@ using Splat;
 using Windows.UI.StartScreen;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls.Maps;
+using Org.Xepher.Kazuma.Common;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
     public class RouteViewModel : ViewModelBase
     {
-        public RouteViewModel(IScreen screen, IMessageBus messageBus, Route selectedRoute)
-            : base(screen, messageBus)
+        public RouteViewModel(IAppBootstrapper bootstrapper, IMessageBus messageBus, Route selectedRoute)
+            : base(bootstrapper, messageBus)
         {
             base.PathSegment = Constants.PATH_SEGMENT_ROUTE;
             this.SelectedRoute = selectedRoute;
-
-            #region Query Configuration
-
-            //this.WhenAnyValue(vm => vm.SelectedSegmentIndex, vm => vm.Segments, vm => vm.IsBusy, (x, y, z) => y.Count > 0 && !z)
-            //    .Subscribe(async _ => await GetRealTimeInfo());
-
-            #endregion Query Configuration
-
+            
             #region ApplicationBar Configuration
 
             RefreshCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
@@ -88,13 +82,6 @@ namespace Org.Xepher.Kazuma.ViewModels
             set { this.RaiseAndSetIfChanged(ref _segments, value); }
         }
 
-        private MapIcon _myPosition;
-        public MapIcon MyPosition
-        {
-            get { return _myPosition; }
-            set { this.RaiseAndSetIfChanged(ref _myPosition, value); }
-        }
-
         private async Task RequestLocalData()
         {
 #if DEBUG
@@ -120,7 +107,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 #if DEBUG
             this.Log().Debug("Load Segments via internet");
 #endif
-            ObservableCollection<Segment> _segmentsResult;
+
             IsBusy = true;
 
             int retryCount = 0;
@@ -129,14 +116,16 @@ namespace Org.Xepher.Kazuma.ViewModels
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS,
                         Constants.SETTING_USER_ID,
-                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        HostBootstrapper.MyPosition.Latitude.ToString(),
+                        HostBootstrapper.MyPosition.Longitude.ToString(),
+                        Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
                         Constants.BUS_API_SECRET));
 
-                _segmentsResult = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
+                Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (null == _segmentsResult || _segmentsResult.Count == 0);
+            } while (null == Segments || Segments.Count == 0);
 
             if (retryCount > 10)
             {
@@ -147,9 +136,6 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
 
             StorageHelper.WriteData(ApplicationData.Current.LocalFolder, String.Format(Constants.STORAGE_FILE_ROUTE, SelectedRoute.RouteId), Segments);
-
-            Segments.Clear();
-            Segments = _segmentsResult;
 
             IsBusy = false;
         }
@@ -162,17 +148,20 @@ namespace Org.Xepher.Kazuma.ViewModels
             StationWithRealTimeInfo station = _segments[SelectedSegmentIndex].List.Last();
 
             int retryCount = 0;
-            RealTimeBusData realTimeInfo;
+            RealTimeData realTimeInfo;
             do
             {
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
-                        Constants.SETTING_USER_ID, Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN,
+                        Constants.SETTING_USER_ID,
+                        HostBootstrapper.MyPosition.Latitude.ToString(),
+                        HostBootstrapper.MyPosition.Longitude.ToString(),
+                        Constants.DEVICE_TOKEN,
                         Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
                         SelectedRoute.RouteId, Constants.BUS_API_SECRET, station.SegmentId,
                         station.StationId.Length > 10 ? station.StationSeq : station.StationId));
 
-                realTimeInfo = await SignatureUtil.WebRequestAsync<RealTimeBusData>(requestUrl);
+                realTimeInfo = await SignatureUtil.WebRequestAsync<RealTimeData>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
             } while (null == realTimeInfo || null == realTimeInfo.Message);

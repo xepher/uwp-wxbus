@@ -1,4 +1,5 @@
-﻿using Org.Xepher.Kazuma.Utils;
+﻿using Org.Xepher.Kazuma.Common;
+using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,8 @@ namespace Org.Xepher.Kazuma.ViewModels
     {
         ApplicationDataContainer localSettings = null;
 
-        public SettingsViewModel(IScreen screen, IMessageBus messageBus)
-            : base(screen, messageBus)
+        public SettingsViewModel(IAppBootstrapper bootstrapper, IMessageBus messageBus)
+            : base(bootstrapper, messageBus)
         {
             base.PathSegment = Constants.PATH_SEGMENT_SETTINGS;
 

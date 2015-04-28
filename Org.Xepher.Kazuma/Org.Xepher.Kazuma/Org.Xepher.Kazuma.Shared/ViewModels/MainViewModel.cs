@@ -9,6 +9,8 @@ using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using Splat;
 using System.Linq;
+using Windows.Devices.Geolocation;
+using Org.Xepher.Kazuma.Common;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -17,8 +19,10 @@ namespace Org.Xepher.Kazuma.ViewModels
         // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
         private IList<Route> _sourceRoutes = new ObservableCollection<Route>();
 
-        public MainViewModel(IScreen screen, IMessageBus messageBus)
-            : base(screen, messageBus)
+        private bool isFirstLoad = true;
+
+        public MainViewModel(IAppBootstrapper bootstrapper, IMessageBus messageBus)
+            : base(bootstrapper, messageBus)
         {
             base.PathSegment = Constants.PATH_SEGMENT_MAIN;
 
@@ -58,7 +62,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 //.DistinctUntilChanged()
                 .Subscribe(r =>
                 {
-                    base.HostScreen.Router.Navigate.Execute(new RouteViewModel(base.HostScreen, base.HostMessageBus, r));
+                    base.HostScreen.Router.Navigate.Execute(new RouteViewModel(base.HostBootstrapper, base.HostMessageBus, r));
 
                     this.SelectedRoute = null;
                 });
@@ -68,7 +72,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             NavigateSettingsCommand.Subscribe(_ =>
             {
-                base.HostScreen.Router.Navigate.Execute(new SettingsViewModel(base.HostScreen, base.HostMessageBus));
+                base.HostScreen.Router.Navigate.Execute(new SettingsViewModel(base.HostBootstrapper, base.HostMessageBus));
             });
 
             #endregion Navigation Configuration
@@ -79,7 +83,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             RefreshCommand.Subscribe(async _ =>
             {
-                await RequestInternetData();
+                await RequestInternetRoutes();
             });
 
             // don't use ToProperty(), because the ToProperty() is a Lazy Observation
@@ -93,17 +97,56 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             #endregion Refresh Data Configuration
 
-            if (ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
+            #region Location Configuration
+
+            LocationCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
+
+            LocationCommand.Subscribe(async _ =>
             {
-                Observable.StartAsync(RequestLocalData);
-            }
-            else
-            {
-                Observable.StartAsync(RequestInternetData);
-            }
+                messageBus.SendMessage<string>("正在定位，请稍候。", Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                Geolocator geolocator = new Geolocator { ReportInterval = 1000 };
+
+                Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+
+                if (location.Coordinate.Point.Position.Latitude == HostBootstrapper.MyPosition.Latitude && location.Coordinate.Point.Position.Longitude == HostBootstrapper.MyPosition.Longitude)
+                {
+                    messageBus.SendMessage<string>("位置未发生改变，无须重新定位。", Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                }
+                else
+                {
+                    messageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                }
+            });
+
+            #endregion Location Configuration
+
+            #region Request data when MyPosition is ready
+
+            this.WhenAnyValue(vm => vm.HostBootstrapper.MyPosition)
+                .Where(x => x.Latitude != 0 && x.Longitude != 0)
+                .Subscribe(position =>
+                {
+                    if (isFirstLoad)
+                    {
+                        if (ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
+                        {
+                            Observable.StartAsync(RequestLocalRoutes);
+                        }
+                        else
+                        {
+                            Observable.StartAsync(RequestInternetRoutes);
+                        }
+
+                        isFirstLoad = false;
+                    }
+
+                    Observable.StartAsync(RequestSegmentsNearby);
+                });
+
+            #endregion Request data when MyPosition is ready
         }
 
-        private async Task RequestLocalData()
+        private async Task RequestLocalRoutes()
         {
 #if DEBUG
             this.Log().Debug("Load Routes via LocalFolder");
@@ -114,7 +157,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             if (null == Routes || Routes.Count == 0)
             {
-                await RequestInternetData();
+                await RequestInternetRoutes();
             }
             else
             {
@@ -124,7 +167,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             IsBusy = false;
         }
 
-        private async Task RequestInternetData()
+        private async Task RequestInternetRoutes()
         {
 #if DEBUG
             this.Log().Debug("Load Routes via internet");
@@ -138,7 +181,9 @@ namespace Org.Xepher.Kazuma.ViewModels
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
                         Constants.SETTING_USER_ID,
-                        Constants.BUS_LAT, Constants.BUS_LNG, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        HostBootstrapper.MyPosition.Latitude.ToString(),
+                        HostBootstrapper.MyPosition.Longitude.ToString(),
+                        Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
                 _routesResult = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
@@ -154,22 +199,63 @@ namespace Org.Xepher.Kazuma.ViewModels
                 return;
             }
 
-            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES, _routes);
+            StorageHelper.WriteData(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES, _routesResult);
 
             _sourceRoutes.Clear();
-            Routes.Clear();
-            Routes = _routesResult;
             _sourceRoutes = _routesResult.Select(x => x).ToList();
+
+            Routes.Clear();
+            Routes = _routesResult.Select(x => x).ToList();
 
             IsBusy = false;
         }
 
-        private IList<Route> _routes;
+        private async Task RequestSegmentsNearby()
+        {
+#if DEBUG
+            this.Log().Debug("Load Segments nearby via internet");
+#endif
+            Dictionary<string, SegmentNearby> _segmentsNearbyResult;
+
+            int retryCount = 0;
+            do
+            {
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS_NEARBY,
+                        Constants.SETTING_USER_ID,
+                        31.574089, 120.292374, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+
+                _segmentsNearbyResult = await SignatureUtil.WebRequestAsync<Dictionary<string, SegmentNearby>>(requestUrl);
+                if (++retryCount > 10) break;
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
+            } while (null == _segmentsNearbyResult || _segmentsNearbyResult.Count == 0);
+
+            if (retryCount > 10)
+            {
+                base.HostMessageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+
+                IsBusy = false;
+                return;
+            }
+
+            SegmentsNearby = new ObservableCollection<SegmentNearby>(_segmentsNearbyResult.Values.ToList());
+        }
+
+        private IList<Route> _routes = new ObservableCollection<Route>();
 
         public IList<Route> Routes
         {
             get { return _routes; }
             set { this.RaiseAndSetIfChanged(ref _routes, value); }
+        }
+
+        private IList<SegmentNearby> _segmentsNearby;
+
+        public IList<SegmentNearby> SegmentsNearby
+        {
+            get { return _segmentsNearby; }
+            set { this.RaiseAndSetIfChanged(ref _segmentsNearby, value); }
         }
 
         public string Title
@@ -222,5 +308,11 @@ namespace Org.Xepher.Kazuma.ViewModels
         public ReactiveCommand<object> RefreshCommand { get; protected set; }
 
         #endregion Refresh Data
+
+        #region Location Configuration
+
+        public ReactiveCommand<object> LocationCommand { get; protected set; }
+
+        #endregion Location Configuration
     }
 }

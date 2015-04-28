@@ -16,6 +16,8 @@ using Splat;
 using Windows.UI.Popups;
 using ReactiveUI;
 using Org.Xepher.Kazuma.Utils;
+using Windows.Devices.Geolocation;
+using Org.Xepher.Kazuma.Common;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -26,19 +28,19 @@ namespace Org.Xepher.Kazuma
     /// </summary>
     public sealed partial class Shell : Page
     {
-        private IScreen HostScreen { get; set; }
-        private IMessageBus HostMessageBus { get; set; }
+        private IAppBootstrapper hostAppBootstrapper { get; set; }
+        private IMessageBus hostMessageBus { get; set; }
 
         public Shell()
         {
             this.InitializeComponent();
 
-            HostScreen = Locator.Current.GetService<IScreen>();
-            HostMessageBus = Locator.Current.GetService<IMessageBus>();
+            hostAppBootstrapper = Locator.Current.GetService<IAppBootstrapper>();
+            hostMessageBus = Locator.Current.GetService<IMessageBus>();
 
-            DataContext = HostScreen;
+            DataContext = hostAppBootstrapper;
 
-            HostMessageBus.Listen<string>(Constants.MSGBUS_TOKEN_MESSAGEBAR).Subscribe(x => this.MessageBar.Message = x);
+            hostMessageBus.Listen<string>(Constants.MSGBUS_TOKEN_MESSAGEBAR).Subscribe(x => this.MessageBar.Message = x);
 
 #if WINDOWS_PHONE_APP
             Windows.Phone.UI.Input.HardwareButtons.BackPressed += HardwareButtons_BackPressed;
@@ -61,15 +63,30 @@ namespace Org.Xepher.Kazuma
             // TODO: Prepare page for display here.
             if (!ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
             {
-                string message = "WxBus 需要知道您的位置才能正常工作。如果您不允许访问您的位置，请点击\"取消\"，这样将不会启动应用。";
+                string message = "WxBus 需要知道您的位置才能正常工作。如果您不允许我们访问您的位置，请点击\"取消\"，这样将不会启动应用。";
 
                 MessageDialog dialog = new MessageDialog(message, "允许获取位置吗？");
-                dialog.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(cmd => { ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, true); })));
+                dialog.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(async cmd =>
+                {
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, true);
+
+                    Geolocator geolocator = new Geolocator { ReportInterval = 1000 };
+                    geolocator.StatusChanged += geolocator_StatusChanged;
+                    Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+                    hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                })));
                 dialog.Commands.Add(new UICommand("取消", new UICommandInvokedHandler(cmd => { ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, false); App.Current.Exit(); })));
                 dialog.DefaultCommandIndex = 0;
                 dialog.CancelCommandIndex = 1;
 
                 await dialog.ShowAsync();
+            }
+            else
+            {
+                Geolocator geolocator = new Geolocator { ReportInterval = 1000 };
+                geolocator.StatusChanged += geolocator_StatusChanged;
+                Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+                hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
             }
 
             // TODO: If your application contains multiple pages, ensure that you are
@@ -82,9 +99,9 @@ namespace Org.Xepher.Kazuma
 #if WINDOWS_PHONE_APP
         private void HardwareButtons_BackPressed(object sender, Windows.Phone.UI.Input.BackPressedEventArgs e)
         {
-            if (this.HostScreen.Router.NavigateBack.CanExecute(null))
+            if (this.hostAppBootstrapper.Router.NavigateBack.CanExecute(null))
             {
-                this.HostScreen.Router.NavigateBack.Execute(null);
+                this.hostAppBootstrapper.Router.NavigateBack.Execute(null);
 
                 e.Handled = true;
             }
@@ -92,5 +109,40 @@ namespace Org.Xepher.Kazuma
 #endif
 
         #endregion
+
+        void geolocator_StatusChanged(Geolocator sender, StatusChangedEventArgs args)
+        {
+            switch (args.Status)
+            {
+                case PositionStatus.Ready:
+                    // Location platform is providing valid data.
+                    break;
+
+                case PositionStatus.Initializing:
+                    // Location platform is acquiring a fix. It may or may not have data. Or the data may be less accurate.
+                    break;
+
+                case PositionStatus.NoData:
+                    // Location platform could not obtain location data.
+                    break;
+
+                case PositionStatus.Disabled:
+                    // The permission to access location data is denied by the user or other policies.
+                    hostMessageBus.SendMessage<string>("定位服务已被关闭，请到设置中打开", Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                    break;
+
+                case PositionStatus.NotInitialized:
+                    // The location platform is not initialized. This indicates that the application has not made a request for location data.
+                    break;
+
+                case PositionStatus.NotAvailable:
+                    // The location platform is not available on this version of the OS.
+                    break;
+
+                default:
+                    // Unknown
+                    break;
+            }
+        }
     }
 }

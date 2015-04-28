@@ -131,9 +131,16 @@ namespace Org.Xepher.Kazuma.Utils
             try
             {
                 HttpResponseMessage response = await httpClient.GetAsync(requestUri).AsTask(cts.Token);
-                string result = await response.Content.ReadAsStringAsync().AsTask(cts.Token);
-                // return deserialized json object
-                return serializer.Deserialize<T>(result);
+                if (response.StatusCode == Windows.Web.Http.HttpStatusCode.Ok)
+                {
+                    string result = await response.Content.ReadAsStringAsync().AsTask(cts.Token);
+                    // return deserialized json object
+                    return serializer.Deserialize<T>(result);
+                }
+                else
+                {
+                    return Activator.CreateInstance<T>();
+                }
             }
             catch (WebException)
             {

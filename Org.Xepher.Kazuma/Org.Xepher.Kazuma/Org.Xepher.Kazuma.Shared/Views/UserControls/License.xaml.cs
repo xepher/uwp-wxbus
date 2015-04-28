@@ -15,6 +15,7 @@ using Windows.UI.Xaml.Navigation;
 using ReactiveUI;
 using Splat;
 using Org.Xepher.Kazuma.ViewModels;
+using Org.Xepher.Kazuma.Common;
 
 // The User Control item template is documented at http://go.microsoft.com/fwlink/?LinkId=234236
 
@@ -29,7 +30,7 @@ namespace Org.Xepher.Kazuma.Views.UserControls
 
         private void Donate_Click(object sender, RoutedEventArgs e)
         {
-            IScreen hostScreen = Locator.Current.GetService<IScreen>();
+            IAppBootstrapper hostScreen = Locator.Current.GetService<IAppBootstrapper>();
             IMessageBus hostMessageBus = Locator.Current.GetService<IMessageBus>();
             hostScreen.Router.Navigate.Execute(new IAPViewModel(hostScreen, hostMessageBus));
         }
