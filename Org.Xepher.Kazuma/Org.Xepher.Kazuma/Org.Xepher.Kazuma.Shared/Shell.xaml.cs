@@ -70,7 +70,7 @@ namespace Org.Xepher.Kazuma
                 {
                     ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, true);
 
-                    Geolocator geolocator = new Geolocator { ReportInterval = 1000 };
+                    Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters= 10, MovementThreshold = 5 };
                     geolocator.StatusChanged += geolocator_StatusChanged;
                     Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
                     hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
@@ -83,7 +83,7 @@ namespace Org.Xepher.Kazuma
             }
             else
             {
-                Geolocator geolocator = new Geolocator { ReportInterval = 1000 };
+                Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
                 geolocator.StatusChanged += geolocator_StatusChanged;
                 Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
                 hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);

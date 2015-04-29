@@ -16,9 +16,6 @@ namespace Org.Xepher.Kazuma.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        // used to cache requested data, will use Windows.Storage.ApplicationData.Current.LocalFolder to store later
-        private IList<Route> _sourceRoutes = new ObservableCollection<Route>();
-
         private bool isFirstLoad = true;
 
         public MainViewModel(IAppBootstrapper bootstrapper, IMessageBus messageBus)
@@ -36,12 +33,12 @@ namespace Org.Xepher.Kazuma.ViewModels
                 {
                     if (string.IsNullOrEmpty(v))
                     {
-                        Routes = _sourceRoutes;
+                        Routes = SourceRoutes;
                     }
                     else
                     {
                         IList<Route> resultList = new ObservableCollection<Route>();
-                        foreach (Route route in _sourceRoutes)
+                        foreach (Route route in SourceRoutes)
                         {
                             if (route.RouteName.Contains(v))
                             {
@@ -104,7 +101,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             LocationCommand.Subscribe(async _ =>
             {
                 messageBus.SendMessage<string>("正在定位，请稍候。", Constants.MSGBUS_TOKEN_MESSAGEBAR);
-                Geolocator geolocator = new Geolocator { ReportInterval = 1000 };
+                Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
 
                 Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
 
@@ -161,7 +158,11 @@ namespace Org.Xepher.Kazuma.ViewModels
             }
             else
             {
-                _sourceRoutes = Routes.Select(x => x).ToList();
+                SourceRoutes.Clear();
+                foreach (Route item in Routes)
+                {
+                    SourceRoutes.Add(item);
+                }
             }
 
             IsBusy = false;
@@ -181,8 +182,8 @@ namespace Org.Xepher.Kazuma.ViewModels
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_ALL_LINES,
                         Constants.SETTING_USER_ID,
-                        HostBootstrapper.MyPosition.Latitude.ToString(),
-                        HostBootstrapper.MyPosition.Longitude.ToString(),
+                        HostBootstrapper.MyPosition.Latitude,
+                        HostBootstrapper.MyPosition.Longitude,
                         Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 
@@ -201,11 +202,14 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             StorageHelper.WriteData(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES, _routesResult);
 
-            _sourceRoutes.Clear();
-            _sourceRoutes = _routesResult.Select(x => x).ToList();
-
+            SourceRoutes.Clear();
             Routes.Clear();
-            Routes = _routesResult.Select(x => x).ToList();
+
+            foreach (Route item in _routesResult)
+            {
+                SourceRoutes.Add(item);
+                Routes.Add(item);
+            }
 
             IsBusy = false;
         }
@@ -220,20 +224,30 @@ namespace Org.Xepher.Kazuma.ViewModels
             int retryCount = 0;
             do
             {
+#if DEBUG
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS_NEARBY,
                         Constants.SETTING_USER_ID,
                         31.574089, 120.292374, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+#else
+                string requestUrl =
+                    SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS_NEARBY,
+                        Constants.SETTING_USER_ID,
+                        HostBootstrapper.MyPosition.Latitude, 
+                        HostBootstrapper.MyPosition.Longitude, 
+                        Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
+                        SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
+#endif
 
                 _segmentsNearbyResult = await SignatureUtil.WebRequestAsync<Dictionary<string, SegmentNearby>>(requestUrl);
                 if (++retryCount > 10) break;
-                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY_OUT_OF_RANGE, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
             } while (null == _segmentsNearbyResult || _segmentsNearbyResult.Count == 0);
 
             if (retryCount > 10)
             {
-                base.HostMessageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                base.HostMessageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE_OUT_OF_RANGE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 IsBusy = false;
                 return;
@@ -250,6 +264,14 @@ namespace Org.Xepher.Kazuma.ViewModels
             set { this.RaiseAndSetIfChanged(ref _routes, value); }
         }
 
+        private IList<Route> _sourceRoutes = new ObservableCollection<Route>();
+
+        public IList<Route> SourceRoutes
+        {
+            get { return _sourceRoutes; }
+            set { this.RaiseAndSetIfChanged(ref _sourceRoutes, value); }
+        }
+
         private IList<SegmentNearby> _segmentsNearby;
 
         public IList<SegmentNearby> SegmentsNearby
@@ -257,12 +279,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             get { return _segmentsNearby; }
             set { this.RaiseAndSetIfChanged(ref _segmentsNearby, value); }
         }
-
-        public string Title
-        {
-            get { return string.Format("WxBus -> Current Available Routes Count: {0}", _sourceRoutes.Count); }
-        }
-
+        
         #region FilterData
 
         private string _filterTerm = string.Empty;
@@ -291,7 +308,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         #region Refresh Data
 
-        private bool _isBusy;
+        private bool _isBusy = true;
         public bool IsBusy
         {
             get { return _isBusy; }

@@ -116,8 +116,8 @@ namespace Org.Xepher.Kazuma.ViewModels
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS,
                         Constants.SETTING_USER_ID,
-                        HostBootstrapper.MyPosition.Latitude.ToString(),
-                        HostBootstrapper.MyPosition.Longitude.ToString(),
+                        HostBootstrapper.MyPosition.Latitude,
+                        HostBootstrapper.MyPosition.Longitude,
                         Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), SelectedRoute.RouteId,
                         Constants.BUS_API_SECRET));
@@ -154,8 +154,8 @@ namespace Org.Xepher.Kazuma.ViewModels
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_REALTIME_INFO,
                         Constants.SETTING_USER_ID,
-                        HostBootstrapper.MyPosition.Latitude.ToString(),
-                        HostBootstrapper.MyPosition.Longitude.ToString(),
+                        HostBootstrapper.MyPosition.Latitude,
+                        HostBootstrapper.MyPosition.Longitude,
                         Constants.DEVICE_TOKEN,
                         Constants.BUS_API_KEY, SignatureUtil.GenerateSeqId(),
                         SelectedRoute.RouteId, Constants.BUS_API_SECRET, station.SegmentId,

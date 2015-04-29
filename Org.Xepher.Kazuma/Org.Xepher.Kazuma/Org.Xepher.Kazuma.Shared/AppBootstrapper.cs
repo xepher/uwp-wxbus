@@ -38,8 +38,7 @@ namespace Org.Xepher.Kazuma
         public BasicGeoposition MyPosition
         {
             get { return _myPosition; }
-            //set { this.RaiseAndSetIfChanged(ref _myPosition, GeoHelper.bd_encrypt(value)); }
-            set { this.RaiseAndSetIfChanged(ref _myPosition, value); } // TODO: need to confirm wifiwx.com use oringal gps position
+            set { this.RaiseAndSetIfChanged(ref _myPosition, value); }
         }
 
         public AppBootstrapper(IMutableDependencyResolver dependencyResolver = null, RoutingState testRouter = null)

@@ -36,7 +36,9 @@ namespace Org.Xepher.Kazuma.Utils
         public const string SETTINGS_IS_LOCATION_ENABLED = "IsLocationEnabled";
 
         public const string MSG_NETWORK_UNAVAILABLE = "网络异常，请稍后再试";
+        public const string MSG_NETWORK_UNAVAILABLE_OUT_OF_RANGE = "网络异常或当前无可用数据，请稍后再试";
         public const string MSG_NETWORK_RETRY = "获取数据失败，第{0}次尝试";
+        public const string MSG_NETWORK_RETRY_OUT_OF_RANGE = "获取数据失败或当前无可用数据，第{0}次尝试";
 
         public const string MSG_MAP_SET_VIEW_FAILURE = "地图定位失败，请重试";
 

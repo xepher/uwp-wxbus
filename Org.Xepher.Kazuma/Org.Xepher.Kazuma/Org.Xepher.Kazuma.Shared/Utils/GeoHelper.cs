@@ -18,7 +18,7 @@ namespace Org.Xepher.Kazuma.Utils
         const double a = 6378245.0;
         const double ee = 0.00669342162296594323;
 
-        //将 GCJ-02 坐标转换成 BD-09 坐标
+        //将 GCJ-02 坐标转换成 BD-09 坐标(火星转百度)
         public static BasicGeoposition bd_encrypt(BasicGeoposition gcjPosition)
         {
             double x = gcjPosition.Longitude, y = gcjPosition.Latitude;
@@ -28,7 +28,7 @@ namespace Org.Xepher.Kazuma.Utils
             return new BasicGeoposition { Longitude = z * Math.Cos(theta) + 0.0065, Latitude = z * Math.Sin(theta) + 0.006 };
         }
 
-        //将 BD-09 坐标转换成  GCJ-02坐标
+        //将 BD-09 坐标转换成  GCJ-02坐标(百度转火星)
         public static BasicGeoposition bd_decrypt(BasicGeoposition bdPosition)
         {
             double x = bdPosition.Longitude - 0.0065, y = bdPosition.Latitude - 0.006;
@@ -38,7 +38,7 @@ namespace Org.Xepher.Kazuma.Utils
             return new BasicGeoposition { Longitude = z * Math.Cos(theta), Latitude = z * Math.Sin(theta) };
         }
 
-        //将 WGS-84 坐标转换成 GCJ-02 坐标
+        //将 WGS-84 坐标转换成 GCJ-02 坐标(地球转火星)
         public static BasicGeoposition gcj_encrypt(BasicGeoposition gcjPosition)
         {
             if (outOfChina(gcjPosition))

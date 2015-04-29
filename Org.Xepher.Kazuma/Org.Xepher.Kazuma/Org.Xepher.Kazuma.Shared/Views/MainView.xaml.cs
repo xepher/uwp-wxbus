@@ -60,14 +60,15 @@ namespace Org.Xepher.Kazuma.Views
             this.Bind(ViewModel, vm => vm.SegmentsNearby, v => v.SegmentsNearby.ItemsSource);
 
             this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
-
-            this.OneWayBind(ViewModel, vm => vm.Title, v => v.RouteCount.Text);
-
+            
             this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
             this.BindCommand(ViewModel, vm => vm.LocationCommand, v => v.Location);
 
             this.BindCommand(ViewModel, vm => vm.NavigateSettingsCommand, v => v.Setting);
+
+            this.WhenAnyValue(v => v.ViewModel.SourceRoutes.Count)
+                .Subscribe(count => this.RouteCount.Text = string.Format("WxBus -> Current Available Routes Count: {0}", count));
 
             this.WhenAnyValue(v => v.ViewModel.HostBootstrapper.MyPosition)
                 .Where(x => x.Latitude != 0 && x.Longitude != 0)
@@ -83,7 +84,7 @@ namespace Org.Xepher.Kazuma.Views
                     {
                         myposition = new MapIcon()
                         {
-                            Location = new Geopoint(position),
+                            Location = new Geopoint(GeoHelper.gcj_encrypt(position)),
                             Title = "Me",
                             //Image = Windows.Storage.Streams.RandomAccessStreamReference.CreateFromUri(new System.Uri("ms-appx:///Assets/pin.png")),
                             NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
@@ -94,7 +95,7 @@ namespace Org.Xepher.Kazuma.Views
                     }
                     else
                     {
-                        myposition.Location = new Geopoint(position);
+                        myposition.Location = new Geopoint(GeoHelper.gcj_encrypt(position));
                     }
 
                     await this.Map.TrySetViewAsync(myposition.Location, 16, 0, 0, MapAnimationKind.Bow);
