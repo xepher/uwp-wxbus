@@ -1,5 +1,4 @@
 ﻿using Org.Xepher.Kazuma.Common;
-using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using Splat;
 

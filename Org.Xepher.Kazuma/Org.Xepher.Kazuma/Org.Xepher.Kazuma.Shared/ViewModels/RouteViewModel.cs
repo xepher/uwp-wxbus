@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
+﻿using Org.Xepher.Kazuma.Common;
 using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
-using System.Linq;
-using Windows.Storage;
 using ReactiveUI;
 using Splat;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
+using Windows.Storage;
 using Windows.UI.StartScreen;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls.Maps;
-using Org.Xepher.Kazuma.Common;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
@@ -94,7 +92,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                     StorageHelper.ReadData<ObservableCollection<Segment>>(ApplicationData.Current.LocalFolder,
                         String.Format(Constants.STORAGE_FILE_ROUTE, SelectedRoute.RouteId));
 
-            if (null == Segments || Segments.Count == 0)
+            if (null == Segments || !Segments.Any())
             {
                 await RequestInternetData();
             }
@@ -125,7 +123,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 Segments = await SignatureUtil.WebRequestAsync<ObservableCollection<Segment>>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (null == Segments || Segments.Count == 0);
+            } while (null == Segments || !Segments.Any());
 
             if (retryCount > 10)
             {

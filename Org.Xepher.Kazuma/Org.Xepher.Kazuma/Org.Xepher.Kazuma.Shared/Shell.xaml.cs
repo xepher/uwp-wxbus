@@ -1,23 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using Windows.Foundation;
-using Windows.Foundation.Collections;
-using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Controls.Primitives;
-using Windows.UI.Xaml.Data;
-using Windows.UI.Xaml.Input;
-using Windows.UI.Xaml.Media;
-using Windows.UI.Xaml.Navigation;
-using Splat;
-using Windows.UI.Popups;
-using ReactiveUI;
+﻿using Org.Xepher.Kazuma.Common;
 using Org.Xepher.Kazuma.Utils;
+using ReactiveUI;
+using Splat;
+using System;
 using Windows.Devices.Geolocation;
-using Org.Xepher.Kazuma.Common;
+using Windows.UI.Popups;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Navigation;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -61,14 +50,20 @@ namespace Org.Xepher.Kazuma
             // the OnNavigatedTo, OnNavigatedFrom will not be triggered
 
             // TODO: Prepare page for display here.
-            if (!ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
+            if (!ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED))
             {
-                string message = "WxBus 需要知道您的位置才能正常工作。如果您不允许我们访问您的位置，请点击\"取消\"，这样将不会启动应用。";
+                string message = "WxBus 需要知道您的位置信息才能正常工作。\r\n\r\n您提供的位置信息仅会提交给数据供应商，用于追踪及查询，本应用不会搜集使用您的位置信息。\r\n\r\n如果您不允许我们访问您的位置信息，请点击\"取消\"，这样将不会启动应用。";
 
-                MessageDialog dialog = new MessageDialog(message, "允许获取位置吗？");
+                MessageDialog dialog = new MessageDialog(message, "允许获取位置信息吗？");
                 dialog.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(async cmd =>
                 {
-                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, true);
+#if DEBUG
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED, false);
+#else
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED, true);
+#endif
+
+                    hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                     Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters= 10, MovementThreshold = 5 };
                     geolocator.StatusChanged += geolocator_StatusChanged;
@@ -83,6 +78,8 @@ namespace Org.Xepher.Kazuma
             }
             else
             {
+                hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+
                 Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
                 geolocator.StatusChanged += geolocator_StatusChanged;
                 Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));

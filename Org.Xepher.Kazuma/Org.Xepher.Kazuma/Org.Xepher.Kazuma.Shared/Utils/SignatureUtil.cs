@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -9,9 +10,6 @@ using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 using Windows.Web.Http;
 using Windows.Web.Http.Filters;
-using Newtonsoft.Json;
-using ReactiveUI;
-using Splat;
 
 namespace Org.Xepher.Kazuma.Utils
 {

@@ -1,17 +1,17 @@
-﻿using Windows.UI.Xaml;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Navigation;
+﻿using Org.Xepher.Kazuma.Models;
+using Org.Xepher.Kazuma.Utils;
 using Org.Xepher.Kazuma.ViewModels;
 using ReactiveUI;
 using Splat;
 using System;
-using System.Reactive.Linq;
-using Windows.UI.Popups;
 using System.Linq;
-using Windows.UI.Xaml.Controls.Maps;
+using System.Reactive.Linq;
 using Windows.Devices.Geolocation;
-using Org.Xepher.Kazuma.Models;
-using Org.Xepher.Kazuma.Utils;
+using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Controls.Maps;
+using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Navigation;
 
 namespace Org.Xepher.Kazuma.Views
 {
@@ -60,7 +60,7 @@ namespace Org.Xepher.Kazuma.Views
             this.Bind(ViewModel, vm => vm.SegmentsNearby, v => v.SegmentsNearby.ItemsSource);
 
             this.Bind(ViewModel, vm => vm.SelectedRoute, v => v.Routes.SelectedItem);
-            
+
             this.BindCommand(ViewModel, vm => vm.RefreshCommand, v => v.Refresh);
 
             this.BindCommand(ViewModel, vm => vm.LocationCommand, v => v.Location);
@@ -131,24 +131,33 @@ namespace Org.Xepher.Kazuma.Views
                     }
                 });
 
-            //this.WhenAnyValue(v => v.ViewModel.SegmentsNearby)
-            //    .Where(x => null != x && x.Any())
-            //    .Subscribe(lstSegmentsNearby =>
-            //    {
-            //        foreach (SegmentNearby item in lstSegmentsNearby)
-            //        {
-
-            //        }
-            //    });
-
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 
         #endregion
 
-        private void SegmentsNearby_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void StackPanel_Tapped(object sender, TappedRoutedEventArgs e)
         {
+            this.Map.MapElements.Clear();
+            if (null != myposition)
+            {
+                this.Map.MapElements.Add(myposition);
+            }
 
+            StationNearBy station = ((StationNearBy)((Panel)(sender)).DataContext);
+
+            Geopoint stationPoint = new Geopoint(GeoHelper.bd_decrypt(new BasicGeoposition { Latitude = station.BGPS.Latitude, Longitude = station.BGPS.Longitude }));
+            MapIcon pin = new MapIcon
+            {
+                Location = stationPoint,
+                Title = station.StationName,
+                NormalizedAnchorPoint = new Windows.Foundation.Point() { X = 0.5, Y = 1 },
+                ZIndex = 900
+            };
+
+            this.Map.MapElements.Add(pin);
+
+            await this.Map.TrySetViewAsync(stationPoint);
         }
     }
 }

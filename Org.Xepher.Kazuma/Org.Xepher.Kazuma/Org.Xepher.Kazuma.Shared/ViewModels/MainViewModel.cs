@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Reactive.Linq;
-using System.Threading.Tasks;
-using Windows.Storage;
+﻿using Org.Xepher.Kazuma.Common;
 using Org.Xepher.Kazuma.Models;
 using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using Splat;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reactive.Linq;
+using System.Threading.Tasks;
 using Windows.Devices.Geolocation;
-using Org.Xepher.Kazuma.Common;
+using Windows.Storage;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {
     public class MainViewModel : ViewModelBase
     {
-        private bool isFirstLoad = true;
-
         public MainViewModel(IAppBootstrapper bootstrapper, IMessageBus messageBus)
             : base(bootstrapper, messageBus)
         {
@@ -100,14 +98,16 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             LocationCommand.Subscribe(async _ =>
             {
-                messageBus.SendMessage<string>("正在定位，请稍候。", Constants.MSGBUS_TOKEN_MESSAGEBAR);
-                Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
+                messageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
+                Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
                 Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
 
                 if (location.Coordinate.Point.Position.Latitude == HostBootstrapper.MyPosition.Latitude && location.Coordinate.Point.Position.Longitude == HostBootstrapper.MyPosition.Longitude)
                 {
-                    messageBus.SendMessage<string>("位置未发生改变，无须重新定位。", Constants.MSGBUS_TOKEN_MESSAGEBAR);
+#if DEBUG
+                    messageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_HAVENT_CHANGE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+#endif
                 }
                 else
                 {
@@ -120,10 +120,9 @@ namespace Org.Xepher.Kazuma.ViewModels
             #region Request data when MyPosition is ready
 
             this.WhenAnyValue(vm => vm.HostBootstrapper.MyPosition)
-                .Where(x => x.Latitude != 0 && x.Longitude != 0)
                 .Subscribe(position =>
                 {
-                    if (isFirstLoad)
+                    if (!SourceRoutes.Any())
                     {
                         if (ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED))
                         {
@@ -133,11 +132,12 @@ namespace Org.Xepher.Kazuma.ViewModels
                         {
                             Observable.StartAsync(RequestInternetRoutes);
                         }
-
-                        isFirstLoad = false;
                     }
 
-                    Observable.StartAsync(RequestSegmentsNearby);
+                    if (position.Longitude != 0 && position.Latitude != 0)
+                    {
+                        Observable.StartAsync(RequestSegmentsNearby);
+                    }
                 });
 
             #endregion Request data when MyPosition is ready
@@ -152,7 +152,7 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             Routes = await StorageHelper.ReadData<ObservableCollection<Route>>(ApplicationData.Current.LocalFolder, Constants.STORAGE_FILE_ROUTES);
 
-            if (null == Routes || Routes.Count == 0)
+            if (null == Routes || !Routes.Any())
             {
                 await RequestInternetRoutes();
             }
@@ -190,7 +190,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 _routesResult = await SignatureUtil.WebRequestAsync<ObservableCollection<Route>>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (null == _routesResult || _routesResult.Count == 0);
+            } while (null == _routesResult || !_routesResult.Any());
 
             if (retryCount > 10)
             {
@@ -243,7 +243,7 @@ namespace Org.Xepher.Kazuma.ViewModels
                 _segmentsNearbyResult = await SignatureUtil.WebRequestAsync<Dictionary<string, SegmentNearby>>(requestUrl);
                 if (++retryCount > 10) break;
                 if (retryCount > 1) base.HostMessageBus.SendMessage<string>(string.Format(Constants.MSG_NETWORK_RETRY_OUT_OF_RANGE, retryCount - 1), Constants.MSGBUS_TOKEN_MESSAGEBAR);
-            } while (null == _segmentsNearbyResult || _segmentsNearbyResult.Count == 0);
+            } while (null == _segmentsNearbyResult || !_segmentsNearbyResult.Any());
 
             if (retryCount > 10)
             {
@@ -279,7 +279,7 @@ namespace Org.Xepher.Kazuma.ViewModels
             get { return _segmentsNearby; }
             set { this.RaiseAndSetIfChanged(ref _segmentsNearby, value); }
         }
-        
+
         #region FilterData
 
         private string _filterTerm = string.Empty;
@@ -326,10 +326,10 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         #endregion Refresh Data
 
-        #region Location Configuration
+        #region Location
 
         public ReactiveCommand<object> LocationCommand { get; protected set; }
 
-        #endregion Location Configuration
+        #endregion Location
     }
 }

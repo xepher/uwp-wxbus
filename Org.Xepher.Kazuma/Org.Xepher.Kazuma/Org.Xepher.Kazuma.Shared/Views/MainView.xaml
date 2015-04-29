@@ -40,8 +40,8 @@
                             <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
                                 <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
                                 <StackPanel Margin="0,0,0,0" Orientation="Vertical">
-                                    <TextBlock Text="{Binding RouteName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
-                                    <TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding RouteName}" TextWrapping="Wrap" FontSize="28" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" MaxHeight="20" VerticalAlignment="Center"/>
                                 </StackPanel>
                             </StackPanel>
                         </DataTemplate>
@@ -55,7 +55,7 @@
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-                
+
                 <Maps:MapControl x:Name="Map" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" MapServiceToken="XfyndYxHpFoRLiG0J77MZg"/>
                 <ListView Grid.Row="1" x:Name="SegmentsNearby">
                     <ListView.ItemContainerStyle>
@@ -65,16 +65,37 @@
                     </ListView.ItemContainerStyle>
                     <ListView.ItemTemplate>
                         <DataTemplate>
-                            <StackPanel Orientation="Horizontal" Margin="4,4,0,0" Background="DarkCyan">
-                                <Image Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
-                                <StackPanel Margin="0,0,0,0" Orientation="Vertical">
-                                    <TextBlock Text="{Binding SegmentName}" TextWrapping="Wrap" FontSize="28" FontWeight="Light" VerticalAlignment="Center"/>
-                                    <StackPanel Orientation="Horizontal">
-                                        <!--<TextBlock Text="{Binding RouteId}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>-->
-                                        <TextBlock Text="{Binding SegmentName2}" TextWrapping="Wrap" FontSize="12" FontWeight="Light" MaxHeight="20" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </StackPanel>
-                            </StackPanel>
+                            <Grid Margin="0,4,0,0" Background="DarkCyan">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="60" />
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="2*" />
+                                </Grid.ColumnDefinitions>
+
+                                <Image Grid.Column="0" Height="60" Width="60" VerticalAlignment="Center" Margin="0,0,4,0" Source="ms-appx:///Assets/Images/Logo62-62.png"/>
+                                <TextBlock Grid.Column="1" Text="{Binding SegmentName}" TextWrapping="Wrap" FontSize="28" VerticalAlignment="Center"/>
+                                <ListView Grid.Column="2" ItemsSource="{Binding Stations}">
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate>
+                                            <StackPanel Tapped="StackPanel_Tapped">
+                                                <TextBlock Text="{Binding StationName}" TextWrapping="Wrap" FontSize="18" VerticalAlignment="Center"/>
+                                                <TextBlock VerticalAlignment="Center" FontSize="9">
+                                                    <Run Text="{Binding StartStation}"/>
+                                                    <Run Text="->" />
+                                                    <Run Text="{Binding EndStation}"/>
+                                                    <Run Text=" " />
+                                                    <Run Text="{Binding StartTime}" />
+                                                </TextBlock>
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                </ListView>
+                            </Grid>
                         </DataTemplate>
                     </ListView.ItemTemplate>
                 </ListView>

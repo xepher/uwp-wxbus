@@ -1,9 +1,6 @@
 ﻿using Org.Xepher.Kazuma.Common;
 using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Org.Xepher.Kazuma.ViewModels
 {

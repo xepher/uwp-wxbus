@@ -1,14 +1,7 @@
-﻿using ReactiveUI;
-using Splat;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Windows.Devices.Geolocation;
-using Windows.Security.Cryptography;
+﻿using Windows.Security.Cryptography;
 using Windows.Security.Cryptography.Core;
 using Windows.Storage.Streams;
 using Windows.System.Profile;
-using ReactiveUI;
 
 namespace Org.Xepher.Kazuma.Utils
 {
@@ -20,7 +13,7 @@ namespace Org.Xepher.Kazuma.Utils
         }
 
         public static string SETTING_USER_ID = "";
-        public static string DEVICE_TOKEN = "d54a1bd8272228350b2e0193da2a40a9";
+        public static string DEVICE_TOKEN = SignatureUtil.GetHashedString(HashAlgorithmNames.Md5, "WxBus");
         public const string BUS_API_KEY = "5";
         public const string BUS_API_SECRET = "640c72a4e4087811e2a4ec8c32f0881a";
 
@@ -40,7 +33,9 @@ namespace Org.Xepher.Kazuma.Utils
         public const string MSG_NETWORK_RETRY = "获取数据失败，第{0}次尝试";
         public const string MSG_NETWORK_RETRY_OUT_OF_RANGE = "获取数据失败或当前无可用数据，第{0}次尝试";
 
-        public const string MSG_MAP_SET_VIEW_FAILURE = "地图定位失败，请重试";
+        public const string MSG_MAP_VIEW_SET_FAILURE = "地图定位失败，请重试";
+        public const string MSG_MAP_LOCATION_GET = "正在定位，请稍候。";
+        public const string MSG_MAP_LOCATION_HAVENT_CHANGE = "位置未发生改变，无须重新定位。";
 
         public const string MSGBUS_TOKEN_MESSAGEBAR = "TopBarMessage";
         public const string MSGBUS_TOKEN_MY_GEOPOSITION = "MyGeoPosition";

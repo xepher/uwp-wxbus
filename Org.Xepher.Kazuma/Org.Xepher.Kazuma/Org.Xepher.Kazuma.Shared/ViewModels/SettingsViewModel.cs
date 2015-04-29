@@ -2,8 +2,6 @@
 using Org.Xepher.Kazuma.Utils;
 using ReactiveUI;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using Windows.Storage;
 
 namespace Org.Xepher.Kazuma.ViewModels

@@ -1,12 +1,12 @@
-﻿using System;
+﻿using Org.Xepher.Kazuma.Common;
+using Org.Xepher.Kazuma.Utils;
+using Org.Xepher.Kazuma.Utils.Logger;
 using Org.Xepher.Kazuma.ViewModels;
 using Org.Xepher.Kazuma.Views;
 using ReactiveUI;
 using Splat;
-using Org.Xepher.Kazuma.Utils.Logger;
+using System;
 using Windows.Devices.Geolocation;
-using Org.Xepher.Kazuma.Utils;
-using Org.Xepher.Kazuma.Common;
 
 namespace Org.Xepher.Kazuma
 {
