@@ -18,12 +18,13 @@
                         <ColumnDefinition Width="*" />
                         <ColumnDefinition Width="Auto" />
                     </Grid.ColumnDefinitions>
-                    <TextBlock Margin="10,-3,0,0"
+                    <TextBlock Text="WxBus -> Settings" Margin="4,0,0,0"/>
+                    <!--<TextBlock Margin="10,-3,0,0"
                                TextTrimming="CharacterEllipsis"
                                TextWrapping="NoWrap"
                                VerticalAlignment="Center"
                                Grid.Column="1"
-                               Text="WxBus.Beta" />
+                               Text="WxBus.Beta" />-->
                     <TextBlock x:Name="AppVersion"
                                VerticalAlignment="Bottom"
                                Grid.Column="2"

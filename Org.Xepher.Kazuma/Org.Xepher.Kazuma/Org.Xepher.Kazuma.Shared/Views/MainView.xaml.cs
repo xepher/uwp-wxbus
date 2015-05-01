@@ -127,7 +127,26 @@ namespace Org.Xepher.Kazuma.Views
                     if (((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations.Any())
                     {
                         await this.Map.TrySetViewAsync(new Geopoint(GeoHelper.bd_decrypt(new BasicGeoposition { Latitude = ((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations.First().BGPS.Latitude, Longitude = ((SegmentNearby)this.SegmentsNearby.SelectedItem).Stations.First().BGPS.Longitude })),
-                            18, 0, 0, MapAnimationKind.Bow);
+                            16, 0, 0, MapAnimationKind.Bow);
+                    }
+                });
+
+            Observable.FromEventPattern<SelectionChangedEventArgs>(this.fvMain, "SelectionChanged")
+                .Select(x => x.Sender)
+                .Subscribe(sender =>
+                {
+                    switch (this.fvMain.SelectedIndex)
+                    {
+                        case 0:
+                            this.Refresh.Visibility = Visibility.Visible;
+                            this.Location.Visibility = Visibility.Collapsed;
+                            break;
+                        case 1:
+                            this.Refresh.Visibility = Visibility.Collapsed;
+                            this.Location.Visibility = Visibility.Visible;
+                            break;
+                        default:
+                            break;
                     }
                 });
 
@@ -157,7 +176,7 @@ namespace Org.Xepher.Kazuma.Views
 
             this.Map.MapElements.Add(pin);
 
-            await this.Map.TrySetViewAsync(stationPoint);
+            await this.Map.TrySetViewAsync(stationPoint, 16, 0, 0, MapAnimationKind.Bow);
         }
     }
 }

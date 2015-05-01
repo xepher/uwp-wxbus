@@ -60,6 +60,7 @@ namespace Org.Xepher.Kazuma.Utils
                 messageBus.SendMessage<string>(Constants.MSG_NETWORK_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
             }
 
+#if DEBUG
             MessageDialog dialog = new MessageDialog(result, "Product Receipt");
             dialog.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(cmd => { })));
             dialog.Commands.Add(new UICommand("取消", new UICommandInvokedHandler(cmd => { })));
@@ -67,6 +68,7 @@ namespace Org.Xepher.Kazuma.Utils
             dialog.CancelCommandIndex = 1;
 
             await dialog.ShowAsync();
+#endif
         }
     }
 }

@@ -11,7 +11,7 @@
         <CommandBar>
             <CommandBar.PrimaryCommands>
                 <AppBarButton x:Name="Refresh" Icon="Refresh" Label="Refresh"/>
-                <AppBarButton x:Name="Location" Icon="Target" Label="Location"/>
+                <AppBarButton x:Name="Location" Icon="Target" Label="Location" Visibility="Collapsed"/>
             </CommandBar.PrimaryCommands>
             <CommandBar.SecondaryCommands>
                 <AppBarButton x:Name="Setting" Icon="Setting" Label="Setting"/>
@@ -19,7 +19,7 @@
         </CommandBar>
     </Page.BottomAppBar>
 
-    <FlipView>
+    <FlipView x:Name="fvMain">
         <FlipViewItem>
             <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
                 <Grid.RowDefinitions>
@@ -52,12 +52,13 @@
         <FlipViewItem>
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
-
-                <Maps:MapControl x:Name="Map" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0" MapServiceToken="XfyndYxHpFoRLiG0J77MZg"/>
-                <ListView Grid.Row="1" x:Name="SegmentsNearby">
+                <TextBlock Text="WxBus -> Segments Nearby" Margin="4,0,0,0"/>
+                <Maps:MapControl x:Name="Map" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MapServiceToken="XfyndYxHpFoRLiG0J77MZg"/>
+                <ListView x:Name="SegmentsNearby" Grid.Row="2">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">
                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

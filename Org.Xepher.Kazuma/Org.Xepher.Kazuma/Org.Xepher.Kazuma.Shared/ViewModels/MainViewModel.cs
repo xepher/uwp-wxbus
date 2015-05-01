@@ -98,6 +98,8 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             LocationCommand.Subscribe(async _ =>
             {
+                IsBusy = true;
+
                 messageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
@@ -113,6 +115,8 @@ namespace Org.Xepher.Kazuma.ViewModels
                 {
                     messageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
                 }
+
+                IsBusy = false;
             });
 
             #endregion Location Configuration
@@ -231,11 +235,13 @@ namespace Org.Xepher.Kazuma.ViewModels
                         31.574089, 120.292374, Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 #else
+                BasicGeoposition encryptedPosition = GeoHelper.bd_encrypt(GeoHelper.gcj_encrypt(HostBootstrapper.MyPosition));
+
                 string requestUrl =
                     SignatureUtil.GetRealRequestUrl(string.Format(Constants.TEMPLATE_SEGMENTS_NEARBY,
                         Constants.SETTING_USER_ID,
-                        HostBootstrapper.MyPosition.Latitude, 
-                        HostBootstrapper.MyPosition.Longitude, 
+                        encryptedPosition.Latitude,
+                        encryptedPosition.Longitude, 
                         Constants.DEVICE_TOKEN, Constants.BUS_API_KEY,
                         SignatureUtil.GenerateSeqId(), Constants.BUS_API_SECRET));
 #endif
@@ -309,7 +315,7 @@ namespace Org.Xepher.Kazuma.ViewModels
         #region Refresh Data
 
         private bool _isBusy = true;
-        public bool IsBusy
+        private bool IsBusy
         {
             get { return _isBusy; }
             set { this.RaiseAndSetIfChanged(ref _isBusy, value); }
