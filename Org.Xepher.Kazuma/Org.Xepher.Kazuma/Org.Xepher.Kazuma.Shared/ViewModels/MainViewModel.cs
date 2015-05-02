@@ -103,8 +103,8 @@ namespace Org.Xepher.Kazuma.ViewModels
                 messageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
                 Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
-                geolocator.StatusChanged += geolocator_StatusChanged;
-                if (geolocator.LocationStatus == PositionStatus.Ready)
+                //geolocator.StatusChanged += geolocator_StatusChanged;
+                try
                 {
                     Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
 
@@ -117,6 +117,17 @@ namespace Org.Xepher.Kazuma.ViewModels
                     else
                     {
                         messageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (geolocator.LocationStatus == PositionStatus.Disabled)
+                    {
+                        messageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_SERVICE_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                    }
+                    else
+                    {
+                        messageBus.SendMessage<string>(ex.Message, Constants.MSGBUS_TOKEN_MESSAGEBAR);
                     }
                 }
 
@@ -340,40 +351,40 @@ namespace Org.Xepher.Kazuma.ViewModels
 
         public ReactiveCommand<object> LocationCommand { get; protected set; }
 
-        private void geolocator_StatusChanged(Geolocator sender, StatusChangedEventArgs args)
-        {
-            switch (args.Status)
-            {
-                case PositionStatus.Ready:
-                    // Location platform is providing valid data.
-                    break;
+        //private void geolocator_StatusChanged(Geolocator sender, StatusChangedEventArgs args)
+        //{
+        //    switch (args.Status)
+        //    {
+        //        case PositionStatus.Ready:
+        //            // Location platform is providing valid data.
+        //            break;
 
-                case PositionStatus.Initializing:
-                    // Location platform is acquiring a fix. It may or may not have data. Or the data may be less accurate.
-                    break;
+        //        case PositionStatus.Initializing:
+        //            // Location platform is acquiring a fix. It may or may not have data. Or the data may be less accurate.
+        //            break;
 
-                case PositionStatus.NoData:
-                    // Location platform could not obtain location data.
-                    break;
+        //        case PositionStatus.NoData:
+        //            // Location platform could not obtain location data.
+        //            break;
 
-                case PositionStatus.Disabled:
-                    // The permission to access location data is denied by the user or other policies.
-                    base.HostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_SERVICE_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
-                    break;
+        //        case PositionStatus.Disabled:
+        //            // The permission to access location data is denied by the user or other policies.
+        //            base.HostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_SERVICE_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+        //            break;
 
-                case PositionStatus.NotInitialized:
-                    // The location platform is not initialized. This indicates that the application has not made a request for location data.
-                    break;
+        //        case PositionStatus.NotInitialized:
+        //            // The location platform is not initialized. This indicates that the application has not made a request for location data.
+        //            break;
 
-                case PositionStatus.NotAvailable:
-                    // The location platform is not available on this version of the OS.
-                    break;
+        //        case PositionStatus.NotAvailable:
+        //            // The location platform is not available on this version of the OS.
+        //            break;
 
-                default:
-                    // Unknown
-                    break;
-            }
-        }
+        //        default:
+        //            // Unknown
+        //            break;
+        //    }
+        //}
 
         #endregion Location
     }
