@@ -36,6 +36,7 @@ namespace Org.Xepher.Kazuma.Utils
         public const string MSG_MAP_VIEW_SET_FAILURE = "地图定位失败，请重试";
         public const string MSG_MAP_LOCATION_GET = "正在定位，请稍候。";
         public const string MSG_MAP_LOCATION_HAVENT_CHANGE = "位置未发生改变，无须重新定位。";
+        public const string MSG_MAP_LOCATION_SERVICE_UNAVAILABLE = "定位服务已被关闭，请到设置中打开。";
 
         public const string MSGBUS_TOKEN_MESSAGEBAR = "TopBarMessage";
         public const string MSGBUS_TOKEN_MY_GEOPOSITION = "MyGeoPosition";

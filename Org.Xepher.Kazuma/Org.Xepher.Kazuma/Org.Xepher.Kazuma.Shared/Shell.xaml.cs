@@ -65,10 +65,13 @@ namespace Org.Xepher.Kazuma
 
                     hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
-                    Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters= 10, MovementThreshold = 5 };
+                    Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
                     geolocator.StatusChanged += geolocator_StatusChanged;
-                    Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
-                    hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                    if (geolocator.LocationStatus == PositionStatus.Ready)
+                    {
+                        Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+                        hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                    }
                 })));
                 dialog.Commands.Add(new UICommand("取消", new UICommandInvokedHandler(cmd => { ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, false); App.Current.Exit(); })));
                 dialog.DefaultCommandIndex = 0;
@@ -82,8 +85,11 @@ namespace Org.Xepher.Kazuma
 
                 Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
                 geolocator.StatusChanged += geolocator_StatusChanged;
-                Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
-                hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                if (geolocator.LocationStatus == PositionStatus.Ready)
+                {
+                    Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+                    hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                }
             }
 
             // TODO: If your application contains multiple pages, ensure that you are
@@ -125,7 +131,7 @@ namespace Org.Xepher.Kazuma
 
                 case PositionStatus.Disabled:
                     // The permission to access location data is denied by the user or other policies.
-                    hostMessageBus.SendMessage<string>("定位服务已被关闭，请到设置中打开", Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                    hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_SERVICE_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
                     break;
 
                 case PositionStatus.NotInitialized:
