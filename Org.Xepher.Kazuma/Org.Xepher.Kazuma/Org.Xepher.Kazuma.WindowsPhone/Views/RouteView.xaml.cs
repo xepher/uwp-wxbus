@@ -76,7 +76,7 @@ namespace Org.Xepher.Kazuma.Views
                 .Subscribe(async position =>
                 {
                     MapIcon myposition = null;
-                    foreach (MapIcon item in this.Map.MapElements)
+                    foreach (MapIcon item in this.Map.MapElements.Where(x => x.GetType() == typeof(MapIcon)))
                     {
                         if (item.Title == "Me")
                             myposition = item;
