@@ -27,7 +27,7 @@
             <RowDefinition Height="3*" />
         </Grid.RowDefinitions>
         <TextBlock Text="WxBus -> Segment" Margin="4,0,0,0"/>
-        <Maps:MapControl x:Name="Map" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MapServiceToken="XfyndYxHpFoRLiG0J77MZg"/>
+        <Maps:MapControl x:Name="Map" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MapServiceToken="ApxlAgxDDDnbCpORu99Npw"/>
         <Pivot x:Name="Segments" Grid.Row="2" Style="{StaticResource PivotStyle}">
             <Pivot.ItemTemplate>
                 <DataTemplate>

@@ -1,9 +1,8 @@
-<img src="http://cdn.marketplaceimages.windowsphone.com/v8/images/c3a6f110-c65c-4048-98b4-48696dcb9d61?imageType=ws_icon_small" alt="无锡公交查询" title="无锡公交查询"/>
+<img src="http://cdn.marketplaceimages.windowsphone.com/v8/images/f22f42ab-8182-4a7f-9e93-6fbdaa778126?imageType=ws_icon_large" alt="WxBus" title="WxBus"/>
 #wp-wuxibus  
-Wuxi Public Transportation Information System on Windows Phone Platform  
-无锡公共交通信息查询客户端(Windows Phone平台)  
+Wx Public Transportation Information System on Windows Phone Platform 
 [view on Market Place][ref_mk]  
 ####Author: [xepher][ref_Author]  
 
 [ref_Author]: http://www.douban.com/people/xepher (xepher)
-[ref_mk]: http://www.windowsphone.com/s?appid=4ac548ed-ffb6-4636-ad67-324e17147841 (Click to view on Market Place)
+[ref_mk]: http://www.windowsphone.com/s?appid=b84aaaa1-6828-4e80-8104-5087d6d0816d (Click to view on Market Place)

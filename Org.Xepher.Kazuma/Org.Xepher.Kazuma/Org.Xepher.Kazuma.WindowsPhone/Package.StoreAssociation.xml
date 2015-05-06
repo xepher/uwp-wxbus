@@ -184,28 +184,30 @@
     <Language Code="vi-vn" InMinimumRequirementSet="true" />
   </SupportedLocales>
   <ProductReservedInfo>
-    <MainPackageIdentityName>47786.WxBus.Beta</MainPackageIdentityName>
+    <MainPackageIdentityName>47786.WxBus</MainPackageIdentityName>
     <ReservedNames>
-      <ReservedName>WxBus.Beta</ReservedName>
+      <ReservedName>WxBus</ReservedName>
     </ReservedNames>
   </ProductReservedInfo>
-  <AccountPackageIdentityNames />
-  <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=15d3f252-e7a9-44c3-a42a-e1ffc69ce53e">
+  <AccountPackageIdentityNames>
+    <MainPackageIdentityName>47786.WxBus.Beta</MainPackageIdentityName>
+  </AccountPackageIdentityNames>
+  <PackageInfoList LandingUrl="https://dev.windowsphone.com/AppSubmission/AssociationLanding?windowsProductId=76420968-69c2-4482-9454-7413a3c3ba5a">
     <BundleInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture>neutral</PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.5.0.6</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.5.0.10</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture></PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.5.0.6</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.5.0.10</PackageMaxArchitectureVersion>
       </PackageInfo>
       <PackageInfo>
         <OsMinVersion>6.3.0.0</OsMinVersion>
         <PackageArchitecture></PackageArchitecture>
-        <PackageMaxArchitectureVersion>1.5.0.6</PackageMaxArchitectureVersion>
+        <PackageMaxArchitectureVersion>1.5.0.10</PackageMaxArchitectureVersion>
       </PackageInfo>
     </BundleInfo>
   </PackageInfoList>

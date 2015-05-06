@@ -57,7 +57,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
                 <TextBlock Text="WxBus -> Segments Nearby" Margin="4,0,0,0"/>
-                <Maps:MapControl x:Name="Map" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MapServiceToken="XfyndYxHpFoRLiG0J77MZg"/>
+                <Maps:MapControl x:Name="Map" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" MapServiceToken="ApxlAgxDDDnbCpORu99Npw"/>
                 <ListView x:Name="SegmentsNearby" Grid.Row="2">
                     <ListView.ItemContainerStyle>
                         <Style TargetType="ListViewItem">

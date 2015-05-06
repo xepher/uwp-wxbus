@@ -7,3 +7,6 @@ TestResults
 *.user
 *.suo
 PerfLogs
+/Org.Xepher.Kazuma/packages
+/Org.Xepher.Kazuma/Org.Xepher.Kazuma/Org.Xepher.Kazuma.WindowsPhone/AppPackages
+/Org.Xepher.Kazuma/Org.Xepher.Kazuma/Org.Xepher.Kazuma.WindowsPhone/BundleArtifacts

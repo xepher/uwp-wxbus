@@ -10,7 +10,7 @@
     <ScrollViewer>
         <StackPanel>
             <TextBlock TextWrapping="Wrap" FontSize="14">
-                <Run Text="WxBus.Beta" FontSize="28" />
+                <Run Text="WxBus" FontSize="28" />
                 <LineBreak />
                 <Run Text="Copyright 2012-2015 Shaojun, WxBus Authors" />
                 <LineBreak />
