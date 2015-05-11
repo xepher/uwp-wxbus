@@ -101,6 +101,13 @@ namespace Org.Xepher.Kazuma.Views
                     await this.Map.TrySetViewAsync(myposition.Location, 16, 0, 0, MapAnimationKind.Bow);
                 });
 
+            this.WhenAnyValue(v => v.ViewModel.IsFlipSegmentsNearbyEnabled)
+                .Subscribe(x =>
+                {
+                    this.flipSegmentsNearby.IsEnabled = x;
+                    this.flipSegmentsNearby.Visibility = x ? Visibility.Visible : Visibility.Collapsed;
+                });
+
             Observable.FromEventPattern<SelectionChangedEventArgs>(this.SegmentsNearby, "SelectionChanged")
                 .Select(x => x.Sender)
                 .Subscribe(async sender =>

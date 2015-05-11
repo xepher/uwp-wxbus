@@ -51,6 +51,8 @@ namespace Org.Xepher.Kazuma.Views
         {
             this.Bind(ViewModel, vm => vm.IsLocalStorageOn, v => v.LocalStorage.IsOn);
 
+            this.Bind(ViewModel, vm => vm.IsLocationServiceOn, v => v.LocationService.IsOn);
+
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 

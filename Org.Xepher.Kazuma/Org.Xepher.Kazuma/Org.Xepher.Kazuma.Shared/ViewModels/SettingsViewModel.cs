@@ -29,6 +29,19 @@ namespace Org.Xepher.Kazuma.ViewModels
                 });
 
             #endregion Local Storage Configuration
+
+            #region Location Service Configuration
+
+            // IsLocationServiceOn default value
+            _isLocationServiceOn = ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED);
+
+            this.ObservableForProperty(vm => vm.IsLocationServiceOn)
+                .Subscribe(x =>
+                {
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue(Constants.SETTINGS_IS_LOCATION_ENABLED, x.Value);
+                });
+
+            #endregion Location Service Configuration
         }
 
         #region Local Storage
@@ -41,5 +54,16 @@ namespace Org.Xepher.Kazuma.ViewModels
         }
 
         #endregion Local Storage
+
+        #region Location Service
+
+        private bool _isLocationServiceOn;
+        public bool IsLocationServiceOn
+        {
+            get { return _isLocationServiceOn; }
+            set { this.RaiseAndSetIfChanged(ref _isLocationServiceOn, value); }
+        }
+
+        #endregion Location Service
     }
 }

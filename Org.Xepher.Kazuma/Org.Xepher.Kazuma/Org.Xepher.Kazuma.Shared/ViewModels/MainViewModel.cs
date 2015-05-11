@@ -94,6 +94,11 @@ namespace Org.Xepher.Kazuma.ViewModels
 
             #region Location Configuration
 
+            messageBus.Listen<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED).Subscribe(x =>
+            {
+                IsFlipSegmentsNearbyEnabled = x;
+            });
+
             LocationCommand = ReactiveCommand.Create(this.WhenAny(vm => vm.IsBusy, r => !r.Value));
 
             LocationCommand.Subscribe(async _ =>
@@ -348,6 +353,14 @@ namespace Org.Xepher.Kazuma.ViewModels
         #endregion Refresh Data
 
         #region Location
+
+        private bool _isFlipSegmentsNearbyEnabled = ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED);
+
+        public bool IsFlipSegmentsNearbyEnabled
+        {
+            get { return _isFlipSegmentsNearbyEnabled; }
+            set { this.RaiseAndSetIfChanged(ref _isFlipSegmentsNearbyEnabled, value); }
+        }
 
         public ReactiveCommand<object> LocationCommand { get; protected set; }
 

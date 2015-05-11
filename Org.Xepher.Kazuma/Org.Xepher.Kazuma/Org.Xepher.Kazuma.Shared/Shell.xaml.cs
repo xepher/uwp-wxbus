@@ -50,15 +50,16 @@ namespace Org.Xepher.Kazuma
             // the OnNavigatedTo, OnNavigatedFrom will not be triggered
 
             // TODO: Prepare page for display here.
-            if (!ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED))
+            if (!ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_MSG_TO_ENABLE_LOCATION))
             {
-                string message = "WxBus 需要知道您的位置信息才能正常工作。\r\n\r\n您提供的位置信息仅会提交给数据供应商，用于追踪及查询，本应用不会搜集使用您的位置信息。\r\n\r\n如果您不允许我们访问您的位置信息，请点击\"取消\"，这样将不会启动应用。";
+                string message = "WxBus 需要知道您的位置信息才能正常工作。\r\n\r\n您提供的位置信息仅会提交给数据供应商，用于追踪及查询。\r\n\r\n如果您不允许我们访问您的位置信息，请点击\"取消\"，这样将不会开启定位功能，程序相关功能也会被禁用。您可以稍候在设置中重新打开定位功能。";
 
                 MessageDialog dialog = new MessageDialog(message, "允许获取位置信息吗？");
                 dialog.Commands.Add(new UICommand("确定", new UICommandInvokedHandler(async cmd =>
                 {
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_MSG_TO_ENABLE_LOCATION, true);
 #if DEBUG
-                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED, false);
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED, true);
 #else
                     ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED, true);
 #endif
@@ -69,8 +70,8 @@ namespace Org.Xepher.Kazuma
                     //geolocator.StatusChanged += geolocator_StatusChanged;
                     try
                     {
-                    Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
-                    hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
+                        Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+                        hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
                     }
                     catch (Exception ex)
                     {
@@ -84,7 +85,11 @@ namespace Org.Xepher.Kazuma
                         }
                     }
                 })));
-                dialog.Commands.Add(new UICommand("取消", new UICommandInvokedHandler(cmd => { ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCALSTORAGE_ENABLED, false); App.Current.Exit(); })));
+                dialog.Commands.Add(new UICommand("取消", new UICommandInvokedHandler(cmd =>
+                {
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_MSG_TO_ENABLE_LOCATION, true); 
+                    ApplicationDataSettingsHelper.SaveOrUpdateValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED, false);
+                })));
                 dialog.DefaultCommandIndex = 0;
                 dialog.CancelCommandIndex = 1;
 
@@ -92,24 +97,27 @@ namespace Org.Xepher.Kazuma
             }
             else
             {
-                hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                if (ApplicationDataSettingsHelper.ReadValue<bool>(Constants.SETTINGS_IS_LOCATION_ENABLED))
+                {
+                    hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_GET, Constants.MSGBUS_TOKEN_MESSAGEBAR);
 
-                Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
-                //geolocator.StatusChanged += geolocator_StatusChanged;
-                try
-                {
-                    Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
-                    hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
-                }
-                catch (Exception ex)
-                {
-                    if (geolocator.LocationStatus == PositionStatus.Disabled)
+                    Geolocator geolocator = new Geolocator { ReportInterval = 1000, DesiredAccuracy = PositionAccuracy.High, DesiredAccuracyInMeters = 10, MovementThreshold = 5 };
+                    //geolocator.StatusChanged += geolocator_StatusChanged;
+                    try
                     {
-                        hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_SERVICE_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                        Geoposition location = await geolocator.GetGeopositionAsync(TimeSpan.FromMinutes(5), TimeSpan.FromSeconds(5));
+                        hostMessageBus.SendMessage<BasicGeoposition>(location.Coordinate.Point.Position, Constants.MSGBUS_TOKEN_MY_GEOPOSITION);
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        hostMessageBus.SendMessage<string>(ex.Message, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                        if (geolocator.LocationStatus == PositionStatus.Disabled)
+                        {
+                            hostMessageBus.SendMessage<string>(Constants.MSG_MAP_LOCATION_SERVICE_UNAVAILABLE, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                        }
+                        else
+                        {
+                            hostMessageBus.SendMessage<string>(ex.Message, Constants.MSGBUS_TOKEN_MESSAGEBAR);
+                        }
                     }
                 }
             }

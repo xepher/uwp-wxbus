@@ -39,9 +39,10 @@
                                   OffContent="Off"
                                   OnContent="On" />
 
-                    <!--<Border Height="1"
-                            Margin="0,12"
-                            Background="{StaticResource SecondColor}" />-->
+                    <ToggleSwitch x:Name="LocationService" 
+                                  Header="Location Service"
+                                  OffContent="Off"
+                                  OnContent="On" />
                 </StackPanel>
             </PivotItem>
             <PivotItem Header="about">

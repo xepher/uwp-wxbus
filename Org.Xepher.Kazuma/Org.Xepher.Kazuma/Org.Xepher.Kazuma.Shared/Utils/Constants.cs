@@ -27,6 +27,7 @@ namespace Org.Xepher.Kazuma.Utils
 
         public const string SETTINGS_IS_LOCALSTORAGE_ENABLED = "IsLocalStorageEnabled";
         public const string SETTINGS_IS_LOCATION_ENABLED = "IsLocationEnabled";
+        public const string SETTINGS_MSG_TO_ENABLE_LOCATION = "MsgToEnableLocation";
 
         public const string MSG_NETWORK_UNAVAILABLE = "网络异常，请稍后再试";
         public const string MSG_NETWORK_UNAVAILABLE_OUT_OF_RANGE = "网络异常或当前无可用数据，请稍后再试";
