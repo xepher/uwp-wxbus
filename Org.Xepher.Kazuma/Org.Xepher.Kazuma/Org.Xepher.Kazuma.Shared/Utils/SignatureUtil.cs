@@ -125,6 +125,11 @@ namespace Org.Xepher.Kazuma.Utils
             httpClient.DefaultRequestHeaders.Host = new HostName("app.wifiwx.com");
             httpClient.DefaultRequestHeaders.Append("KeepAlive", "true");
             httpClient.DefaultRequestHeaders.AcceptEncoding.ParseAdd("gzip");
+            httpClient.DefaultRequestHeaders.Add("X-API-KEY", "70efdf2ec9b086079795c442636b55fb");
+            httpClient.DefaultRequestHeaders.Add("X-API-SIGNATURE", "NTU3ZTJkODU5NWI5YTRiMmNhNjRhNGIwZTE1M2E1ZDVmYmNiN2NiYg==");
+            httpClient.DefaultRequestHeaders.Add("X-API-TIMESTAMP", "1450534779463bCDabP");
+            httpClient.DefaultRequestHeaders.Add("X-API-VERSION", "2.8.3");
+            httpClient.DefaultRequestHeaders.Add("X-AUTH-TYPE", "sha1");
 
             try
             {
